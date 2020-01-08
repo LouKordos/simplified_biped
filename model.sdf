@@ -9,12 +9,12 @@
         <pose> 0 0 1.115 0 0 0 </pose>
 
         <inertial>
-            <mass>2</mass>
+            <mass>10</mass>
 
             <inertia>
-                <ixx>0.006</ixx>
-                <iyy>0.035</iyy>
-                <izz>0.037</izz>
+                <ixx>0.03</ixx>
+                <iyy>0.166</iyy>
+                <izz>0.175</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
                 <iyz>0</iyz>
@@ -375,13 +375,17 @@
             <xyz> 0 0 1 </xyz>
         </axis>
     </joint>
-
-    <joint type="revolute" name="left_ankle_foot_base_joint">
+    
+    <!--Change joint type back to revolute if actively driven ankle joint is needed-->
+    <joint type="fixed" name="left_ankle_foot_base_joint">
         <pose> 0 0 0.03 0 0 0 </pose>
 
         <parent>left_ankle</parent>
         <child>left_foot_base</child>
-
+        <limit>
+            <lower>0</lower>
+            <upper>0</upper>
+        </limit>
         <axis>
             <xyz>1 0 0 </xyz>
         </axis>
@@ -737,13 +741,16 @@
             <xyz> 0 0 1 </xyz>
         </axis>
     </joint>
-
-    <joint type="revolute" name="right_ankle_foot_base_joint">
+    <!--Change joint type back to revolute if actively driven ankle joint is needed-->
+    <joint type="fixed" name="right_ankle_foot_base_joint">
         <pose> 0 0 0.03 0 0 0 </pose>
 
         <parent>right_ankle</parent>
         <child>right_foot_base</child>
-
+        <limit>
+            <lower>0</lower>
+            <upper>0</upper>
+        </limit>
         <axis>
             <xyz>1 0 0 </xyz>
         </axis>
