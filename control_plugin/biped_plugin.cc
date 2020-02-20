@@ -40,7 +40,7 @@ namespace gazebo
 	public: gazebo::physics::JointPtr rightKneeJoint;
 	public: gazebo::physics::JointPtr rightAnkleJoint;
 
-	public: double torqueApplyingInterval = 1000; //microseconds
+	public: double torqueApplyingInterval = 2000; //microseconds
 	public: double statePublishingInterval = 1000; //microseconds
 	
     /// \brief Constructor
@@ -65,7 +65,7 @@ namespace gazebo
     {
 		this->model = _model;
 
-		std::cout << _model->GetScopedName() << std::endl;
+		//std::cout << _model->GetScopedName() << std::endl;
 
 		this->leftHip3Joint = this->model->GetJoint("simplified_biped::left_hip_axis_3_hip_axis_2_joint");
 		this->leftHip2Joint = this->model->GetJoint("simplified_biped::left_hip_axis_2_hip_axis_1_joint");
@@ -79,9 +79,9 @@ namespace gazebo
 		this->rightKneeJoint = this->model->GetJoint("simplified_biped::right_knee_lower_leg_joint");
 		this->rightAnkleJoint = this->model->GetJoint("simplified_biped::right_ankle_foot_base_joint");
 
-		std::cout << "hip3 joint pos: " << this->leftHip2Joint->Position() << std::endl;
+		//std::cout << "hip3 joint pos: " << this->leftHip2Joint->Position() << std::endl;
 
-		std::cerr << "\nThe biped plugin is attached to model[" << _model->GetName() << "]\n";
+		//std::cerr << "\nThe biped plugin is attached to model[" << _model->GetName() << "]\n";
 
 		leftLegStateThread = std::thread(std::bind(&BipedPlugin::PublishLeftLegState, this));	
 		rightLegStateThread = std::thread(std::bind(&BipedPlugin::PublishRightLegState, this));
@@ -93,8 +93,8 @@ namespace gazebo
 		zmq::context_t context(1);
     	zmq::socket_t leftLegPublisher(context, ZMQ_PUB);
 
-		leftLegPublisher.setsockopt(ZMQ_SNDHWM, 100);
-    	leftLegPublisher.bind("tcp://*:1337");
+		leftLegPublisher.setsockopt(ZMQ_SNDHWM, 1);
+    	leftLegPublisher.bind("tcp://*:9998");
 
 		high_resolution_clock::time_point t1 = high_resolution_clock::now();
         high_resolution_clock::time_point t2 = high_resolution_clock::now();
@@ -127,8 +127,8 @@ namespace gazebo
 		zmq::context_t context(1);	
 		zmq::socket_t rightLegPublisher(context, ZMQ_PUB);
 
-		rightLegPublisher.setsockopt(ZMQ_SNDHWM, 100);
-    	rightLegPublisher.bind("tcp://*:1338");
+		rightLegPublisher.setsockopt(ZMQ_SNDHWM, 1);
+    	rightLegPublisher.bind("tcp://*:9999");
 
 		high_resolution_clock::time_point t1 = high_resolution_clock::now();
         high_resolution_clock::time_point t2 = high_resolution_clock::now();
@@ -183,8 +183,6 @@ namespace gazebo
 
 				std::string data = std::string(static_cast<char*>(msg.data()), msg.size());
 
-				std::cout << data << std::endl;
-
 				std::vector<std::string> data_no_topic = split_string(data, ' ');
 
 				std::vector<std::string> torques = split_string(data_no_topic[1], '|');
@@ -202,6 +200,8 @@ namespace gazebo
 					this->model->GetJointController()->SetForce(this->leftHip1Joint->GetScopedName(), tau_3);
 					this->model->GetJointController()->SetForce(this->leftKneeJoint->GetScopedName(), tau_4);
 					this->model->GetJointController()->SetForce(this->leftAnkleJoint->GetScopedName(), tau_5);
+
+					std::cout << data << std::endl;
 				}
 			}
 		}
@@ -233,7 +233,7 @@ namespace gazebo
 
 				std::string data = std::string(static_cast<char*>(msg.data()), msg.size());
 
-				std::cout << data << std::endl;
+				//std::cout << data << std::endl;
 
 				std::vector<std::string> data_no_topic = split_string(data, ' ');
 
