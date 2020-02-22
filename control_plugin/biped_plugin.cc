@@ -96,30 +96,30 @@ namespace gazebo
 		leftLegPublisher.setsockopt(ZMQ_SNDHWM, 1);
     	leftLegPublisher.bind("tcp://*:9998");
 
-		high_resolution_clock::time_point t1 = high_resolution_clock::now();
-        high_resolution_clock::time_point t2 = high_resolution_clock::now();
+		high_resolution_clock::time_point start = high_resolution_clock::now();
+        high_resolution_clock::time_point end = high_resolution_clock::now();
 
 		double duration = 0.0f;
 
+		struct timespec deadline;
+
 		while(true) {
-			t2 = high_resolution_clock::now();
-			duration = duration_cast<microseconds>(t2 - t1).count();
+			start = high_resolution_clock::now();
+			std::stringstream s;
+			s << "lState " << leftHip3Joint->Position() << "|" << leftHip2Joint->Position() << "|" << leftHip1Joint->Position() << "|" << leftKneeJoint->Position() << "|" << leftAnkleJoint->Position() << "|" << leftHip3Joint->GetVelocity(0) << "|" << leftHip2Joint->GetVelocity(0) << "|" << leftHip1Joint->GetVelocity(0) << "|" << leftKneeJoint->GetVelocity(0) << "|" << leftAnkleJoint->GetVelocity(0);
 			
-			if(duration >= statePublishingInterval) {
-				t1 = high_resolution_clock::now();
-
-				std::stringstream s;
-				s << "lState " << leftHip3Joint->Position() << "|" << leftHip2Joint->Position() << "|" << leftHip1Joint->Position() << "|" << leftKneeJoint->Position() << "|" << leftAnkleJoint->Position() << "|" << leftHip3Joint->GetVelocity(0) << "|" << leftHip2Joint->GetVelocity(0) << "|" << leftHip1Joint->GetVelocity(0) << "|" << leftKneeJoint->GetVelocity(0) << "|" << leftAnkleJoint->GetVelocity(0);
-				
-				auto msg = s.str();
-				zmq::message_t message(msg.length());
-				// Copy Into Buffer
-				memcpy(message.data(), msg.c_str(), msg.length());
-				// Send It
-				leftLegPublisher.send(message);	
-
-				//std::cout << "left:" << s.str() << std::endl;
-			}
+			auto msg = s.str();
+			zmq::message_t message(msg.length());
+			// Copy Into Buffer
+			memcpy(message.data(), msg.c_str(), msg.length());
+			// Send It
+			leftLegPublisher.send(message);
+			end = high_resolution_clock::now();
+			duration = duration_cast<microseconds>(end - start).count();
+			long long remainder = (statePublishingInterval - duration) * 1e+03;
+			deadline.tv_nsec = remainder;
+			deadline.tv_sec = 0;
+			clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
 		}
 	}
 
@@ -130,30 +130,33 @@ namespace gazebo
 		rightLegPublisher.setsockopt(ZMQ_SNDHWM, 1);
     	rightLegPublisher.bind("tcp://*:9999");
 
-		high_resolution_clock::time_point t1 = high_resolution_clock::now();
-        high_resolution_clock::time_point t2 = high_resolution_clock::now();
+		high_resolution_clock::time_point start = high_resolution_clock::now();
+        high_resolution_clock::time_point end = high_resolution_clock::now();
 
 		double duration = 0.0f;
 
+		struct timespec deadline;
+
 		while(true) {
-			t2 = high_resolution_clock::now();
-			duration = duration_cast<microseconds>(t2 - t1).count();
 
-			if(duration >= statePublishingInterval) {
-				t1 = high_resolution_clock::now();
+			start = high_resolution_clock::now();
 
-				std::stringstream s;
-				s << "rState " << leftHip3Joint->Position() << "|" << leftHip2Joint->Position() << "|" << leftHip1Joint->Position() << "|" << leftKneeJoint->Position() << "|" << leftAnkleJoint->Position() << "|" << leftHip3Joint->GetVelocity(0) << "|" << leftHip2Joint->GetVelocity(0) << "|" << leftHip1Joint->GetVelocity(0) << "|" << leftKneeJoint->GetVelocity(0) << "|" << leftAnkleJoint->GetVelocity(0);
+			std::stringstream s;
+			s << "rState " << leftHip3Joint->Position() << "|" << leftHip2Joint->Position() << "|" << leftHip1Joint->Position() << "|" << leftKneeJoint->Position() << "|" << leftAnkleJoint->Position() << "|" << leftHip3Joint->GetVelocity(0) << "|" << leftHip2Joint->GetVelocity(0) << "|" << leftHip1Joint->GetVelocity(0) << "|" << leftKneeJoint->GetVelocity(0) << "|" << leftAnkleJoint->GetVelocity(0);
 
-				auto msg = s.str();
-				zmq::message_t message(msg.length());
-				// Copy Into Buffer
-				memcpy(message.data(), msg.c_str(), msg.length());
-				// Send It
-				rightLegPublisher.send(message);
-
-				//std::cout << "right:" << s.str() << std::endl;
-			}
+			auto msg = s.str();
+			zmq::message_t message(msg.length());
+			// Copy Into Buffer
+			memcpy(message.data(), msg.c_str(), msg.length());
+			// Send It
+			rightLegPublisher.send(message);
+			
+			end = high_resolution_clock::now();
+			duration = duration_cast<microseconds>(end - start).count();
+			long long remainder = (statePublishingInterval - duration) * 1e+03;
+			deadline.tv_nsec = remainder;
+			deadline.tv_sec = 0;
+			clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
 		}
 	}
 
@@ -165,45 +168,49 @@ namespace gazebo
     	subscriber.connect("tcp://127.0.0.1:42000");
     	subscriber.setsockopt(ZMQ_SUBSCRIBE, "lTorques", 0);
 
-		high_resolution_clock::time_point t1 = high_resolution_clock::now();
-        high_resolution_clock::time_point t2 = high_resolution_clock::now();
+		high_resolution_clock::time_point start = high_resolution_clock::now();
+        high_resolution_clock::time_point end = high_resolution_clock::now();
 
 		double duration = 0.0f;
 
+		struct timespec deadline;
+
 		while(true) {
-			t2 = high_resolution_clock::now();
-            duration = duration_cast<microseconds>( t2 - t1 ).count();
+			
+			start = high_resolution_clock::now();
 
-			if(duration >= torqueApplyingInterval) {
+			zmq::message_t msg;
+			subscriber.recv(&msg);
 
-				t1 = high_resolution_clock::now();
+			std::string data = std::string(static_cast<char*>(msg.data()), msg.size());
 
-				zmq::message_t msg;
-				subscriber.recv(&msg);
+			std::vector<std::string> data_no_topic = split_string(data, ' ');
 
-				std::string data = std::string(static_cast<char*>(msg.data()), msg.size());
+			std::vector<std::string> torques = split_string(data_no_topic[1], '|');
 
-				std::vector<std::string> data_no_topic = split_string(data, ' ');
+			if(static_cast<int>(torques.size()) >= 4) {
 
-				std::vector<std::string> torques = split_string(data_no_topic[1], '|');
+				double tau_1 = atof(torques[0].c_str());
+				double tau_2 = atof(torques[1].c_str());
+				double tau_3 = atof(torques[2].c_str());
+				double tau_4 = atof(torques[3].c_str());
+				double tau_5 = atof(torques[4].c_str());
 
-				if(static_cast<int>(torques.size()) >= 4) {
+				this->model->GetJointController()->SetForce(this->leftHip3Joint->GetScopedName(), tau_1);
+				this->model->GetJointController()->SetForce(this->leftHip2Joint->GetScopedName(), tau_2);
+				this->model->GetJointController()->SetForce(this->leftHip1Joint->GetScopedName(), tau_3);
+				this->model->GetJointController()->SetForce(this->leftKneeJoint->GetScopedName(), tau_4);
+				this->model->GetJointController()->SetForce(this->leftAnkleJoint->GetScopedName(), tau_5);
 
-					double tau_1 = atof(torques[0].c_str());
-					double tau_2 = atof(torques[1].c_str());
-					double tau_3 = atof(torques[2].c_str());
-					double tau_4 = atof(torques[3].c_str());
-					double tau_5 = atof(torques[4].c_str());
-
-					this->model->GetJointController()->SetForce(this->leftHip3Joint->GetScopedName(), tau_1);
-					this->model->GetJointController()->SetForce(this->leftHip2Joint->GetScopedName(), tau_2);
-					this->model->GetJointController()->SetForce(this->leftHip1Joint->GetScopedName(), tau_3);
-					this->model->GetJointController()->SetForce(this->leftKneeJoint->GetScopedName(), tau_4);
-					this->model->GetJointController()->SetForce(this->leftAnkleJoint->GetScopedName(), tau_5);
-
-					std::cout << data << std::endl;
-				}
+				std::cout << data << std::endl;
 			}
+
+			end = high_resolution_clock::now();
+			duration = duration_cast<microseconds>(end - start).count();
+			long long remainder = (torqueApplyingInterval - duration) * 1e+03;
+			deadline.tv_nsec = remainder;
+			deadline.tv_sec = 0;
+			clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
 		}
 	}
 
@@ -215,45 +222,48 @@ namespace gazebo
     	subscriber.connect("tcp://127.0.0.1:42001");
     	subscriber.setsockopt(ZMQ_SUBSCRIBE, "rTorques", 0);
 
-		high_resolution_clock::time_point t1 = high_resolution_clock::now();
-        high_resolution_clock::time_point t2 = high_resolution_clock::now();
+		high_resolution_clock::time_point start = high_resolution_clock::now();
+        high_resolution_clock::time_point end = high_resolution_clock::now();
 
 		double duration = 0.0f;
 
+		struct timespec deadline;
+
 		while(true) {
-			t2 = high_resolution_clock::now();
-            duration = duration_cast<microseconds>( t2 - t1 ).count();
+			start = high_resolution_clock::now();
 
-			if(duration >= torqueApplyingInterval) {
+			zmq::message_t msg;
+			subscriber.recv(&msg);
 
-				t1 = high_resolution_clock::now();
+			std::string data = std::string(static_cast<char*>(msg.data()), msg.size());
 
-				zmq::message_t msg;
-				subscriber.recv(&msg);
+			//std::cout << data << std::endl;
 
-				std::string data = std::string(static_cast<char*>(msg.data()), msg.size());
+			std::vector<std::string> data_no_topic = split_string(data, ' ');
 
-				//std::cout << data << std::endl;
+			std::vector<std::string> torques = split_string(data_no_topic[1], '|');
 
-				std::vector<std::string> data_no_topic = split_string(data, ' ');
+			if(static_cast<int>(torques.size()) >= 4) {
 
-				std::vector<std::string> torques = split_string(data_no_topic[1], '|');
+				double tau_1 = atof(torques[0].c_str());
+				double tau_2 = atof(torques[1].c_str());
+				double tau_3 = atof(torques[2].c_str());
+				double tau_4 = atof(torques[3].c_str());
+				double tau_5 = atof(torques[4].c_str());
 
-				if(static_cast<int>(torques.size()) >= 4) {
-
-					double tau_1 = atof(torques[0].c_str());
-					double tau_2 = atof(torques[1].c_str());
-					double tau_3 = atof(torques[2].c_str());
-					double tau_4 = atof(torques[3].c_str());
-					double tau_5 = atof(torques[4].c_str());
-
-					this->model->GetJointController()->SetForce(this->rightHip3Joint->GetScopedName(), tau_1);
-					this->model->GetJointController()->SetForce(this->rightHip2Joint->GetScopedName(), tau_2);
-					this->model->GetJointController()->SetForce(this->rightHip1Joint->GetScopedName(), tau_3);
-					this->model->GetJointController()->SetForce(this->rightKneeJoint->GetScopedName(), tau_4);
-					this->model->GetJointController()->SetForce(this->rightAnkleJoint->GetScopedName(), tau_5);
-				}
+				this->model->GetJointController()->SetForce(this->rightHip3Joint->GetScopedName(), tau_1);
+				this->model->GetJointController()->SetForce(this->rightHip2Joint->GetScopedName(), tau_2);
+				this->model->GetJointController()->SetForce(this->rightHip1Joint->GetScopedName(), tau_3);
+				this->model->GetJointController()->SetForce(this->rightKneeJoint->GetScopedName(), tau_4);
+				this->model->GetJointController()->SetForce(this->rightAnkleJoint->GetScopedName(), tau_5);
 			}
+			
+			end = high_resolution_clock::now();
+			duration = duration_cast<microseconds>(end - start).count();
+			long long remainder = (torqueApplyingInterval - duration) * 1e+03;
+			deadline.tv_nsec = remainder;
+			deadline.tv_sec = 0;
+			clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
 		}
 	}
 	};

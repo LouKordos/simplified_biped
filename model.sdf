@@ -247,9 +247,9 @@
             <inertial>
                 <mass>0.1</mass>
                 <inertia>
-                    <ixx>0.00076</ixx>
-                    <izz>0.00006</izz>
-                    <iyy>0.00076</iyy>
+                    <ixx>7.982e-04</ixx>
+                    <iyy>7.982e-04</iyy>
+					<izz>9.391e-05</izz>
                     <ixy>0</ixy>
                     <ixz>0</ixz>
                     <iyz>0</iyz>
@@ -281,9 +281,9 @@
         <inertial>
             <mass>0.01</mass>
             <inertia>
-                <ixx>0.000005</ixx>
-                <iyy>0.000005</iyy>
-                <izz>0.000007</izz>
+                <ixx>0.00000005</ixx>
+                <iyy>0.00000005</iyy>
+                <izz>0.00000007</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
                 <iyz>0</iyz>
@@ -319,9 +319,9 @@
         <inertial>
             <mass>0.1</mass>
             <inertia>
-                <ixx>0.00076</ixx>
-                <iyy>0.00076</iyy>
-                <izz>0.00006</izz>
+                <ixx>7.982e-04</ixx>
+                <iyy>7.982e-04</iyy>
+                <izz>9.391e-05</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
                 <iyz>0</iyz>
@@ -355,9 +355,9 @@
         <inertial>
             <mass>0.01</mass>
             <inertia>
-                <ixx>0.000025</ixx>
-                <iyy>0.0000045</iyy>
-                <izz>0.000028</izz>
+                <ixx>2.733e-05</ixx>
+                <iyy>5.666e-06</iyy>
+                <izz>3.233e-05</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
                 <iyz>0</iyz>
@@ -389,9 +389,9 @@
         <inertial>
             <mass>0.01</mass>
             <inertia>
-                <ixx>0.0000048</ixx>
-                <iyy>0.0000048</iyy>
-                <izz>0.0000008</izz>
+                <ixx>0.0000024</ixx>
+                <iyy>0.0000024</iyy>
+                <izz>0.0000004</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
                 <iyz>0</iyz>
@@ -425,9 +425,9 @@
         <inertial>
             <mass>0.1</mass>
             <inertia>
-                <ixx>0.0001</ixx>
-                <iyy>0.0001</iyy>
-                <izz>0.00014</izz>
+                <ixx>1.249e-04</ixx>
+                <iyy>9.241e-05</iyy>
+                <izz>9.241e-05</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
                 <iyz>0</iyz>
@@ -462,9 +462,9 @@
         <inertial>
             <mass>0.1</mass>
             <inertia>
-                <ixx>0.0001</ixx>
-                <iyy>0.0001</iyy>
-                <izz>0.00014</izz>
+                <ixx>1.249e-04</ixx>
+                <iyy>9.241e-05</iyy>
+                <izz>9.241e-05</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
                 <iyz>0</iyz>
@@ -499,9 +499,9 @@
         <inertial>
             <mass>0.1</mass>
             <inertia>
-                <ixx>0.0001</ixx>
-                <iyy>0.0001</iyy>
-                <izz>0.00014</izz>
+                <ixx>1.249e-04</ixx>
+                <iyy>9.241e-05</iyy>
+                <izz>9.241e-05</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
                 <iyz>0</iyz>
@@ -634,9 +634,9 @@
             <inertial>
                 <mass>0.1</mass>
                 <inertia>
-                    <ixx>0.00076</ixx>
-                    <izz>0.00006</izz>
-                    <iyy>0.00076</iyy>
+                    <ixx>7.982e-04</ixx>
+                    <iyy>7.982e-04</iyy>
+					<izz>9.391e-05</izz>
                     <ixy>0</ixy>
                     <ixz>0</ixz>
                     <iyz>0</iyz>
@@ -706,9 +706,9 @@
         <inertial>
             <mass>0.1</mass>
             <inertia>
-                <ixx>0.00076</ixx>
-                <iyy>0.00076</iyy>
-                <izz>0.00006</izz>
+                <ixx>7.982e-04</ixx>
+                <iyy>7.982e-04</iyy>
+                <izz>9.391e-05</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
                 <iyz>0</iyz>
@@ -742,9 +742,9 @@
         <inertial>
             <mass>0.01</mass>
             <inertia>
-                <ixx>0.000025</ixx>
-                <iyy>0.0000045</iyy>
-                <izz>0.000028</izz>
+                <ixx>2.733e-05</ixx>
+                <iyy>5.666e-06</iyy>
+                <izz>3.233e-05</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
                 <iyz>0</iyz>
@@ -776,9 +776,9 @@
         <inertial>
             <mass>0.01</mass>
             <inertia>
-                <ixx>0.0000048</ixx>
-                <iyy>0.0000048</iyy>
-                <izz>0.0000008</izz>
+                <ixx>0.0000024</ixx>
+                <iyy>0.0000024</iyy>
+                <izz>0.0000004</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
                 <iyz>0</iyz>
@@ -812,9 +812,9 @@
         <inertial>
             <mass>0.1</mass>
             <inertia>
-                <ixx>0.0001</ixx>
-                <iyy>0.0001</iyy>
-                <izz>0.00014</izz>
+                <ixx>1.249e-04</ixx>
+                <iyy>9.241e-05</iyy>
+                <izz>9.241e-05</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
                 <iyz>0</iyz>
@@ -849,9 +849,9 @@
         <inertial>
             <mass>0.1</mass>
             <inertia>
-                <ixx>0.0001</ixx>
-                <iyy>0.0001</iyy>
-                <izz>0.00014</izz>
+                <ixx>1.249e-04</ixx>
+                <iyy>9.241e-05</iyy>
+                <izz>9.241e-05</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
                 <iyz>0</iyz>
@@ -886,9 +886,9 @@
         <inertial>
             <mass>0.1</mass>
             <inertia>
-                <ixx>0.00010</ixx>
-                <iyy>0.00010</iyy>
-                <izz>0.00014</izz>
+                <ixx>1.249e-04</ixx>
+                <iyy>9.241e-05</iyy>
+                <izz>9.241e-05</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
                 <iyz>0</iyz>
