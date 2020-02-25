@@ -25,6 +25,26 @@ boost/algorithm/string.hpp
 -
 stdlib.h
 -
+mutex
+-
+torque_setpoint.hpp
+/home/loukas/.gazebo/models/simplified_biped/control_plugin/torque_setpoint.hpp
+leg_state.hpp
+/home/loukas/.gazebo/models/simplified_biped/control_plugin/leg_state.hpp
+unistd.h
+-
+zcm/zcm-cpp.hpp
+-
+sys/types.h
+-
+
+/home/loukas/.gazebo/models/simplified_biped/control_plugin/leg_state.hpp
+zcm/zcm_coretypes.h
+-
+
+/home/loukas/.gazebo/models/simplified_biped/control_plugin/torque_setpoint.hpp
+zcm/zcm_coretypes.h
+-
 
 /usr/include/gazebo-9/gazebo/Master.hh
 string

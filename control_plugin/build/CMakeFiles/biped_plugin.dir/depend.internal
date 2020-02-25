@@ -3,6 +3,8 @@
 
 CMakeFiles/biped_plugin.dir/biped_plugin.cc.o
  /home/loukas/.gazebo/models/simplified_biped/control_plugin/biped_plugin.cc
+ /home/loukas/.gazebo/models/simplified_biped/control_plugin/leg_state.hpp
+ /home/loukas/.gazebo/models/simplified_biped/control_plugin/torque_setpoint.hpp
  /usr/include/gazebo-9/gazebo/Master.hh
  /usr/include/gazebo-9/gazebo/Server.hh
  /usr/include/gazebo-9/gazebo/common/Animation.hh
