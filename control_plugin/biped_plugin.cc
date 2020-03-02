@@ -60,6 +60,9 @@ namespace gazebo
 
 	const int udp_buffer_size = 4096;
 
+	// Pointer to the update event connection
+	event::ConnectionPtr updateConnection;
+
 	class Handler
 	{
 		public:
@@ -110,9 +113,10 @@ namespace gazebo
 			return results;
 		}
 
-
 		public: virtual void Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 		{
+			//updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&BipedPlugin::OnUpdate, this));
+
 			model = _model;
 
 			leftHip3Joint = model->GetJoint("simplified_biped::left_hip_axis_3_hip_axis_2_joint");
@@ -149,6 +153,10 @@ namespace gazebo
 			//leftLegStateThread = std::thread(std::bind(&BipedPlugin::PublishLeftLegState, this));	
 			//rightLegStateThread = std::thread(std::bind(&BipedPlugin::PublishRightLegState, this));
 			leftLegTorqueThread = std::thread(std::bind(&BipedPlugin::ApplyLeftLegTorques, this));
+		}
+
+		public: void OnUpdate() {
+			//std::cout << "Update was called by magic... (or just Gazebo)" << std::endl;
 		}
 
 		public: void ApplyLeftLegTorques() {
@@ -237,124 +245,6 @@ namespace gazebo
 
 				std::cout << "Loop duration in uS:" << duration << std::endl;
 				long long remainder = (torqueApplyingInterval - duration) * 1e+03;
-				deadline.tv_nsec = remainder;
-				deadline.tv_sec = 0;
-				clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
-			}
-		}
-
-		public: void PublishLeftLegState() {
-
-			high_resolution_clock::time_point start = high_resolution_clock::now();
-			high_resolution_clock::time_point end = high_resolution_clock::now();
-
-			double duration = 0.0f;
-
-			struct timespec deadline;
-
-			int sockfd; 
-			char buffer[udp_buffer_size];
-			struct sockaddr_in servaddr, cliaddr;
-
-			int n;
-
-			socklen_t len;
-
-			// Creating socket file descriptor 
-			if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) { 
-				perror("socket creation failed"); 
-				exit(EXIT_FAILURE); 
-			} 
-			
-			memset(&servaddr, 0, sizeof(servaddr)); 
-			memset(&cliaddr, 0, sizeof(cliaddr)); 
-			
-			// Filling server information 
-			servaddr.sin_family = AF_INET; // IPv4 
-			servaddr.sin_addr.s_addr = INADDR_ANY;
-			servaddr.sin_port = htons(udp_port); 
-			
-			// Bind the socket with the server address 
-			if ( bind(sockfd, (const struct sockaddr *)&servaddr, sizeof(servaddr)) < 0 ) 
-			{ 
-				perror("bind failed"); 
-				exit(EXIT_FAILURE); 
-			}
-
-			while(true) {
-				start = high_resolution_clock::now();
-
-				stringstream s;
-
-				s << leftHip3Joint->Position() << "|" << leftHip2Joint->Position() << "|" << leftHip1Joint->Position() << "|" << leftKneeJoint->Position() << "|" 
-				<< leftAnkleJoint->Position() 
-				<< "|" << leftHip3Joint->GetVelocity(0) << "|" << leftHip2Joint->GetVelocity(0) << "|" << leftHip1Joint->GetVelocity(0) << "|" 
-				<< leftKneeJoint->GetVelocity(0) << "|" << leftAnkleJoint->GetVelocity(0);
-
-				sendto(sockfd, (const char *)s.str().c_str(), strlen(s.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
-
-				//std::cout << "Sent state, not my fault it doesn't work..." << std::endl;
-				
-				leg_state state;
-
-				state.theta1 = leftHip3Joint->Position();
-				state.theta2 = leftHip2Joint->Position();
-				state.theta3 = leftHip1Joint->Position();
-				state.theta4 = leftKneeJoint->Position();
-				state.theta5 = leftAnkleJoint->Position();
-
-				state.theta1_dot = leftHip3Joint->GetVelocity(0);
-				state.theta2_dot = leftHip2Joint->GetVelocity(0);
-				state.theta3_dot = leftHip1Joint->GetVelocity(0);
-				state.theta4_dot = leftKneeJoint->GetVelocity(0);
-				state.theta5_dot = leftAnkleJoint->GetVelocity(0);
-
-				zcm_context.publish(left_leg_state_channel, &state);
-
-				//std::cout << "Published left leg state." << std::endl;
-
-				end = high_resolution_clock::now();
-
-				duration = duration_cast<microseconds>(end - start).count();
-				long long remainder = (statePublishingInterval - duration) * 1e+03;
-				deadline.tv_nsec = remainder;
-				deadline.tv_sec = 0;
-				clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
-			}
-		}
-
-		public: void PublishRightLegState() {
-
-			high_resolution_clock::time_point start = high_resolution_clock::now();
-			high_resolution_clock::time_point end = high_resolution_clock::now();
-
-			double duration = 0.0f;
-
-			struct timespec deadline;
-
-			while(true) {
-
-				start = high_resolution_clock::now();
-
-				leg_state state;
-
-				state.theta1 = rightHip3Joint->Position();
-				state.theta2 = rightHip2Joint->Position();
-				state.theta3 = rightHip1Joint->Position();
-				state.theta4 = rightKneeJoint->Position();
-				state.theta5 = rightAnkleJoint->Position();
-
-				state.theta1_dot = rightHip3Joint->GetVelocity(0);
-				state.theta2_dot = rightHip2Joint->GetVelocity(0);
-				state.theta3_dot = rightHip1Joint->GetVelocity(0);
-				state.theta4_dot = rightKneeJoint->GetVelocity(0);
-				state.theta5_dot = rightAnkleJoint->GetVelocity(0);
-
-				zcm_context.publish(right_leg_state_channel, &state);
-
-				end = high_resolution_clock::now();
-				duration = duration_cast<microseconds>(end - start).count();
-				long long remainder = (statePublishingInterval - duration) * 1e+03;
 				deadline.tv_nsec = remainder;
 				deadline.tv_sec = 0;
 				clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
