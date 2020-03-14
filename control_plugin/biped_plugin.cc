@@ -33,6 +33,8 @@ namespace gazebo
 	std::thread leftLegTorqueThread;
 	std::thread rightLegTorqueThread;
 
+	std::thread disturbance_thread;
+
 	gazebo::physics::JointPtr leftHip3Joint;
 	gazebo::physics::JointPtr leftHip2Joint;
 	gazebo::physics::JointPtr leftHip1Joint;
@@ -59,6 +61,8 @@ namespace gazebo
 	const int udp_port = 4200;
 
 	const int udp_buffer_size = 4096;
+
+	const int udp_disturbance_port = 6768;
 
 	// Pointer to the update event connection
 	event::ConnectionPtr updateConnection;
@@ -131,7 +135,7 @@ namespace gazebo
 			rightKneeJoint = model->GetJoint("simplified_biped::right_knee_lower_leg_joint");
 			rightAnkleJoint = model->GetJoint("simplified_biped::right_ankle_foot_base_joint");
 
-			double friction = 0.01;
+			double friction = 0.02;
 
 			leftHip3Joint->SetParam("friction", 0, friction);
 			leftKneeJoint->SetParam("friction", 0, friction);
@@ -153,10 +157,79 @@ namespace gazebo
 			//leftLegStateThread = std::thread(std::bind(&BipedPlugin::PublishLeftLegState, this));	
 			//rightLegStateThread = std::thread(std::bind(&BipedPlugin::PublishRightLegState, this));
 			leftLegTorqueThread = std::thread(std::bind(&BipedPlugin::ApplyLeftLegTorques, this));
+			disturbance_thread = std::thread(std::bind(&BipedPlugin::ApplyDisturbance, this));
 		}
 
 		public: void OnUpdate() {
-			//std::cout << "Update was called by magic... (or just Gazebo)" << std::endl;
+			
+		}
+
+		public: void ApplyDisturbance() {
+			int sockfd; 
+			char buffer[udp_buffer_size]; 
+			struct sockaddr_in servaddr; 
+		
+			// Creating socket file descriptor 
+			if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) { 
+				perror("disturbance socket creation failed..."); 
+				exit(EXIT_FAILURE); 
+			} 
+		
+			memset(&servaddr, 0, sizeof(servaddr)); 
+			
+			// Filling server information 
+			servaddr.sin_family = AF_INET; 
+			servaddr.sin_port = htons(udp_disturbance_port); 
+			servaddr.sin_addr.s_addr = INADDR_ANY; 
+			
+			int n; 
+			socklen_t len;
+
+			while(true) {
+
+				n = recvfrom(sockfd, (char *)buffer, udp_buffer_size, MSG_WAITALL, (struct sockaddr *) &servaddr, &len); 
+				buffer[n] = '\0';
+
+				string data(buffer);
+
+				std::vector<std::string> message_split = split_string(data, '|');
+
+				if(static_cast<int>(message_split.size()) >= 2) {
+					
+					std::vector<std::string> force_components = split_string(message_split[1], ',');
+
+					ignition::math::Vector3d force(atof(force_components[0].c_str()), atof(force_components[1].c_str()), atof(force_components[2].c_str()));
+
+					model->GetLink(message_split[0])->AddLinkForce(force);
+
+					// if(link_str == "0") {
+					// 	model->GetLink("torso_connection")->AddLinkForce(force);
+					// }
+					// else if(link_str == "1") {
+					// 	model->GetLink("left_hip_axis_3")->AddLinkForce(force);
+					// }
+					// else if(link_str == "2") {
+					// 	model->GetLink("left_hip_axis_2")->AddLinkForce(force);
+					// }
+					// else if(link_str == "3") {
+					// 	model->GetLink("left_hip_axis_1")->AddLinkForce(force);
+					// }
+					// else if(link_str == "4") {
+					// 	model->GetLink("left_upper_leg")->AddLinkForce(force);
+					// }
+					// else if(link_str == "5") {
+					// 	model->GetLink("left_knee")->AddLinkForce(force);
+					// }
+					// else if(link_str == "6") {
+					// 	model->GetLink("left_lower_leg")->AddLinkForce(force);
+					// }
+					// else if(link_str == "7") {
+					// 	model->GetLink("left_hip_axis_3")->AddLinkForce(force);
+					// }
+
+					std::cout << "Applying disturbance." << std::endl;
+				}
+			}
 		}
 
 		public: void ApplyLeftLegTorques() {
@@ -170,7 +243,7 @@ namespace gazebo
 
 			int sockfd; 
 			char buffer[udp_buffer_size]; 
-			struct sockaddr_in     servaddr; 
+			struct sockaddr_in servaddr; 
 		
 			// Creating socket file descriptor 
 			if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) { 
