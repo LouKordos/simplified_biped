@@ -259,7 +259,7 @@
             <collision name="left_base_collision">
                 <geometry>
                     <mesh>
-		   		 		<uri>model://simplified_biped/meshes/lower_leg.stl</uri>
+						<uri>model://simplified_biped/meshes/lower_leg.stl</uri>
 					</mesh>
                 </geometry>
             </collision>
