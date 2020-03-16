@@ -259,7 +259,7 @@
             <collision name="left_base_collision">
                 <geometry>
                     <mesh>
-						<uri>model://simplified_biped/meshes/lower_leg.stl</uri>
+						<uri>model://simplified_biped/meshes/lower_leg_350mm.stl</uri>
 					</mesh>
                 </geometry>
             </collision>
@@ -267,7 +267,7 @@
             <visual name="left_base_visual">
                 <geometry>
                     <mesh>
-		   		 		<uri>model://simplified_biped/meshes/lower_leg.stl</uri>
+		   		 		<uri>model://simplified_biped/meshes/lower_leg_350mm.stl</uri>
 					</mesh>
                 </geometry>
             </visual>
@@ -333,7 +333,7 @@
         <collision name="left_upper_leg_collision">
             <geometry>
                 <mesh>
-					<uri>model://simplified_biped/meshes/upper_leg.stl</uri>
+					<uri>model://simplified_biped/meshes/upper_leg_350mm.stl</uri>
 				</mesh>
             </geometry>
         </collision>
@@ -341,7 +341,7 @@
         <visual name="left_upper_leg_visual">
             <geometry>
                 <mesh>
-					<uri>model://simplified_biped/meshes/upper_leg.stl</uri>
+					<uri>model://simplified_biped/meshes/upper_leg_350mm.stl</uri>
 				</mesh>
             </geometry>
         </visual>
