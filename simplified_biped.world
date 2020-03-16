@@ -15,7 +15,7 @@
         <uri>model://simplified_biped</uri>
       </include>
 
-      <plugin name="biped_plugin" filename="libbiped_plugin.so"/>
+	<plugin name="biped_plugin" filename="libbiped_plugin.so"/>
     </model>
   </world>
 </sdf>
