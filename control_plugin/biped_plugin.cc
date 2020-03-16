@@ -135,7 +135,7 @@ namespace gazebo
 			rightKneeJoint = model->GetJoint("simplified_biped::right_knee_lower_leg_joint");
 			rightAnkleJoint = model->GetJoint("simplified_biped::right_ankle_foot_base_joint");
 
-			double friction = 0.02;
+			double friction = 0.05; // Coulomb friction coefficient
 
 			leftHip3Joint->SetParam("friction", 0, friction);
 			leftKneeJoint->SetParam("friction", 0, friction);
@@ -143,11 +143,11 @@ namespace gazebo
 			leftHip1Joint->SetParam("friction", 0, friction);
 			leftAnkleJoint->SetParam("friction", 0, friction);
 
-			rightHip3Joint->SetParam("friction", 0, friction);
-			rightKneeJoint->SetParam("friction", 0, friction);
-			rightHip2Joint->SetParam("friction", 0, friction);
-			rightHip1Joint->SetParam("friction", 0, friction);
-			rightAnkleJoint->SetParam("friction", 0, friction);
+			// rightHip3Joint->SetParam("friction", 0, friction);
+			// rightKneeJoint->SetParam("friction", 0, friction);
+			// rightHip2Joint->SetParam("friction", 0, friction);
+			// rightHip1Joint->SetParam("friction", 0, friction);
+			// rightAnkleJoint->SetParam("friction", 0, friction);
 
 			Handler handlerObject;
 
