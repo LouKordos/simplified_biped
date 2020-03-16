@@ -211,12 +211,9 @@
             <mass>10</mass>
 
             <inertia>
-                <ixx>0.03</ixx>
-                <iyy>0.166</iyy>
-                <izz>0.175</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
+                <ixx>0.05121</ixx>
+                <iyy>0.2096</iyy>
+                <izz>0.2281</izz>
             </inertia>
         </inertial>
 
