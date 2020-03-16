@@ -55,7 +55,7 @@
             </inertia>
         </inertial>
 
-        <collision name="torso_connection_collision">
+        <collision name="rod_1_collision">
             <geometry>
                 <box>
                     <size> 0.15 1 0.15 </size>
@@ -63,7 +63,7 @@
             </geometry>
         </collision>
 
-        <visual name="torso_connection_visual">
+        <visual name="rod_1_visual">
             <geometry>
                 <box>
                     <size> 0.15 1 0.15 </size>
@@ -90,7 +90,7 @@
             </inertia>
         </inertial>
 
-        <collision name="torso_connection_collision">
+        <collision name="rod_2_collision">
             <geometry>
                 <box>
                     <size> 0.15 1 0.15 </size>
@@ -98,7 +98,7 @@
             </geometry>
         </collision>
 
-        <visual name="torso_connection_visual">
+        <visual name="rod_2_visual">
             <geometry>
                 <box>
                     <size> 0.15 1 0.15 </size>
@@ -125,7 +125,7 @@
             </inertia>
         </inertial>
 
-        <collision name="torso_connection_collision">
+        <collision name="rod_3_collision">
             <geometry>
                 <box>
                     <size> 0.15 1 0.15 </size>
@@ -133,7 +133,7 @@
             </geometry>
         </collision>
 
-        <visual name="torso_connection_visual">
+        <visual name="rod_3_visual">
             <geometry>
                 <box>
                     <size> 0.15 1 0.15 </size>
@@ -160,7 +160,7 @@
             </inertia>
         </inertial>
 
-        <collision name="torso_connection_collision">
+        <collision name="rod_4_collision">
             <geometry>
                 <box>
                     <size> 0.15 1 0.15 </size>
@@ -168,7 +168,7 @@
             </geometry>
         </collision>
 
-        <visual name="torso_connection_visual">
+        <visual name="rod_4_visual">
             <geometry>
                 <box>
                     <size> 0.15 1 0.15 </size>
