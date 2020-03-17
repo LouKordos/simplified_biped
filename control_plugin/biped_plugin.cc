@@ -165,34 +165,58 @@ namespace gazebo
 		}
 
 		public: void ApplyDisturbance() {
+			auto start = high_resolution_clock::now();
+			auto end = high_resolution_clock::now();
+
+			double duration;
+			struct timespec deadline;
+
+			
 			int sockfd; 
 			char buffer[udp_buffer_size]; 
-			struct sockaddr_in servaddr; 
-		
+			char *hello = "Hello from server"; 
+			struct sockaddr_in servaddr, cliaddr; 
+			
 			// Creating socket file descriptor 
 			if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) { 
-				perror("disturbance socket creation failed..."); 
+				perror("socket creation failed"); 
 				exit(EXIT_FAILURE); 
 			} 
-		
+			
 			memset(&servaddr, 0, sizeof(servaddr)); 
+			memset(&cliaddr, 0, sizeof(cliaddr)); 
 			
 			// Filling server information 
-			servaddr.sin_family = AF_INET; 
-			servaddr.sin_port = htons(udp_disturbance_port); 
+			servaddr.sin_family    = AF_INET; // IPv4 
 			servaddr.sin_addr.s_addr = INADDR_ANY; 
+			servaddr.sin_port = htons(udp_disturbance_port); 
+			
+			// Bind the socket with the server address 
+			if ( bind(sockfd, (const struct sockaddr *)&servaddr,  
+					sizeof(servaddr)) < 0 ) 
+			{ 
+				perror("bind failed"); 
+				exit(EXIT_FAILURE); 
+			} 
 			
 			int n; 
-			socklen_t len;
+		
+			socklen_t len = sizeof(cliaddr);  //len is value/result 
+
+			std::cout << "Disturbance Socket set up." << std::endl;
 
 			while(true) {
 
-				n = recvfrom(sockfd, (char *)buffer, udp_buffer_size, MSG_WAITALL, (struct sockaddr *) &servaddr, &len); 
-				buffer[n] = '\0';
+				n = recvfrom(sockfd, (char *)buffer, udp_buffer_size, MSG_WAITALL, ( struct sockaddr *) &cliaddr, &len); 
+				buffer[n] = '\0'; 
+
+				std::cout << "Received message, processing..." << std::endl;
 
 				string data(buffer);
 
 				std::vector<std::string> message_split = split_string(data, '|');
+
+				double dt = 1000; // microseconds
 
 				if(static_cast<int>(message_split.size()) >= 2) {
 					
@@ -200,34 +224,36 @@ namespace gazebo
 
 					ignition::math::Vector3d force(atof(force_components[0].c_str()), atof(force_components[1].c_str()), atof(force_components[2].c_str()));
 
-					model->GetLink(message_split[0])->AddLinkForce(force);
+					double disturbance_duration = atof(message_split[2].c_str());
 
-					// if(link_str == "0") {
-					// 	model->GetLink("torso_connection")->AddLinkForce(force);
-					// }
-					// else if(link_str == "1") {
-					// 	model->GetLink("left_hip_axis_3")->AddLinkForce(force);
-					// }
-					// else if(link_str == "2") {
-					// 	model->GetLink("left_hip_axis_2")->AddLinkForce(force);
-					// }
-					// else if(link_str == "3") {
-					// 	model->GetLink("left_hip_axis_1")->AddLinkForce(force);
-					// }
-					// else if(link_str == "4") {
-					// 	model->GetLink("left_upper_leg")->AddLinkForce(force);
-					// }
-					// else if(link_str == "5") {
-					// 	model->GetLink("left_knee")->AddLinkForce(force);
-					// }
-					// else if(link_str == "6") {
-					// 	model->GetLink("left_lower_leg")->AddLinkForce(force);
-					// }
-					// else if(link_str == "7") {
-					// 	model->GetLink("left_hip_axis_3")->AddLinkForce(force);
-					// }
+					auto disturbance_link = model->GetLink("simplified_biped::" + message_split[0]);
 
-					std::cout << "Applying disturbance." << std::endl;
+					std::cout << "Finished parsing, entering loop. Selected Link name: " << disturbance_link << ", force: " << force.Length() << ", Duration: " << disturbance_duration << std::endl;
+
+					if(disturbance_link != NULL) {
+
+						int counter = 0;
+
+						for(int i = 0; i < (dt/1000) * disturbance_duration * 1000 /*multiply by 1000 to get back to ms*/; ++i) {
+							
+							start = high_resolution_clock::now();
+							disturbance_link->AddLinkForce(force);
+							end = high_resolution_clock::now();
+							duration = duration_cast<microseconds> (end - start).count();
+							std::cout << "Applied disturbance for one iteration. Link name: " << disturbance_link << ", force: " << force.Length() << ", Duration: " << disturbance_duration << std::endl;
+							counter++;
+							long long remainder = (dt - duration) * 1e+03;
+							deadline.tv_nsec = remainder;
+							deadline.tv_sec = 0;
+							clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
+						}
+
+						std::cout << "Applying disturbance, counter: " << counter << std::endl;
+					}
+					else {
+							std::cout << "Selected link lead to null pointer..." << std::endl;
+					}
+					
 				}
 			}
 		}
