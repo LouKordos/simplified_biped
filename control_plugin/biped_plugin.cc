@@ -47,8 +47,8 @@ namespace gazebo
 	gazebo::physics::JointPtr rightKneeJoint;
 	gazebo::physics::JointPtr rightAnkleJoint;
 
-	double torqueApplyingInterval = 1000; //microseconds
-	double statePublishingInterval = 1000; //microseconds
+	double torqueApplyingInterval = 1000; // microseconds
+	double statePublishingInterval = 1000; // microseconds
 
 	zcm::ZCM zcm_context { "ipc" };
 
