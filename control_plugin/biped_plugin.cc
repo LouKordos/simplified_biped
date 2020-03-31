@@ -18,9 +18,6 @@
 
 #include <unistd.h>
 
-#include <zcm/zcm-cpp.hpp>
-#include <sys/types.h>
-
 using namespace std;
 using namespace std::chrono;
 
@@ -50,8 +47,6 @@ namespace gazebo
 	double torqueApplyingInterval = 1000; // microseconds
 	double statePublishingInterval = 1000; // microseconds
 
-	zcm::ZCM zcm_context { "ipc" };
-
 	const char* left_leg_state_channel = "left_leg_state";
 	const char* right_leg_state_channel = "right_leg_state";
 
@@ -66,36 +61,6 @@ namespace gazebo
 
 	// Pointer to the update event connection
 	event::ConnectionPtr updateConnection;
-
-	class Handler
-	{
-		public:
-			~Handler() {}
-
-			void handleLeftLegTorqueSetpointMessage(const zcm::ReceiveBuffer* rbuf,
-							const string& chan,
-							const torque_setpoint *setpoint)
-			{
-				model->GetJointController()->SetForce(leftHip3Joint->GetScopedName(), setpoint->tau1);
-				model->GetJointController()->SetForce(leftHip2Joint->GetScopedName(), setpoint->tau2);
-				model->GetJointController()->SetForce(leftHip1Joint->GetScopedName(), setpoint->tau3);
-				model->GetJointController()->SetForce(leftKneeJoint->GetScopedName(), setpoint->tau4);
-				model->GetJointController()->SetForce(leftAnkleJoint->GetScopedName(), setpoint->tau5);
-
-				std::cout << "Received left leg torque setpoint." << std::endl;
-			}
-
-			void handleRightLegTorqueSetpointMessage(const zcm::ReceiveBuffer* rbuf,
-							const string& chan,
-							const torque_setpoint *setpoint)
-			{
-				model->GetJointController()->SetForce(rightHip3Joint->GetScopedName(), setpoint->tau1);
-				model->GetJointController()->SetForce(rightHip2Joint->GetScopedName(), setpoint->tau2);
-				model->GetJointController()->SetForce(rightHip1Joint->GetScopedName(), setpoint->tau3);
-				model->GetJointController()->SetForce(rightKneeJoint->GetScopedName(), setpoint->tau4);
-				model->GetJointController()->SetForce(rightAnkleJoint->GetScopedName(), setpoint->tau5);
-			}
-	};
 
   	/// \brief A plugin to control a Velodyne sensor.
 	class BipedPlugin : public ModelPlugin
@@ -148,11 +113,6 @@ namespace gazebo
 			// rightHip2Joint->SetParam("friction", 0, friction);
 			// rightHip1Joint->SetParam("friction", 0, friction);
 			// rightAnkleJoint->SetParam("friction", 0, friction);
-
-			Handler handlerObject;
-
-    		auto left_leg_subs = zcm_context.subscribe(left_leg_torque_setpoint_channel, &Handler::handleLeftLegTorqueSetpointMessage, &handlerObject);
-    		auto right_leg_subs = zcm_context.subscribe(right_leg_torque_setpoint_channel, &Handler::handleRightLegTorqueSetpointMessage, &handlerObject);
 
 			//leftLegStateThread = std::thread(std::bind(&BipedPlugin::PublishLeftLegState, this));	
 			//rightLegStateThread = std::thread(std::bind(&BipedPlugin::PublishRightLegState, this));
