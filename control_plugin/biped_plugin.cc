@@ -13,8 +13,8 @@
 #include <stdlib.h>
 #include <mutex>
 
-#include "torque_setpoint.hpp"
-#include "leg_state.hpp"
+//#include "torque_setpoint.hpp"
+//#include "leg_state.hpp"
 
 #include <unistd.h>
 
