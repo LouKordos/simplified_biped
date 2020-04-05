@@ -1,0 +1,37 @@
+<?xml version="1.0" ?>
+<sdf version="1.5">
+
+<model name="simplified_biped">
+    <link name="torso_connection">
+        <self_collide> 1 </self_collide>
+
+        <pose> 0 0 1.48 0 0 0 </pose>
+
+        <inertial>
+            <mass>30</mass>
+
+            <inertia>
+                <ixx>0.1536</ixx>
+                <iyy>0.6288</iyy>
+                <izz>0.6843</izz>
+            </inertia>
+        </inertial>
+
+        <collision name="torso_connection_collision">
+            <geometry>
+                <mesh>
+	   		 		<uri>model://simplified_biped/meshes/torso_connection.stl</uri>
+				</mesh>
+            </geometry>
+        </collision>
+
+        <visual name="torso_connection_visual">
+            <geometry>
+                <mesh>
+					<uri>model://simplified_biped/meshes/torso_connection.stl</uri>
+				</mesh>
+            </geometry>
+        </visual>
+    </link>
+</model>
+</sdf>
