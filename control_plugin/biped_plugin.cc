@@ -31,6 +31,8 @@ namespace gazebo
 	std::thread rightLegTorqueThread;
 
 	std::thread disturbance_thread;
+	std::thread mpc_force_thread;
+	std::thread mpc_parse_thread;
 
 	gazebo::physics::JointPtr leftHip3Joint;
 	gazebo::physics::JointPtr leftHip2Joint;
@@ -43,9 +45,18 @@ namespace gazebo
 	gazebo::physics::JointPtr rightHip1Joint;
 	gazebo::physics::JointPtr rightKneeJoint;
 	gazebo::physics::JointPtr rightAnkleJoint;
+	
+	gazebo::physics::LinkPtr torso;
+
+	ignition::math::Vector3d f_l(0, 0, 0); // Position where force is excerted
+	ignition::math::Vector3d f_r(0, 0, 0); // Position where force is excerted
+	
+	ignition::math::Vector3d r_l(0, 0, 0); // Position where force is excerted
+	ignition::math::Vector3d r_r(0, 0, 0); // Position where force is excerted
 
 	double torqueApplyingInterval = 1000; // microseconds
 	double statePublishingInterval = 1000; // microseconds
+	double mpcInterval = 1/30.0 * 1000 * 1000; // microseconds
 
 	const char* left_leg_state_channel = "left_leg_state";
 	const char* right_leg_state_channel = "right_leg_state";
@@ -58,6 +69,10 @@ namespace gazebo
 	const int udp_buffer_size = 4096;
 
 	const int udp_disturbance_port = 6768;
+
+	const int udp_mpc_port = 6969;
+
+	bool temp_mpc_test = true;
 
 	// Pointer to the update event connection
 	event::ConnectionPtr updateConnection;
@@ -87,37 +102,182 @@ namespace gazebo
 			//updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&BipedPlugin::OnUpdate, this));
 
 			model = _model;
+			torso = model->GetChildLink("simplified_biped::torso_connection");
 
-			leftHip3Joint = model->GetJoint("simplified_biped::left_hip_axis_3_hip_axis_2_joint");
-			leftHip2Joint = model->GetJoint("simplified_biped::left_hip_axis_2_hip_axis_1_joint");
-			leftHip1Joint = model->GetJoint("simplified_biped::left_hip_axis_1_upper_leg_joint");
-			leftKneeJoint = model->GetJoint("simplified_biped::left_knee_lower_leg_joint");
-			leftAnkleJoint = model->GetJoint("simplified_biped::left_ankle_foot_base_joint");
+			if(!temp_mpc_test) {
+				leftHip3Joint = model->GetJoint("simplified_biped::left_hip_axis_3_hip_axis_2_joint");
+				leftHip2Joint = model->GetJoint("simplified_biped::left_hip_axis_2_hip_axis_1_joint");
+				leftHip1Joint = model->GetJoint("simplified_biped::left_hip_axis_1_upper_leg_joint");
+				leftKneeJoint = model->GetJoint("simplified_biped::left_knee_lower_leg_joint");
+				leftAnkleJoint = model->GetJoint("simplified_biped::left_ankle_foot_base_joint");
 
-			rightHip3Joint = model->GetJoint("simplified_biped::right_hip_axis_3_hip_axis_2_joint");
-			rightHip2Joint = model->GetJoint("simplified_biped::right_hip_axis_2_hip_axis_1_joint");
-			rightHip1Joint = model->GetJoint("simplified_biped::right_hip_axis_1_upper_leg_joint");
-			rightKneeJoint = model->GetJoint("simplified_biped::right_knee_lower_leg_joint");
-			rightAnkleJoint = model->GetJoint("simplified_biped::right_ankle_foot_base_joint");
+				rightHip3Joint = model->GetJoint("simplified_biped::right_hip_axis_3_hip_axis_2_joint");
+				rightHip2Joint = model->GetJoint("simplified_biped::right_hip_axis_2_hip_axis_1_joint");
+				rightHip1Joint = model->GetJoint("simplified_biped::right_hip_axis_1_upper_leg_joint");
+				rightKneeJoint = model->GetJoint("simplified_biped::right_knee_lower_leg_joint");
+				rightAnkleJoint = model->GetJoint("simplified_biped::right_ankle_foot_base_joint");
+				double friction = 0.05; // Coulomb friction coefficient
 
-			double friction = 0.05; // Coulomb friction coefficient
+				leftHip3Joint->SetParam("friction", 0, friction);
+				leftKneeJoint->SetParam("friction", 0, friction);
+				leftHip2Joint->SetParam("friction", 0, friction);
+				leftHip1Joint->SetParam("friction", 0, friction);
+				leftAnkleJoint->SetParam("friction", 0, friction);
 
-			leftHip3Joint->SetParam("friction", 0, friction);
-			leftKneeJoint->SetParam("friction", 0, friction);
-			leftHip2Joint->SetParam("friction", 0, friction);
-			leftHip1Joint->SetParam("friction", 0, friction);
-			leftAnkleJoint->SetParam("friction", 0, friction);
+				// rightHip3Joint->SetParam("friction", 0, friction);
+				// rightKneeJoint->SetParam("friction", 0, friction);
+				// rightHip2Joint->SetParam("friction", 0, friction);
+				// rightHip1Joint->SetParam("friction", 0, friction);
+				// rightAnkleJoint->SetParam("friction", 0, friction);
 
-			// rightHip3Joint->SetParam("friction", 0, friction);
-			// rightKneeJoint->SetParam("friction", 0, friction);
-			// rightHip2Joint->SetParam("friction", 0, friction);
-			// rightHip1Joint->SetParam("friction", 0, friction);
-			// rightAnkleJoint->SetParam("friction", 0, friction);
+				//leftLegStateThread = std::thread(std::bind(&BipedPlugin::PublishLeftLegState, this));	
+				//rightLegStateThread = std::thread(std::bind(&BipedPlugin::PublishRightLegState, this));
+				leftLegTorqueThread = std::thread(std::bind(&BipedPlugin::ApplyLeftLegTorques, this));
+				disturbance_thread = std::thread(std::bind(&BipedPlugin::ApplyDisturbance, this));
+			}
+			mpc_force_thread = std::thread(std::bind(&BipedPlugin::ApplyMPCForces, this));
+			mpc_parse_thread = std::thread(std::bind(&BipedPlugin::UpdateMPCForces, this));
+		}
 
-			//leftLegStateThread = std::thread(std::bind(&BipedPlugin::PublishLeftLegState, this));	
-			//rightLegStateThread = std::thread(std::bind(&BipedPlugin::PublishRightLegState, this));
-			leftLegTorqueThread = std::thread(std::bind(&BipedPlugin::ApplyLeftLegTorques, this));
-			disturbance_thread = std::thread(std::bind(&BipedPlugin::ApplyDisturbance, this));
+		public: void filter_value(double &val) {
+			if(isnan(val) || isinf(val)) {
+				val = 0;
+			}
+		}
+
+		public: void UpdateMPCForces() {
+			auto start = high_resolution_clock::now();
+			auto end = high_resolution_clock::now();
+
+			double duration;
+			struct timespec deadline;
+			
+			int sockfd;
+			char buffer[udp_buffer_size];
+			struct sockaddr_in servaddr;
+			
+			// Creating socket file descriptor
+			if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
+				perror("socket creation failed");
+				exit(EXIT_FAILURE);
+			}
+			
+			memset(&servaddr, 0, sizeof(servaddr));
+			
+			// Filling server information
+			servaddr.sin_family    = AF_INET; // IPv4
+			servaddr.sin_addr.s_addr = INADDR_ANY;
+			servaddr.sin_port = htons(udp_mpc_port);
+
+			int n;
+		
+			socklen_t len = sizeof(servaddr);  //len is value/result
+
+			std::cout << "MPC Socket set up." << std::endl;
+			
+			stringstream first_msg;
+
+			first_msg << torso->WorldPose().Rot().Euler().X() << "|" << torso->WorldPose().Rot().Euler().Y() << "|" << torso->WorldPose().Rot().Euler().Z() << "|" << torso->WorldPose().Pos().X() << "|" 
+					<< torso->WorldPose().Pos().Y() << "|" << torso->WorldPose().Pos().Z() << "|" << torso->WorldAngularVel().X() << "|" << torso->WorldAngularVel().Y() << "|" 
+					<< torso->WorldAngularVel().Z() << "|" << torso->WorldLinearVel().X() << "|" << torso->WorldLinearVel().Y() << "|" << torso->WorldLinearVel().Z() << "|-9.81";
+
+			sendto(sockfd, (const char *)first_msg.str().c_str(), strlen(first_msg.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
+
+			while(true) {
+				start = high_resolution_clock::now();
+
+				stringstream s;
+
+				// state is phi, theta, psi, p_x, p_y, p_z, omega_x, omega_y, omega_z, v_x, v_y, v_z, gravity constant
+
+				double phi = torso->WorldPose().Rot().Euler().X();
+				filter_value(phi);
+				double theta = torso->WorldPose().Rot().Euler().Y();
+				filter_value(theta);
+				double psi = torso->WorldPose().Rot().Euler().Z();
+				filter_value(psi);
+
+				double pos_x = torso->WorldPose().Pos().X();
+				filter_value(pos_x);
+				double pos_y = torso->WorldPose().Pos().Y();
+				filter_value(pos_y);
+				double pos_z = torso->WorldPose().Pos().Z();
+				filter_value(pos_z);
+
+				double omega_x = torso->WorldAngularVel().X();
+				filter_value(omega_x);
+				double omega_y = torso->WorldAngularVel().Y();
+				filter_value(omega_y);
+				double omega_z = torso->WorldAngularVel().Z();
+				filter_value(omega_z);
+
+				double vel_x = torso->WorldLinearVel().X();
+				filter_value(vel_x);
+				double vel_y = torso->WorldLinearVel().Y();
+				filter_value(vel_y);
+				double vel_z = torso->WorldLinearVel().Z();
+				filter_value(vel_z);
+
+				s << phi << "|" << theta << "|" << psi << "|" << pos_x << "|" 
+					<< pos_y << "|" << pos_z << "|" << omega_x << "|" << omega_y << "|" 
+					<< omega_z << "|" << vel_x << "|" << vel_y << "|" << vel_z << "|-9.81";
+
+				sendto(sockfd, (const char *)s.str().c_str(), strlen(s.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
+
+				n = recvfrom(sockfd, (char *)buffer, udp_buffer_size, MSG_WAITALL, (struct sockaddr *) &servaddr, &len); 
+				buffer[n] = '\0';
+
+				string data_str(buffer);
+
+				std::vector<std::string> message_split = split_string(data_str, '|');
+
+				if(static_cast<int>(message_split.size()) >= 5) {
+					ignition::math::Vector3d f_l_temp(atof(message_split[0].c_str()), atof(message_split[1].c_str()), atof(message_split[2].c_str()));
+					ignition::math::Vector3d f_r_temp(atof(message_split[3].c_str()), atof(message_split[4].c_str()), atof(message_split[5].c_str()));
+					f_l = f_l_temp;
+					f_r = f_r_temp;
+
+					ignition::math::Vector3d r_l_temp(0.15, 0, -torso->WorldPose().Pos().Z());
+					ignition::math::Vector3d r_r_temp(-0.15, 0, -torso->WorldPose().Pos().Z());
+
+					r_l = r_l_temp;
+					r_r = r_r_temp;
+				}
+				
+				end = high_resolution_clock::now();
+
+				duration = duration_cast<microseconds>(end - start).count();
+				long long remainder = (mpcInterval - duration) * 1e+3;
+				// deadline.tv_nsec = remainder;
+				// deadline.tv_sec = 0;
+				// clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
+			}
+		}
+
+		public: void ApplyMPCForces() {
+			auto start = high_resolution_clock::now();
+			auto end = high_resolution_clock::now();
+
+			double duration;
+			struct timespec deadline;
+
+			while(true) {
+				start = high_resolution_clock::now();
+
+				std::cout << "f_l: " << f_l << std::endl;
+				std::cout << "f_r: " << f_r << std::endl;
+
+				torso->AddForceAtWorldPosition(f_l, r_l);
+				torso->AddForceAtWorldPosition(f_r, r_r);
+
+				end = high_resolution_clock::now();
+				duration = duration_cast<microseconds>(end - start).count();
+				std::cout << "Loop duration in uS:" << duration << std::endl;
+				long long remainder = (torqueApplyingInterval - duration) * 1e+03; // nanoseconds
+				deadline.tv_nsec = remainder;
+				deadline.tv_sec = 0;
+				clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
+			}
 		}
 
 		public: void OnUpdate() {
@@ -130,11 +290,9 @@ namespace gazebo
 
 			double duration;
 			struct timespec deadline;
-
 			
 			int sockfd; 
-			char buffer[udp_buffer_size]; 
-			char *hello = "Hello from server"; 
+			char buffer[udp_buffer_size];
 			struct sockaddr_in servaddr, cliaddr; 
 			
 			// Creating socket file descriptor 
@@ -144,7 +302,7 @@ namespace gazebo
 			} 
 			
 			memset(&servaddr, 0, sizeof(servaddr)); 
-			memset(&cliaddr, 0, sizeof(cliaddr)); 
+			memset(&cliaddr, 0, sizeof(cliaddr));
 			
 			// Filling server information 
 			servaddr.sin_family    = AF_INET; // IPv4 
