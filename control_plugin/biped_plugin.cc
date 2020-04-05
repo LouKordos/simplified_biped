@@ -245,7 +245,7 @@ namespace gazebo
 			servaddr.sin_addr.s_addr = INADDR_ANY; 
 			
 			int n; 
-			socklen_t len;
+			socklen_t len = sizeof(servaddr);
 			
 			//Initial message for connection to work properly.
 			stringstream first_msg;
