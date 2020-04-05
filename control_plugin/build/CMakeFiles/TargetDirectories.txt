@@ -1,3 +1,0 @@
-/home/loukas/.gazebo/models/simplified_biped/control_plugin/build/CMakeFiles/rebuild_cache.dir
-/home/loukas/.gazebo/models/simplified_biped/control_plugin/build/CMakeFiles/biped_plugin.dir
-/home/loukas/.gazebo/models/simplified_biped/control_plugin/build/CMakeFiles/edit_cache.dir
