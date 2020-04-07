@@ -231,14 +231,13 @@ namespace gazebo
 
 				std::vector<std::string> message_split = split_string(data_str, '|');
 
-				if(static_cast<int>(message_split.size()) >= 5) {
+				if(static_cast<int>(message_split.size()) >= 11) {
 					ignition::math::Vector3d f_l_temp(atof(message_split[0].c_str()), atof(message_split[1].c_str()), atof(message_split[2].c_str()));
 					ignition::math::Vector3d f_r_temp(atof(message_split[3].c_str()), atof(message_split[4].c_str()), atof(message_split[5].c_str()));
 					f_l = f_l_temp;
 					f_r = f_r_temp;
-
-					ignition::math::Vector3d r_l_temp(0.15, 0, -torso->WorldPose().Pos().Z());
-					ignition::math::Vector3d r_r_temp(-0.15, 0, -torso->WorldPose().Pos().Z());
+					ignition::math::Vector3d r_l_temp(atof(message_split[6].c_str()), atof(message_split[7].c_str()), atof(message_split[8].c_str()));
+					ignition::math::Vector3d r_r_temp(atof(message_split[9].c_str()), atof(message_split[10].c_str()), atof(message_split[11].c_str()));
 
 					r_l = r_l_temp;
 					r_r = r_r_temp;
@@ -266,13 +265,15 @@ namespace gazebo
 
 				std::cout << "f_l: " << f_l << std::endl;
 				std::cout << "f_r: " << f_r << std::endl;
+				std::cout << "r_l: " << r_l << std::endl;
+				std::cout << "r_r: " << r_r << std::endl;
 
 				torso->AddForceAtWorldPosition(f_l, r_l);
 				torso->AddForceAtWorldPosition(f_r, r_r);
 
 				end = high_resolution_clock::now();
 				duration = duration_cast<microseconds>(end - start).count();
-				std::cout << "Loop duration in uS:" << duration << std::endl;
+				//std::cout << "Loop duration in uS:" << duration << std::endl;
 				long long remainder = (torqueApplyingInterval - duration) * 1e+03; // nanoseconds
 				deadline.tv_nsec = remainder;
 				deadline.tv_sec = 0;
