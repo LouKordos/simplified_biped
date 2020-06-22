@@ -12,8 +12,8 @@
 
             <inertia>
                 <ixx>0.1536</ixx>
-                <iyy>0.6288</iyy>
-                <izz>0.6843</izz>
+                <iyy>.6288</iyy>
+                <izz>.6843</izz>
             </inertia>
         </inertial>
 
