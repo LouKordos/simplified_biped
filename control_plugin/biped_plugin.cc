@@ -199,6 +199,13 @@ namespace gazebo
 			Eigen::Matrix<double, 4,1> r_left_world_vector;
 			Eigen::Matrix<double, 4,1> r_right_world_vector;
 
+			ofstream data_file;
+			data_file.open("../mpc_log.csv");
+			data_file << "t,phi,theta,psi,pos_x,pos_y,pos_z,omega_x,omega_y,omega_z,vel_x,vel_y,vel_z,g,f_x_left,f_y_left,f_z_left,f_x_right,f_y_right,f_z_right,r_x_left,r_y_left,r_z_left,r_x_right,r_y_right,r_z_right,x_t_temp_pitch" << std::endl; // Add header to csv file
+			data_file.close();
+
+			long long total_iterations = 0;
+
 			while(true) {
 				start = high_resolution_clock::now();
 
