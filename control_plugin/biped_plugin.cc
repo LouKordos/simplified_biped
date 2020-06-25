@@ -55,11 +55,11 @@ namespace gazebo
 	
 	gazebo::physics::LinkPtr torso;
 
-	ignition::math::Vector3d f_l(0, 0, 0); // Position where force is excerted
-	ignition::math::Vector3d f_r(0, 0, 0); // Position where force is excerted
+	ignition::math::Vector3d f_l(0, 0, 0); // Left foot force expressed in world frame
+	ignition::math::Vector3d f_r(0, 0, 0); // Right foot force expressed in world frame
 	
-	ignition::math::Vector3d r_l(0, 0, 0); // Position where force is excerted
-	ignition::math::Vector3d r_r(0, 0, 0); // Position where force is excerted
+	ignition::math::Vector3d r_l(0, 0, 0); // Position where force is excerted expressed in CoM frame
+	ignition::math::Vector3d r_r(0, 0, 0); // Position where force is excerted expressed in CoM frame
 
 
 	static const double torqueApplyingInterval = 1000; // microseconds
@@ -261,20 +261,26 @@ namespace gazebo
 					pos_x = torso->WorldPose().Pos().X();
 					filter_value(pos_x);
 
-					pos_y = torso->WorldPose().Pos().Y();
+					double pos_x = torso->WorldPose().Pos().X();
+					filter_value(pos_x);
+					double pos_y = torso->WorldPose().Pos().Y();
 					filter_value(pos_y);
-
-					pos_z = torso->WorldPose().Pos().Z();
+					double pos_z = torso->WorldPose().Pos().Z();
 					filter_value(pos_z);
 
-					phi = torso->WorldPose().Rot().Roll();
-					filter_value(phi);
+					double omega_x = torso->WorldAngularVel().X();
+					filter_value(omega_x);
+					double omega_y = torso->WorldAngularVel().Y();
+					filter_value(omega_y);
+					double omega_z = torso->WorldAngularVel().Z();
+					filter_value(omega_z);
 
-					theta = torso->WorldPose().Rot().Pitch();
-					filter_value(theta);
-
-					psi = torso->WorldPose().Rot().Yaw();
-					filter_value(psi);
+					double vel_x = torso->WorldLinearVel().X();
+					filter_value(vel_x);
+					double vel_y = torso->WorldLinearVel().Y();
+					filter_value(vel_y);
+					double vel_z = torso->WorldLinearVel().Z();
+					filter_value(vel_z);
 
 					double r_x_left = atof(message_split[6].c_str());
 					double r_y_left = atof(message_split[7].c_str());
@@ -310,14 +316,33 @@ namespace gazebo
 					//ignition::math::Vector3d r_l_temp(r_x_left_world + pos_x, r_y_left_world + pos_y, r_z_left_world);
 					//ignition::math::Vector3d r_r_temp(r_x_right_world + pos_x, r_y_right_world + pos_y, r_z_right_world);
 
-					ignition::math::Vector3d r_l_temp(r_left_world_vector(0), r_left_world_vector(1), r_left_world_vector(2));
-					ignition::math::Vector3d r_r_temp(r_right_world_vector(0), r_right_world_vector(1), r_right_world_vector(2));
+					// ignition::math::Vector3d r_l_temp(r_left_world_vector(0), r_left_world_vector(1), r_left_world_vector(2));
+					// ignition::math::Vector3d r_r_temp(r_right_world_vector(0), r_right_world_vector(1), r_right_world_vector(2));
+
+					ignition::math::Vector3d r_l_temp(r_x_left + pos_x, r_y_left + pos_y, r_z_left + pos_z);
+					ignition::math::Vector3d r_r_temp(r_x_right + pos_x, r_y_right + pos_y, r_z_right + pos_z);
 					
 					r_l = r_l_temp;
 					r_r = r_r_temp;
 
+					ofstream data_file;
+					data_file.open("../mpc_log.csv", ios::app); // Open csv file in append mode
+					data_file << total_iterations * (1/30.0) << "," << phi << "," << theta << "," << psi << "," 
+								<< pos_x << "," << pos_y << "," << pos_z << ","
+								<< omega_x << "," << omega_y << "," << omega_z << ","
+								<< vel_x << "," << vel_y << "," << vel_z << "," << -9.81 << ","
+								<< f_l[0] << "," << f_l[1] << "," << f_l[2] << ","
+								<< f_r[0] << "," << f_r[1] << "," << f_r[2] << ","
+								<< r_l[0] << "," << r_l[1] << "," << r_l[2] << "," 
+								<< r_r[0] << "," << r_r[1] << "," << r_r[2] << ","
+								<< atof(message_split[12].c_str())
+								<< std::endl;
+					data_file.close(); // Close csv file again. This way thread abort should (almost) never leave file open.
+
 					//std::cout << "r_left_world: " << r_l << "\tr_right_world: " << r_r << std::endl;
 				}
+
+				total_iterations++;
 				
 				end = high_resolution_clock::now();
 
@@ -341,8 +366,8 @@ namespace gazebo
 
 				//std::cout << "f_l: " << f_l << std::endl;
 				//std::cout << "f_r: " << f_r << std::endl;
-				std::cout << "r_l_world: " << r_l << std::endl;
-				std::cout << "r_r_world: " << r_r << std::endl;
+				//std::cout << "r_l_world: " << r_l << std::endl;
+				//std::cout << "r_r_world: " << r_r << std::endl;
 
 				torso->AddForceAtWorldPosition(f_l, r_l);
 				torso->AddForceAtWorldPosition(f_r, r_r);
