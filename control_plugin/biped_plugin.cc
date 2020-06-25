@@ -261,7 +261,7 @@ namespace gazebo
 				if(static_cast<int>(message_split.size()) >= 11) {
 					ignition::math::Vector3d f_l_temp(atof(message_split[0].c_str()), atof(message_split[1].c_str()), atof(message_split[2].c_str()));
 					ignition::math::Vector3d f_r_temp(atof(message_split[3].c_str()), atof(message_split[4].c_str()), atof(message_split[5].c_str()));
-					f_l = f_l_temp;
+
 					f_l = f_l_temp;
 					f_r = f_r_temp;
 
