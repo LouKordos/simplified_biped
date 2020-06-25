@@ -265,8 +265,12 @@ namespace gazebo
 					f_l = f_l_temp;
 					f_r = f_r_temp;
 
-					pos_x = torso->WorldPose().Pos().X();
-					filter_value(pos_x);
+					double phi = torso->WorldPose().Rot().Roll();
+					filter_value(phi);
+					double theta = torso->WorldPose().Rot().Pitch();
+					filter_value(theta);
+					double psi = torso->WorldPose().Rot().Yaw();
+					filter_value(psi);
 
 					double pos_x = torso->WorldPose().Pos().X();
 					filter_value(pos_x);
