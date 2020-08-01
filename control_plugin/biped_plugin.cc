@@ -12,7 +12,7 @@
 #include <boost/algorithm/string.hpp>
 #include <stdlib.h>
 #include <mutex>
-#include <Eigen_unsupported/Eigen/MatrixFunctions>
+#include <eigen3/unsupported/Eigen/MatrixFunctions>
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/QR>
 #include <mutex>
