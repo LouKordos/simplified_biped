@@ -338,7 +338,7 @@ namespace gazebo
 
 					ofstream data_file;
 					data_file.open("../mpc_log.csv", ios::app); // Open csv file in append mode
-					data_file << total_iterations * mpcInterval * 1000.0 << "," << phi << "," << theta << "," << psi << "," 
+					data_file << total_iterations * (mpcInterval / 1e+6) << "," << phi << "," << theta << "," << psi << "," 
 								<< pos_x << "," << pos_y << "," << pos_z << ","
 								<< omega_x << "," << omega_y << "," << omega_z << ","
 								<< vel_x << "," << vel_y << "," << vel_z << "," << -9.81 << ","
