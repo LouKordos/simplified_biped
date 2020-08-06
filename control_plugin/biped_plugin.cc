@@ -346,7 +346,7 @@ namespace gazebo
 								<< f_r[0] << "," << f_r[1] << "," << f_r[2] << ","
 								<< r_l[0] << "," << r_l[1] << "," << r_l[2] << "," 
 								<< r_r[0] << "," << r_r[1] << "," << r_r[2] << ","
-								<< atof(message_split[12].c_str())
+								<< atof(message_split[12].c_str()) << "," << atof(message_split[13].c_str()) << "," << atof(message_split[14].c_str())
 								<< std::endl;
 					data_file.close(); // Close csv file again. This way thread abort should (almost) never leave file open.
 
