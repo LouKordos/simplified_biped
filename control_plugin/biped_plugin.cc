@@ -296,39 +296,10 @@ namespace gazebo
 					double r_x_left = atof(message_split[6].c_str());
 					double r_y_left = atof(message_split[7].c_str());
 					double r_z_left = atof(message_split[8].c_str());
-
-					r_left_vector << r_x_left, r_y_left, r_z_left, 1; // 0 to match transformation matrix dimensions, otherwise obsolete and will not be used
 					
 					double r_x_right = atof(message_split[9].c_str());
 					double r_y_right = atof(message_split[10].c_str());
 					double r_z_right = atof(message_split[11].c_str());
-
-					r_right_vector << r_x_right, r_y_right, r_z_right, 1; // 0 to match transformation matrix dimensions, otherwise obsolete and will not be used
-
-					H_body_world << cos(psi)*cos(theta), sin(phi)*sin(theta)*cos(psi) - sin(psi)*cos(phi), sin(phi)*sin(psi) + sin(theta)*cos(phi)*cos(psi), pos_x,
-									sin(psi)*cos(theta), sin(phi)*sin(psi)*sin(theta) + cos(phi)*cos(psi), -sin(phi)*cos(psi) + sin(psi)*sin(theta)*cos(phi), pos_y,
-									-sin(theta), sin(phi)*cos(theta), cos(phi)*cos(theta), pos_z,
-									0, 0, 0, 1;
-
-					r_left_world_vector = H_body_world * r_left_vector;
-					r_right_world_vector = H_body_world * r_right_vector;
-					
-					double r_x_left_world = r_x_left + sin(theta) * r_z_left;
-					double r_x_right_world = r_x_right + sin(theta) * r_z_right;
-
-					double r_y_left_world = r_y_left - r_z_left * sin(phi);
-					double r_y_right_world = r_y_right - r_z_right * sin(phi);
-
-					double r_z_left_world = 0;
-					double r_z_right_world = 0;
-
-					//std::cout << "r_x_left_world: " << r_x_left_world << ",r_x_right_world: " << r_x_right_world << ",r_y_left_world: " << r_y_left_world << ",r_y_right_world: " << r_y_right_world << std::endl;
-
-					//ignition::math::Vector3d r_l_temp(r_x_left_world + pos_x, r_y_left_world + pos_y, r_z_left_world);
-					//ignition::math::Vector3d r_r_temp(r_x_right_world + pos_x, r_y_right_world + pos_y, r_z_right_world);
-
-					// ignition::math::Vector3d r_l_temp(r_left_world_vector(0), r_left_world_vector(1), r_left_world_vector(2));
-					// ignition::math::Vector3d r_r_temp(r_right_world_vector(0), r_right_world_vector(1), r_right_world_vector(2));
 
 					ignition::math::Vector3d r_l_temp(r_x_left + pos_x, r_y_left + pos_y, r_z_left + pos_z);
 					ignition::math::Vector3d r_r_temp(r_x_right + pos_x, r_y_right + pos_y, r_z_right + pos_z);
