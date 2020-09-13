@@ -81,7 +81,7 @@ namespace gazebo
 
 	const int udp_mpc_port = 4801;
 
-	const bool legs_attached = false;
+	const bool legs_attached = true;
 
 	// Pointer to the update event connection
 	event::ConnectionPtr updateConnection;
@@ -127,17 +127,17 @@ namespace gazebo
 				rightAnkleJoint = model->GetJoint("simplified_biped::right_ankle_foot_base_joint");
 				double friction = 0.05; // Coulomb friction coefficient
 
-				leftHip3Joint->SetParam("friction", 0, friction);
-				leftKneeJoint->SetParam("friction", 0, friction);
-				leftHip2Joint->SetParam("friction", 0, friction);
-				leftHip1Joint->SetParam("friction", 0, friction);
-				leftAnkleJoint->SetParam("friction", 0, friction);
+				// leftHip3Joint->SetParam("friction", 0, friction);
+				// leftKneeJoint->SetParam("friction", 0, friction);
+				// leftHip2Joint->SetParam("friction", 0, friction);
+				// leftHip1Joint->SetParam("friction", 0, friction);
+				// leftAnkleJoint->SetParam("friction", 0, friction);
 
-				rightHip3Joint->SetParam("friction", 0, friction);
-				rightKneeJoint->SetParam("friction", 0, friction);
-				rightHip2Joint->SetParam("friction", 0, friction);
-				rightHip1Joint->SetParam("friction", 0, friction);
-				rightAnkleJoint->SetParam("friction", 0, friction);
+				// rightHip3Joint->SetParam("friction", 0, friction);
+				// rightKneeJoint->SetParam("friction", 0, friction);
+				// rightHip2Joint->SetParam("friction", 0, friction);
+				// rightHip1Joint->SetParam("friction", 0, friction);
+				// rightAnkleJoint->SetParam("friction", 0, friction);
 
 				//leftLegStateThread = std::thread(std::bind(&BipedPlugin::PublishLeftLegState, this));	
 				//rightLegStateThread = std::thread(std::bind(&BipedPlugin::PublishRightLegState, this));
@@ -285,7 +285,7 @@ namespace gazebo
 					filter_value(omega_y);
 					double omega_z = torso->WorldAngularVel().Z();
 					filter_value(omega_z);
-
+					
 					double vel_x = torso->WorldLinearVel().X();
 					filter_value(vel_x);
 					double vel_y = torso->WorldLinearVel().Y();
@@ -320,8 +320,6 @@ namespace gazebo
 								<< atof(message_split[12].c_str()) << "," << atof(message_split[13].c_str()) << "," << atof(message_split[14].c_str())
 								<< std::endl;
 					data_file.close(); // Close csv file again. This way thread abort should (almost) never leave file open.
-
-					//std::cout << "r_left_world: " << r_l << "\tr_right_world: " << r_r << std::endl;
 				}
 
 				total_iterations++;
@@ -343,6 +341,8 @@ namespace gazebo
 			double duration;
 			struct timespec deadline;
 
+			long long total_iterations = 0;
+
 			while(true) {
 				start = high_resolution_clock::now();
 
@@ -350,9 +350,12 @@ namespace gazebo
 				//std::cout << "f_r: " << f_r << std::endl;
 				//std::cout << "r_l_world: " << r_l << std::endl;
 				//std::cout << "r_r_world: " << r_r << std::endl;
-
-				torso->AddForceAtWorldPosition(f_l, r_l);
-				torso->AddForceAtWorldPosition(f_r, r_r);
+				if(!legs_attached /*&& (total_iterations * (1/1000.0)) > 0.5*/) {
+					torso->AddForceAtWorldPosition(f_l, r_l);
+					torso->AddForceAtWorldPosition(f_r, r_r);
+				}
+				
+				total_iterations++;
 
 				end = high_resolution_clock::now();
 				duration = duration_cast<microseconds>(end - start).count();
