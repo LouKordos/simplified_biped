@@ -106,6 +106,17 @@ namespace gazebo
 			return results;
 		}
 
+		public: void print_threadsafe(std::string str, std::string sender) {
+			std::string prepared_string = "\033[1;36m[From '" + sender + "']:\033[0m \033[1;33m'" + str + "'\033[0m\n";
+			std::cout << prepared_string;
+		}
+
+		public: void filter_value(double &val) {
+			if(isnan(val) || isinf(val)) {
+				val = 0;
+			}
+		}
+
 		public: virtual void Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 		{
 			//updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&BipedPlugin::OnUpdate, this));
@@ -149,12 +160,6 @@ namespace gazebo
 			mpc_parse_thread = std::thread(std::bind(&BipedPlugin::UpdateMPCForces, this));
 		}
 
-		public: void filter_value(double &val) {
-			if(isnan(val) || isinf(val)) {
-				val = 0;
-			}
-		}
-
 		public: void UpdateMPCForces() {
 			auto start = high_resolution_clock::now();
 			auto end = high_resolution_clock::now();
@@ -183,7 +188,7 @@ namespace gazebo
 		
 			socklen_t len = sizeof(servaddr);  //len is value/result
 
-			std::cout << "MPC Socket set up." << std::endl;
+			print_threadsafe("MPC Socket set up.", "mpc_update_thread");
 			
 			stringstream first_msg;
 
@@ -248,6 +253,10 @@ namespace gazebo
 					<< omega_z << "|" << vel_x << "|" << vel_y << "|" << vel_z << "|-9.81";
 
 				std::cout << "UDP message:" << s.str() << std::endl;
+
+				stringstream temp;
+				temp << "UDP message: " << s.str();
+				print_threadsafe(temp.str(), "mpc_update_thread");
 
 				sendto(sockfd, (const char *)s.str().c_str(), strlen(s.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 
@@ -408,14 +417,16 @@ namespace gazebo
 		
 			socklen_t len = sizeof(cliaddr);  //len is value/result 
 
-			std::cout << "Disturbance Socket set up." << std::endl;
+			stringstream temp;
+			temp << "Disturbance Socket set up.";
+			print_threadsafe(temp.str(), "disturbance_thread");
 
 			while(true) {
 
 				n = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, ( struct sockaddr *) &cliaddr, &len); 
 				buffer[n] = '\0'; 
 
-				std::cout << "Received message, processing..." << std::endl;
+				print_threadsafe("Received message, processing...", "disturbance_thread");
 
 				string data(buffer);
 
@@ -428,15 +439,17 @@ namespace gazebo
 					std::vector<std::string> force_components = split_string(message_split[1], ',');
 
 					ignition::math::Vector3d force(atof(force_components[0].c_str()), atof(force_components[1].c_str()), atof(force_components[2].c_str()));
-
+					
 					double disturbance_duration = atof(message_split[2].c_str());
 
 					auto disturbance_link = model->GetLink("simplified_biped::" + message_split[0]);
 
-					std::cout << "Finished parsing, entering loop. Selected Link name: " << disturbance_link << ", force: " << force.Length() << ", Duration: " << disturbance_duration << std::endl;
+					stringstream temp;
+					temp << "Finished parsing, entering loop. Selected Link name: " << disturbance_link << ", force: " << force.Length() << ", Duration: " << disturbance_duration;
+					print_threadsafe(temp.str(), "disturbance_thread");
 
 					if(disturbance_link != NULL) {
-
+						
 						int counter = 0;
 
 						for(int i = 0; i < (dt/1000) * disturbance_duration * 1000 /*multiply by 1000 to get back to ms*/; ++i) {
@@ -445,7 +458,11 @@ namespace gazebo
 							disturbance_link->AddLinkForce(force);
 							end = high_resolution_clock::now();
 							duration = duration_cast<microseconds> (end - start).count();
-							std::cout << "Applied disturbance for one iteration. Link name: " << disturbance_link << ", force: " << force.Length() << ", Duration: " << disturbance_duration << std::endl;
+
+							stringstream temp;
+							temp << "Applied disturbance for one iteration. Link name: " << disturbance_link << ", force: " << force.Length() << ", Duration: " << disturbance_duration;
+							print_threadsafe(temp.str(), "disturbance_thread");
+
 							counter++;
 							long long remainder = (dt - duration) * 1e+03;
 							deadline.tv_nsec = remainder;
@@ -453,10 +470,12 @@ namespace gazebo
 							clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
 						}
 
-						std::cout << "Applying disturbance, counter: " << counter << std::endl;
+						stringstream temp;
+						temp << "Applying disturbance, counter: " << counter;
+						print_threadsafe(temp.str(), "disturbance_thread");
 					}
 					else {
-							std::cerr << "Selected link lead to null pointer..." << std::endl;
+						print_threadsafe("Selected link lead to null pointer...", "disturbance_thread");
 					}
 				}
 			}
@@ -535,15 +554,20 @@ namespace gazebo
 						model->GetJointController()->SetForce(leftKneeJoint->GetScopedName(), tau_4);
 						model->GetJointController()->SetForce(leftAnkleJoint->GetScopedName(), tau_5);
 
-						std::cout << "Torque vector: " << tau_1 << "," << tau_2 << "," << tau_3 << "," << tau_4 << "," << tau_5 << std::endl;
+						stringstream temp;
+						temp << "Torque vector: " << tau_1 << "," << tau_2 << "," << tau_3 << "," << tau_4 << "," << tau_5;
+						print_threadsafe(temp.str(), "left_leg_torque_thread");
 					}
 
 					iteration_counter++;
 
 					end = high_resolution_clock::now();
 					duration = duration_cast<microseconds>(end - start).count();
+					
+					stringstream temp;
+					temp << "Left leg torque loop duration in µS:" << duration;
+					print_threadsafe(temp.str(), "left_leg_torque_thread");
 
-					std::cout << "Left leg torque loop duration in µS:" << duration << std::endl;
 					long long remainder = (torqueApplyingInterval - duration) * 1e+03;
 					deadline.tv_nsec = remainder;
 					deadline.tv_sec = 0;
@@ -601,12 +625,11 @@ namespace gazebo
 						<< "|" << rightHip3Joint->GetVelocity(0) << "|" << rightHip2Joint->GetVelocity(0) << "|" << rightHip1Joint->GetVelocity(0) << "|" 
 						<< rightKneeJoint->GetVelocity(0) << "|" << rightAnkleJoint->GetVelocity(0);
 
-					
 					sendto(sockfd, (const char *)s.str().c_str(), strlen(s.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 					n = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, (struct sockaddr *) &servaddr, &len); 
 					buffer[n] = '\0';
 
-					std::cout << "Received left leg torque setpoint." << std::endl;
+					print_threadsafe("Received left leg torque setpoint.", "right_leg_torque_thread");
 
 					string data(buffer);
 
@@ -626,7 +649,9 @@ namespace gazebo
 						model->GetJointController()->SetForce(rightKneeJoint->GetScopedName(), tau_4);
 						model->GetJointController()->SetForce(rightAnkleJoint->GetScopedName(), tau_5);
 
-						std::cout << "Torque vector: " << tau_1 << "," << tau_2 << "," << tau_3 << "," << tau_4 << "," << tau_5 << std::endl;
+						stringstream temp;
+						temp << "Torque vector: " << tau_1 << "," << tau_2 << "," << tau_3 << "," << tau_4 << "," << tau_5;
+						print_threadsafe(temp.str(), "right_leg_torque_thread");
 					}
 
 					iteration_counter++;
@@ -634,7 +659,10 @@ namespace gazebo
 					end = high_resolution_clock::now();
 					duration = duration_cast<microseconds>(end - start).count();
 
-					std::cout << "Right leg torque loop duration in µS:" << duration << std::endl;
+					stringstream temp;
+					temp << "Right leg torque loop duration in µS:" << duration;
+					print_threadsafe(temp.str(), "right_leg_torque_thread");
+
 					long long remainder = (torqueApplyingInterval - duration) * 1e+03;
 					deadline.tv_nsec = remainder;
 					deadline.tv_sec = 0;

@@ -9,3 +9,4 @@ compile_commands.json
 CTestTestfile.cmake
 _deps
 control_plugin/build
+control_plugin/mpc_log.csv
