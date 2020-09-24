@@ -31,4 +31,4 @@ ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES compute,video,utility
 
 CMD bash -c 'gazebo --verbose ../../simplified_biped.world'
-# Current command: sudo docker run -it --gpus all --net=host --env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw" loukordos/biped-sim
+# Current command: sudo docker run -it --gpus all --net=host -e "TERM=xterm-256color" --env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw" loukordos/biped-sim
