@@ -1,6 +1,6 @@
 FROM archlinux
 
-RUN pacman -Syu --needed --noconfirm base-devel git go nvidia
+RUN pacman -Syu --needed --noconfirm base-devel git go nvidia nvidia-utils
 RUN git clone https://aur.archlinux.org/yay.git
 RUN sudo chmod 777 -R ./yay
 
