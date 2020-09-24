@@ -12,7 +12,7 @@ RUN chmod -R 777 /home/build && chown -R build:build /home/build
 
 USER build
 RUN cd yay && makepkg -si --noconfirm
-RUN yay -Syu --noconfirm bullet-git gazebo eigen-git
+RUN yay -Syu --noconfirm gazebo-git eigen-git
 RUN rm -rf /home/build/.cache/yay/*
 USER root
 
