@@ -1,26 +1,23 @@
 <?xml version="1.0" ?>
 <sdf version="1.5">
-
+ 
 <model name="simplified_biped">
-
+ 
     <link name="hanging_thing">
         <self_collide> 1 </self_collide>
-
+ 
         <pose> 0 0 1.7 0 0 0 </pose>
-
+ 
         <inertial>
             <mass>100</mass>
-
+ 
             <inertia>
                 <ixx>0.3</ixx>
                 <iyy>166</iyy>
                 <izz>175</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
             </inertia>
         </inertial>
-
+ 
         <collision name="torso_connection_collision">
             <geometry>
                 <box>
@@ -28,7 +25,7 @@
                 </box>
             </geometry>
         </collision>
-
+ 
         <visual name="torso_connection_visual">
             <geometry>
                 <box>
@@ -37,25 +34,22 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <link name="rod_1">
         <self_collide> 1 </self_collide>
-
+ 
         <pose> 1 0 0.5 1.57 0 0 </pose>
-
+ 
         <inertial>
             <mass>100</mass>
-
+ 
             <inertia>
                 <ixx>0.3</ixx>
                 <iyy>166</iyy>
                 <izz>175</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
             </inertia>
         </inertial>
-
+ 
         <collision name="rod_1_collision">
             <geometry>
                 <box>
@@ -63,7 +57,7 @@
                 </box>
             </geometry>
         </collision>
-
+ 
         <visual name="rod_1_visual">
             <geometry>
                 <box>
@@ -72,25 +66,22 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <link name="rod_2">
         <self_collide> 1 </self_collide>
-
+ 
         <pose> -1 0 0.5 1.57 0 0 </pose>
-
+ 
         <inertial>
             <mass>100</mass>
-
+ 
             <inertia>
                 <ixx>0.3</ixx>
                 <iyy>166</iyy>
                 <izz>175</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
             </inertia>
         </inertial>
-
+ 
         <collision name="rod_2_collision">
             <geometry>
                 <box>
@@ -98,7 +89,7 @@
                 </box>
             </geometry>
         </collision>
-
+ 
         <visual name="rod_2_visual">
             <geometry>
                 <box>
@@ -107,25 +98,22 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <link name="rod_3">
         <self_collide> 1 </self_collide>
-
+ 
         <pose> 0 1 0.5 1.57 0 0 </pose>
-
+ 
         <inertial>
             <mass>100</mass>
-
+ 
             <inertia>
                 <ixx>0.3</ixx>
                 <iyy>166</iyy>
                 <izz>175</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
             </inertia>
         </inertial>
-
+ 
         <collision name="rod_3_collision">
             <geometry>
                 <box>
@@ -133,7 +121,7 @@
                 </box>
             </geometry>
         </collision>
-
+ 
         <visual name="rod_3_visual">
             <geometry>
                 <box>
@@ -142,25 +130,22 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <link name="rod_4">
         <self_collide> 1 </self_collide>
-
+ 
         <pose> 0 -1 0.5 1.57 0 0 </pose>
-
+ 
         <inertial>
             <mass>100</mass>
-
+ 
             <inertia>
                 <ixx>0.3</ixx>
                 <iyy>166</iyy>
                 <izz>175</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
             </inertia>
         </inertial>
-
+ 
         <collision name="rod_4_collision">
             <geometry>
                 <box>
@@ -168,7 +153,7 @@
                 </box>
             </geometry>
         </collision>
-
+ 
         <visual name="rod_4_visual">
             <geometry>
                 <box>
@@ -177,47 +162,47 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <joint name="temp_joint_1" type="fixed">
         <parent>hanging_thing</parent>
         <child>torso_connection</child>
     </joint>
-
+ 
     <joint name="temp_joint_2" type="fixed">
         <parent>rod_1</parent>
         <child>hanging_thing</child>
     </joint>
-
+ 
     <joint name="temp_joint_3" type="fixed">
         <parent>rod_2</parent>
         <child>hanging_thing</child>
     </joint>
-
+ 
     <joint name="temp_joint_4" type="fixed">
         <parent>rod_3</parent>
         <child>hanging_thing</child>
     </joint>
-
+ 
     <joint name="temp_joint_5" type="fixed">
         <parent>rod_4</parent>
         <child>hanging_thing</child>
     </joint>
-
+ 
     <link name="torso_connection">
         <self_collide> 1 </self_collide>
-
+ 
         <pose> 0 0 1.48 0 0 0 </pose>
-
+ 
         <inertial>
             <mass>28.4</mass>
-
+ 
             <inertia>
                 <ixx>0.15121</ixx>
                 <iyy>0.6296</iyy>
                 <izz>0.6881</izz>
             </inertia>
         </inertial>
-
+ 
         <collision name="torso_connection_collision">
             <geometry>
                 <mesh>
@@ -225,7 +210,7 @@
 				</mesh>
             </geometry>
         </collision>
-
+ 
         <visual name="torso_connection_visual">
             <geometry>
                 <mesh>
@@ -234,14 +219,14 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <!--Left leg-->
     <link name="left_lower_leg">
-
+ 
         <self_collide>0</self_collide>
-
+ 
         <pose> -0.15 0 0.51 0 0 0 </pose>
-
+ 
             <inertial>
                 <mass>0.1</mass>
                 <inertia>
@@ -250,7 +235,7 @@
 					<izz>9.378e-05</izz>
                 </inertia>
             </inertial>
-            
+ 
             <collision name="left_base_collision">
                 <geometry>
                     <mesh>
@@ -258,7 +243,7 @@
 					</mesh>
                 </geometry>
             </collision>
-
+ 
             <visual name="left_base_visual">
                 <geometry>
                     <mesh>
@@ -267,12 +252,12 @@
                 </geometry>
             </visual>
     </link>
-
+ 
     <link name="left_knee">
-
+ 
         <self_collide>1</self_collide>
         <pose> -0.15 0 0.715 0 1.570796 0</pose>
-
+ 
         <inertial>
             <mass>0.01</mass>
             <inertia>
@@ -281,7 +266,7 @@
                 <izz>8e-06</izz>
             </inertia>
         </inertial>
-
+ 
         <collision name="left_knee_collision">
             <geometry>
                 <cylinder>
@@ -290,7 +275,7 @@
                 </cylinder>
             </geometry>
         </collision>
-
+ 
         <visual name="left_knee_visual">
             <pose> 0 0 0 0 0 0</pose>
             <geometry>
@@ -301,13 +286,13 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <link name="left_upper_leg">
-
+ 
         <self_collide>1</self_collide>
-
+ 
         <pose> -0.15 0 0.92 0 0 0 </pose> 
-
+ 
         <inertial>
             <mass>0.1</mass>
             <inertia>
@@ -316,6 +301,7 @@
                 <izz>9.378e-05</izz>
             </inertia>
         </inertial>
+
         <collision name="left_upper_leg_collision">
             <geometry>
                 <mesh>
@@ -323,7 +309,7 @@
 				</mesh>
             </geometry>
         </collision>
-
+ 
         <visual name="left_upper_leg_visual">
             <geometry>
                 <mesh>
@@ -332,12 +318,12 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <link name="left_foot_base">
-
+ 
         <self_collide>0</self_collide>
         <pose> -0.15 0 0.31 0 0 0</pose>
-
+ 
         <inertial>
             <mass>0.05</mass>
             <inertia>
@@ -346,7 +332,7 @@
                 <izz>1.6e-04</izz>
             </inertia>
         </inertial>
-
+ 
         <collision name="left_foot_base_collision">
             <geometry>
                 <box>
@@ -354,7 +340,7 @@
                 </box>
             </geometry>
         </collision>
-
+ 
         <visual name="left_foot_base_visual">
             <geometry>
                 <box>
@@ -363,24 +349,21 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <link name="left_ankle">
-
+ 
         <self_collide>1</self_collide>
         <pose> -0.15 0 0.34 0 1.570796 0 </pose>
-
+ 
         <inertial>
             <mass>0.01</mass>
             <inertia>
                 <ixx>0.000024</ixx>
                 <iyy>0.000024</iyy>
                 <izz>0.000004</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
             </inertia>
         </inertial>
-
+ 
         <collision name="left_ankle_collision">
             <geometry>
                 <cylinder>
@@ -389,7 +372,7 @@
                 </cylinder>
             </geometry>
         </collision>
-
+ 
         <visual name="left_ankle_visual">
             <geometry>
                 <cylinder>
@@ -399,24 +382,21 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <link name="left_hip_axis_1">
-
+ 
         <self_collide>1</self_collide>
         <pose> -0.15 0 1.125 0 1.570796 0 </pose>
-
+ 
         <inertial>
             <mass>0.1</mass>
             <inertia>
                 <ixx>1.249e-04</ixx>
                 <iyy>9.250e-05</iyy>
                 <izz>9.250e-05</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
             </inertia>
         </inertial>
-
+ 
         <collision name="left_hip_axis_1_collision">
             <geometry>
                 <cylinder>
@@ -425,7 +405,7 @@
                 </cylinder>
             </geometry>
         </collision>
-
+ 
         <visual name="left_hip_axis_1_visual">
             <pose> 0 0 0 0 0 0</pose>
             <geometry>
@@ -436,24 +416,24 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <link name="left_hip_axis_2">
-
+ 
         <self_collide>1</self_collide>
         <pose> -0.15 0 1.27 0 1.570796 1.570796 </pose>
-        
+ 
         <inertial>
             <mass>0.1</mass>
             <inertia>
                 <ixx>1.249e-04</ixx>
-                <iyy>9.250e-05</iyy>
+                <iyy>9.250e-04</iyy>
                 <izz>9.250e-05</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
                 <iyz>0</iyz>
             </inertia>
         </inertial>
-
+ 
         <collision name="left_hip_axis_2_collision">
             <geometry>
                 <cylinder>
@@ -462,7 +442,7 @@
                 </cylinder>
             </geometry>
         </collision>
-
+ 
         <visual name="left_hip_axis_2_visual">
             <pose> 0 0 0 0 0 0</pose>
             <geometry>
@@ -473,12 +453,12 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <link name="left_hip_axis_3">
-
+ 
         <self_collide>1</self_collide>
         <pose> -0.15 0 1.415 0 0 0 </pose> <!--145mm from center of hip axis 2-->
-
+ 
         <inertial>
             <mass>0.1</mass>
             <inertia>
@@ -490,7 +470,7 @@
                 <iyz>0</iyz>
             </inertia>
         </inertial>
-
+ 
         <collision name="left_hip_axis_3_collision">
             <geometry>
                 <mesh>
@@ -498,7 +478,7 @@
 				</mesh>
             </geometry>
         </collision>
-
+ 
         <visual name="left_hip_axis_3_visual">
             <geometry>
                 <mesh>
@@ -507,15 +487,15 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <joint type="revolute" name="left_knee_lower_leg_joint">
-
+ 
         <pose> 0 0 0.205 0 0 0 </pose>
-
+ 
         <parent>left_knee</parent>
-
+ 
         <child>left_lower_leg</child>
-        
+ 
         <axis>
             <xyz>1 0 0 </xyz>
             <limit>
@@ -524,15 +504,15 @@
             </limit>
         </axis>
     </joint>
-
+ 
     <joint type="revolute" name="left_hip_axis_1_upper_leg_joint">
-
+ 
         <pose> 0 0 0.205 0 0 0 </pose>
-
+ 
         <parent>left_hip_axis_1</parent>
-
+ 
         <child>left_upper_leg</child>
-
+ 
         <axis>
             <xyz>1 0 0 </xyz>
             <limit>
@@ -541,13 +521,13 @@
             </limit>
         </axis>
     </joint>
-
+ 
     <joint type="revolute" name="left_hip_axis_2_hip_axis_1_joint">
         <pose> -0.145 0 0 0 -1.570796 0 </pose>
-
+ 
         <parent>left_hip_axis_2</parent>
         <child>left_hip_axis_1</child>
-
+ 
         <axis>
             <xyz> 0 1 0 </xyz>
             <limit>
@@ -556,13 +536,13 @@
             </limit>
         </axis>
     </joint>
-
+ 
     <joint type="revolute" name="left_hip_axis_3_hip_axis_2_joint">
         <pose> -0.145 0 0 0 -1.5707 0 </pose>
-
+ 
         <parent>left_hip_axis_3</parent>
         <child>left_hip_axis_2</child>
-
+ 
         <axis>
             <xyz> 0 0 1 </xyz>
             <limit>
@@ -571,11 +551,11 @@
             </limit>
         </axis>
     </joint>
-
+ 
     <!--Change joint type back to revolute if actively driven ankle joint is needed-->
     <joint type="revolute" name="left_ankle_foot_base_joint">
         <pose> 0 0 0.03 0 0 0 </pose>
-
+ 
         <parent>left_ankle</parent>
         <child>left_foot_base</child>
         <axis>
@@ -586,41 +566,41 @@
             </limit>
         </axis>
     </joint>
-
+ 
     <joint type="fixed" name="left_torso_connection_joint">
         <pose> 0 0 0 0 0 0 </pose>
         <parent>torso_connection</parent>
         <child>left_hip_axis_3</child>
     </joint>
-
+ 
     <joint type="fixed" name="left_upper_leg_knee_joint">
         <pose> 0 0 0 0 0 0 </pose>
         <parent>left_upper_leg</parent>
         <child>left_knee</child>
     </joint>
-
+ 
     <joint type="fixed" name="left_lower_leg_ankle_joint">
         <pose>0 0 0 0 0 0</pose>
         <parent>left_lower_leg</parent>
         <child>left_ankle</child>
     </joint>
-
+ 
     <!--right leg-->
     <link name="right_lower_leg">
-
+ 
         <self_collide>0</self_collide>
-
+ 
         <pose> 0.15 0 0.51 0 0 0 </pose>
-
+ 
             <inertial>
                 <mass>0.1</mass>
                 <inertia>
                     <ixx>7.982e-04</ixx>
                     <iyy>7.982e-04</iyy>
-					<izz>9.378e-05</izz>
+                    <izz>9.378e-05</izz>
                 </inertia>
             </inertial>
-            
+ 
             <collision name="right_base_collision">
                 <geometry>
                     <mesh>
@@ -628,7 +608,7 @@
 					</mesh>
                 </geometry>
             </collision>
-
+ 
             <visual name="right_base_visual">
                 <geometry>
                     <mesh>
@@ -637,24 +617,21 @@
                 </geometry>
             </visual>
     </link>
-
+ 
     <link name="right_knee">
-
+ 
         <self_collide>1</self_collide>
         <pose> 0.15 0 0.715 0 1.570796 0</pose>
-
+ 
         <inertial>
             <mass>0.01</mass>
             <inertia>
                 <ixx>1e-05</ixx>
                 <iyy>8e-06</iyy>
                 <izz>8e-06</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
             </inertia>
         </inertial>
-
+ 
         <collision name="right_knee_collision">
             <geometry>
                 <cylinder>
@@ -663,7 +640,7 @@
                 </cylinder>
             </geometry>
         </collision>
-
+ 
         <visual name="right_knee_visual">
             <pose> 0 0 0 0 0 0</pose>
             <geometry>
@@ -674,13 +651,13 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <link name="right_upper_leg">
-
+ 
         <self_collide>1</self_collide>
-
+ 
         <pose> 0.15 0 0.92 0 0 0 </pose> 
-
+ 
         <inertial>
             <mass>0.1</mass>
             <inertia>
@@ -689,7 +666,7 @@
                 <izz>9.378e-05</izz>
             </inertia>
         </inertial>
-
+ 
         <collision name="right_upper_leg_collision">
             <geometry>
                 <mesh>
@@ -697,7 +674,7 @@
 				</mesh>
             </geometry>
         </collision>
-
+ 
         <visual name="right_upper_leg_visual">
             <geometry>
                 <mesh>
@@ -706,13 +683,13 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <link name="right_foot_base">
-
+ 
         <self_collide>0</self_collide>
         <pose> 0.15 0 0.31 0 0 0</pose>
-
-        <inertial>
+ 
+       <inertial>
             <mass>0.05</mass>
             <inertia>
                 <ixx>1.42e-04</ixx>
@@ -720,7 +697,7 @@
                 <izz>1.6e-04</izz>
             </inertia>
         </inertial>
-
+ 
         <collision name="right_foot_base_collision">
             <geometry>
                 <box>
@@ -728,7 +705,7 @@
                 </box>
             </geometry>
         </collision>
-
+ 
         <visual name="right_foot_base_visual">
             <geometry>
                 <box>
@@ -737,12 +714,12 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <link name="right_ankle">
-
+ 
         <self_collide>1</self_collide>
         <pose> 0.15 0 0.34 0 1.570796 0 </pose>
-
+ 
         <inertial>
             <mass>0.01</mass>
             <inertia>
@@ -751,7 +728,7 @@
                 <izz>0.000004</izz>
             </inertia>
         </inertial>
-
+ 
         <collision name="right_ankle_collision">
             <geometry>
                 <cylinder>
@@ -760,7 +737,7 @@
                 </cylinder>
             </geometry>
         </collision>
-
+ 
         <visual name="right_ankle_visual">
             <geometry>
                 <cylinder>
@@ -770,12 +747,12 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <link name="right_hip_axis_1">
-
+ 
         <self_collide>1</self_collide>
         <pose> 0.15 0 1.125 0 1.570796 0 </pose>
-
+ 
         <inertial>
             <mass>0.1</mass>
             <inertia>
@@ -784,7 +761,7 @@
                 <izz>9.250e-05</izz>
             </inertia>
         </inertial>
-
+ 
         <collision name="right_hip_axis_1_collision">
             <geometry>
                 <cylinder>
@@ -793,7 +770,7 @@
                 </cylinder>
             </geometry>
         </collision>
-
+ 
         <visual name="right_hip_axis_1_visual">
             <pose> 0 0 0 0 0 0</pose>
             <geometry>
@@ -804,12 +781,12 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <link name="right_hip_axis_2">
-
+ 
         <self_collide>1</self_collide>
         <pose> 0.15 0 1.27 0 1.570796 1.570796 </pose>
-        
+ 
         <inertial>
             <mass>0.1</mass>
             <inertia>
@@ -818,7 +795,7 @@
                 <izz>9.250e-05</izz>
             </inertia>
         </inertial>
-
+ 
         <collision name="right_hip_axis_2_collision">
             <geometry>
                 <cylinder>
@@ -827,7 +804,7 @@
                 </cylinder>
             </geometry>
         </collision>
-
+ 
         <visual name="right_hip_axis_2_visual">
             <pose> 0 0 0 0 0 0</pose>
             <geometry>
@@ -838,12 +815,12 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <link name="right_hip_axis_3">
-
+ 
         <self_collide>1</self_collide>
         <pose> 0.15 0 1.415 0 0 0 </pose> <!--145mm from center of hip axis 2-->
-
+ 
         <inertial>
             <mass>0.1</mass>
             <inertia>
@@ -852,7 +829,7 @@
                 <izz>9.250e-05</izz>
             </inertia>
         </inertial>
-
+ 
         <collision name="right_hip_axis_3_collision">
             <geometry>
                 <mesh>
@@ -860,7 +837,7 @@
 				</mesh>
             </geometry>
         </collision>
-
+ 
         <visual name="right_hip_axis_3_visual">
             <geometry>
                 <mesh>
@@ -869,15 +846,15 @@
             </geometry>
         </visual>
     </link>
-
+ 
     <joint type="revolute" name="right_knee_lower_leg_joint">
-
+ 
         <pose> 0 0 0.205 0 0 0 </pose>
-
+ 
         <parent>right_knee</parent>
-
+ 
         <child>right_lower_leg</child>
-        
+ 
         <axis>
             <xyz>1 0 0 </xyz>
             <limit>
@@ -886,15 +863,15 @@
             </limit>
         </axis>
     </joint>
-
+ 
     <joint type="revolute" name="right_hip_axis_1_upper_leg_joint">
-
+ 
         <pose> 0 0 0.205 0 0 0 </pose>
-
+ 
         <parent>right_hip_axis_1</parent>
-
+ 
         <child>right_upper_leg</child>
-
+ 
         <axis>
             <xyz>1 0 0 </xyz>
             <limit>
@@ -903,13 +880,13 @@
             </limit>
         </axis>
     </joint>
-
+ 
     <joint type="revolute" name="right_hip_axis_2_hip_axis_1_joint">
         <pose> -0.145 0 0 0 -1.570796 0 </pose>
-
+ 
         <parent>right_hip_axis_2</parent>
         <child>right_hip_axis_1</child>
-
+ 
         <axis>
             <xyz> 0 1 0 </xyz>
             <limit>
@@ -918,13 +895,13 @@
             </limit>
         </axis>
     </joint>
-
+ 
     <joint type="revolute" name="right_hip_axis_3_hip_axis_2_joint">
         <pose> -0.145 0 0 0 -1.5707 0 </pose>
-
+ 
         <parent>right_hip_axis_3</parent>
         <child>right_hip_axis_2</child>
-
+ 
         <axis>
             <xyz> 0 0 1 </xyz>
             <limit>
@@ -933,11 +910,11 @@
             </limit>
         </axis>
     </joint>
-
+ 
     <!--Change joint type back to revolute if actively driven ankle joint is needed-->
     <joint type="revolute" name="right_ankle_foot_base_joint">
         <pose> 0 0 0.03 0 0 0 </pose>
-
+ 
         <parent>right_ankle</parent>
         <child>right_foot_base</child>
         <axis>
@@ -948,19 +925,19 @@
             </limit>
         </axis>
     </joint>
-
+ 
     <joint type="fixed" name="right_torso_connection_joint">
         <pose> 0 0 0 0 0 0 </pose>
         <parent>torso_connection</parent>
         <child>right_hip_axis_3</child>
     </joint>
-
+ 
     <joint type="fixed" name="right_upper_leg_knee_joint">
         <pose> 0 0 0 0 0 0 </pose>
         <parent>right_upper_leg</parent>
         <child>right_knee</child>
     </joint>
-
+ 
     <joint type="fixed" name="right_lower_leg_ankle_joint">
         <pose>0 0 0 0 0 0</pose>
         <parent>right_lower_leg</parent>
