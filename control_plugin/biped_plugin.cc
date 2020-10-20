@@ -136,6 +136,9 @@ namespace gazebo
 				rightHip1Joint = model->GetJoint("simplified_biped::right_hip_axis_1_upper_leg_joint");
 				rightKneeJoint = model->GetJoint("simplified_biped::right_knee_lower_leg_joint");
 				rightAnkleJoint = model->GetJoint("simplified_biped::right_ankle_foot_base_joint");
+
+				// model->SetJointPosition("simplified_biped::left_hip_axis_3_hip_axis_2_joint", 1);
+
 				double friction = 0.05; // Coulomb friction coefficient
 
 				// leftHip3Joint->SetParam("friction", 0, friction);
@@ -359,7 +362,7 @@ namespace gazebo
 				//std::cout << "f_r: " << f_r << std::endl;
 				//std::cout << "r_l_world: " << r_l << std::endl;
 				//std::cout << "r_r_world: " << r_r << std::endl;
-				if(!legs_attached /*&& (total_iterations * (1/1000.0)) > 0.5*/) {
+				if(legs_attached /*&& (total_iterations * (1/1000.0)) > 0.5*/) {
 					torso->AddForceAtWorldPosition(f_l, r_l);
 					torso->AddForceAtWorldPosition(f_r, r_r);
 				}
