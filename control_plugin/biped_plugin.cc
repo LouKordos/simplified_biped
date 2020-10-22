@@ -3,30 +3,25 @@
 
 #include <gazebo/gazebo.hh>
 #include <gazebo/physics/physics.hh>
+#include <gazebo/gazebo_client.hh>
 
 #include <string>
 #include <random>
 #include <chrono>
-#include <zmq.hpp>
 #include <ctime>
 #include <boost/algorithm/string.hpp>
 #include <stdlib.h>
 #include <mutex>
+#include <unistd.h>
+
 #include <eigen3/unsupported/Eigen/MatrixFunctions>
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/QR>
-#include <mutex>
 
 using Eigen::MatrixXd;
 
-//#include "torque_setpoint.hpp"
-//#include "leg_state.hpp"s
-
-#include <unistd.h>
-
 using namespace std;
 using namespace std::chrono;
-
 
 namespace gazebo
 {
@@ -40,6 +35,9 @@ namespace gazebo
 	std::thread disturbance_thread;
 	std::thread mpc_force_thread;
 	std::thread mpc_parse_thread;
+
+	std::thread sim_state_thread;
+	std::mutex sim_state_mutex;
 
 	gazebo::physics::JointPtr leftHip3Joint;
 	gazebo::physics::JointPtr leftHip2Joint;
@@ -61,19 +59,13 @@ namespace gazebo
 	ignition::math::Vector3d r_l(0, 0, 0); // Position where force is excerted expressed in CoM frame
 	ignition::math::Vector3d r_r(0, 0, 0); // Position where force is excerted expressed in CoM frame
 
-
 	static const double torqueApplyingInterval = 1000; // microseconds
 	static const double statePublishingInterval = 1000; // microseconds
 	static const double mpcInterval = (1/30.0) * 1000.0 * 1000.0; // microseconds, make sure this is the same as in Controller code!
 
-	const char* left_leg_state_channel = "left_leg_state";
-	const char* right_leg_state_channel = "right_leg_state";
-
-	const char* left_leg_torque_setpoint_channel = ".left_leg_torque_setpoint";
-	const char* right_leg_torque_setpoint_channel = ".right_leg_torque_setpoint";
-
 	const int left_leg_port = 4200;
 	const int right_leg_port = 4201;
+	const int sim_state_port = 4202;
 
 	const int udp_buffer_size = 4096;
 
@@ -116,10 +108,9 @@ namespace gazebo
 				val = 0;
 			}
 		}
-
 		public: virtual void Load(physics::ModelPtr _model, sdf::ElementPtr _sdf)
 		{
-			//updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&BipedPlugin::OnUpdate, this));
+			// updateConnection = event::Events::ConnectWorldUpdateBegin(std::bind(&BipedPlugin::OnUpdate, this));
 
 			model = _model;
 			torso = model->GetChildLink("simplified_biped::torso_connection");
@@ -136,6 +127,42 @@ namespace gazebo
 				rightHip1Joint = model->GetJoint("simplified_biped::right_hip_axis_1_upper_leg_joint");
 				rightKneeJoint = model->GetJoint("simplified_biped::right_knee_lower_leg_joint");
 				rightAnkleJoint = model->GetJoint("simplified_biped::right_ankle_foot_base_joint");
+
+				leftHip3Joint->SetPosition(0, 0);
+				leftHip2Joint->SetPosition(0, 0);
+				leftHip1Joint->SetPosition(0, -0.4);
+				leftKneeJoint->SetPosition(0, 0.85);
+				leftAnkleJoint->SetPosition(0, -0.45);
+
+				rightHip3Joint->SetPosition(0, 0);
+				rightHip2Joint->SetPosition(0, 0);
+				rightHip1Joint->SetPosition(0, -0.4);
+				rightKneeJoint->SetPosition(0, 0.85);
+				rightAnkleJoint->SetPosition(0, -0.45);
+
+				model->GetJointController()->SetPositionPID(leftHip3Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+				model->GetJointController()->SetPositionPID(leftHip2Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+				model->GetJointController()->SetPositionPID(leftHip1Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+				model->GetJointController()->SetPositionPID(leftKneeJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+				model->GetJointController()->SetPositionPID(leftAnkleJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+
+				model->GetJointController()->SetVelocityPID(leftHip3Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+				model->GetJointController()->SetVelocityPID(leftHip2Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+				model->GetJointController()->SetVelocityPID(leftHip1Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+				model->GetJointController()->SetVelocityPID(leftKneeJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+				model->GetJointController()->SetVelocityPID(leftAnkleJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+
+				model->GetJointController()->SetPositionPID(rightHip3Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+				model->GetJointController()->SetPositionPID(rightHip2Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+				model->GetJointController()->SetPositionPID(rightHip1Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+				model->GetJointController()->SetPositionPID(rightKneeJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+				model->GetJointController()->SetPositionPID(rightAnkleJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+
+				model->GetJointController()->SetVelocityPID(rightHip3Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+				model->GetJointController()->SetVelocityPID(rightHip2Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+				model->GetJointController()->SetVelocityPID(rightHip1Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+				model->GetJointController()->SetVelocityPID(rightKneeJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+				model->GetJointController()->SetVelocityPID(rightAnkleJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 
 				// model->SetJointPosition("simplified_biped::left_hip_axis_3_hip_axis_2_joint", 1);
 
@@ -255,11 +282,9 @@ namespace gazebo
 					<< pos_y << "|" << pos_z << "|" << omega_x << "|" << omega_y << "|" 
 					<< omega_z << "|" << vel_x << "|" << vel_y << "|" << vel_z << "|-9.81";
 
-				std::cout << "UDP message:" << s.str() << std::endl;
-
-				stringstream temp;
-				temp << "UDP message: " << s.str();
-				print_threadsafe(temp.str(), "mpc_update_thread");
+				// stringstream temp;
+				// temp << "UDP message: " << s.str();
+				// print_threadsafe(temp.str(), "mpc_update_thread");
 
 				sendto(sockfd, (const char *)s.str().c_str(), strlen(s.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 
@@ -362,7 +387,7 @@ namespace gazebo
 				//std::cout << "f_r: " << f_r << std::endl;
 				//std::cout << "r_l_world: " << r_l << std::endl;
 				//std::cout << "r_r_world: " << r_r << std::endl;
-				if(legs_attached /*&& (total_iterations * (1/1000.0)) > 0.5*/) {
+				if(true /*&& (total_iterations * (1/1000.0)) > 0.5*/) {
 					torso->AddForceAtWorldPosition(f_l, r_l);
 					torso->AddForceAtWorldPosition(f_r, r_r);
 				}
@@ -377,10 +402,6 @@ namespace gazebo
 				deadline.tv_sec = 0;
 				clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
 			}
-		}
-
-		public: void OnUpdate() {
-			
 		}
 
 		public: void ApplyDisturbance() {
@@ -567,9 +588,9 @@ namespace gazebo
 					end = high_resolution_clock::now();
 					duration = duration_cast<microseconds>(end - start).count();
 					
-					stringstream temp;
-					temp << "Left leg torque loop duration in µS:" << duration;
-					print_threadsafe(temp.str(), "left_leg_torque_thread");
+					// stringstream temp;
+					// temp << "Left leg torque loop duration in µS:" << duration;
+					// print_threadsafe(temp.str(), "left_leg_torque_thread");
 
 					long long remainder = (torqueApplyingInterval - duration) * 1e+03;
 					deadline.tv_nsec = remainder;
@@ -632,7 +653,7 @@ namespace gazebo
 					n = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, (struct sockaddr *) &servaddr, &len); 
 					buffer[n] = '\0';
 
-					print_threadsafe("Received left leg torque setpoint.", "right_leg_torque_thread");
+					// print_threadsafe("Received left leg torque setpoint.", "right_leg_torque_thread");
 
 					string data(buffer);
 
@@ -662,9 +683,9 @@ namespace gazebo
 					end = high_resolution_clock::now();
 					duration = duration_cast<microseconds>(end - start).count();
 
-					stringstream temp;
-					temp << "Right leg torque loop duration in µS:" << duration;
-					print_threadsafe(temp.str(), "right_leg_torque_thread");
+					// stringstream temp;
+					// temp << "Right leg torque loop duration in µS:" << duration;
+					// print_threadsafe(temp.str(), "right_leg_torque_thread");
 
 					long long remainder = (torqueApplyingInterval - duration) * 1e+03;
 					deadline.tv_nsec = remainder;

@@ -16,5 +16,7 @@
 			</include>
 			<plugin name="biped_plugin" filename="./libbiped_plugin.so"/>
 		</model>
+
+        <plugin name="world_state_plugin" filename="./libworld_state_plugin.so"/>
 	</world>
 </sdf>

@@ -4,10 +4,11 @@
 <model name="simplified_biped">
  
     <!-- One leg weighs approximately 3.22kg -->
+    <!-- IMPORTANT: EVERY LINK IS OFFSET BY 0.065m TO BRING IT AS POSSIBLE TO THE GRONUD WITH THE NONZERO ANGLES SET BY THE PLUGIN CODE. TO REVERT, SIMPLY ADD 0.065 TO EVERY LINK HEIGHT -->
     <link name="torso_connection">
         <self_collide> 1 </self_collide>
  
-        <pose> 0 0 1.18 0 0 0 </pose>
+        <pose> 0 0 1.115 0 0 0 </pose>
  
         <inertial>
             <mass>23.5</mass>
@@ -41,7 +42,7 @@
  
         <self_collide>0</self_collide>
  
-        <pose> -0.15 0 0.21 0 0 0 </pose>
+        <pose> -0.15 0 0.145 0 0 0 </pose>
  
             <inertial>
                 <mass>0.1</mass>
@@ -72,7 +73,7 @@
     <link name="left_knee">
  
         <self_collide>1</self_collide>
-        <pose> -0.15 0 0.415 0 1.570796 0</pose>
+        <pose> -0.15 0 0.35 0 1.570796 0</pose>
  
         <inertial>
             <mass>0.01</mass>
@@ -107,7 +108,7 @@
  
         <self_collide>1</self_collide>
  
-        <pose> -0.15 0 0.62 0 0 0 </pose> 
+        <pose> -0.15 0 0.555 0 0 0 </pose> 
  
         <inertial>
             <mass>0.1</mass>
@@ -138,7 +139,7 @@
     <link name="left_foot_base">
  
         <self_collide>0</self_collide>
-        <pose> -0.15 0 0.01 0 0 0</pose>
+        <pose> -0.15 0 -0.055 0 0 0</pose>
  
         <inertial>
             <mass>0.05</mass>
@@ -169,7 +170,7 @@
     <link name="left_ankle">
  
         <self_collide>1</self_collide>
-        <pose> -0.15 0 0.04 0 1.570796 0 </pose>
+        <pose> -0.15 0 -0.025 0 1.570796 0 </pose>
  
         <inertial>
             <mass>0.01</mass>
@@ -202,7 +203,7 @@
     <link name="left_hip_axis_1">
  
         <self_collide>1</self_collide>
-        <pose> -0.15 0 0.825 0 1.570796 0 </pose>
+        <pose> -0.15 0 0.76 0 1.570796 0 </pose>
 
         <inertial>
             <mass>1</mass>
@@ -236,7 +237,7 @@
     <link name="left_hip_axis_2">
  
         <self_collide>1</self_collide>
-        <pose> -0.15 0 0.97 0 1.570796 1.570796 </pose>
+        <pose> -0.15 0 0.905 0 1.570796 1.570796 </pose>
  
         <inertial>
             <mass>1</mass>
@@ -244,9 +245,6 @@
                 <ixx>1.249e-03</ixx>
                 <iyy>9.250e-04</iyy>
                 <izz>9.250e-04</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
             </inertia>
         </inertial>
  
@@ -273,7 +271,7 @@
     <link name="left_hip_axis_3">
  
         <self_collide>1</self_collide>
-        <pose> -0.15 0 1.115 0 0 0 </pose> <!--145mm from center of hip axis 2-->
+        <pose> -0.15 0 1.05 0 0 0 </pose> <!--145mm from center of hip axis 2-->
  
         <inertial>
             <mass>1</mass>
@@ -281,9 +279,6 @@
                 <ixx>1.249e-03</ixx>
                 <iyy>9.250e-04</iyy>
                 <izz>9.250e-04</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
             </inertia>
         </inertial>
  
@@ -406,7 +401,7 @@
  
         <self_collide>0</self_collide>
  
-        <pose> 0.15 0 0.21 0 0 0 </pose>
+        <pose> 0.15 0 0.145 0 0 0 </pose>
  
             <inertial>
                 <mass>0.1</mass>
@@ -437,7 +432,7 @@
     <link name="right_knee">
  
         <self_collide>1</self_collide>
-        <pose> 0.15 0 0.415 0 1.570796 0</pose>
+        <pose> 0.15 0 0.35 0 1.570796 0</pose>
  
         <inertial>
             <mass>0.01</mass>
@@ -472,7 +467,7 @@
  
         <self_collide>1</self_collide>
  
-        <pose> 0.15 0 0.62 0 0 0 </pose> 
+        <pose> 0.15 0 0.555 0 0 0 </pose> 
  
         <inertial>
             <mass>0.1</mass>
@@ -503,7 +498,7 @@
     <link name="right_foot_base">
  
         <self_collide>0</self_collide>
-        <pose> 0.15 0 0.01 0 0 0</pose>
+        <pose> 0.15 0 -0.055 0 0 0</pose>
  
        <inertial>
             <mass>0.05</mass>
@@ -534,7 +529,7 @@
     <link name="right_ankle">
  
         <self_collide>1</self_collide>
-        <pose> 0.15 0 0.04 0 1.570796 0 </pose>
+        <pose> 0.15 0 -0.025 0 1.570796 0 </pose>
  
         <inertial>
             <mass>0.01</mass>
@@ -567,7 +562,7 @@
     <link name="right_hip_axis_1">
  
         <self_collide>1</self_collide>
-        <pose> 0.15 0 0.825 0 1.570796 0 </pose>
+        <pose> 0.15 0 0.76 0 1.570796 0 </pose>
  
         <inertial>
             <mass>1</mass>
@@ -601,7 +596,7 @@
     <link name="right_hip_axis_2">
  
         <self_collide>1</self_collide>
-        <pose> 0.15 0 0.97 0 1.570796 1.570796 </pose>
+        <pose> 0.15 0 0.905 0 1.570796 1.570796 </pose>
  
         <inertial>
             <mass>1</mass>
@@ -635,7 +630,7 @@
     <link name="right_hip_axis_3">
  
         <self_collide>1</self_collide>
-        <pose> 0.15 0 1.115 0 0 0 </pose> <!--145mm from center of hip axis 2-->
+        <pose> 0.15 0 1.05 0 0 0 </pose> <!--145mm from center of hip axis 2-->
  
         <inertial>
             <mass>1</mass>
