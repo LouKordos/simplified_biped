@@ -320,9 +320,8 @@
     </link>
  
     <link name="left_foot_base">
- 
         <self_collide>0</self_collide>
-        <pose> -0.15 0 0.31 0 0 0</pose>
+        <pose>-0.15 0 0.31 0 0 0</pose>
  
         <inertial>
             <mass>0.05</mass>
@@ -336,7 +335,7 @@
         <collision name="left_foot_base_collision">
             <geometry>
                 <box>
-                    <size> 0.08 0.18 0.02</size>
+                    <size>0.08 0.18 0.02</size>
                 </box>
             </geometry>
         </collision>
@@ -348,6 +347,12 @@
                 </box>
             </geometry>
         </visual>
+
+        <sensor name='left_foot_contact' type='contact'>
+            <contact>
+                <collision>left_foot_base_collision</collision>
+            </contact>
+        </sensor>
     </link>
  
     <link name="left_ankle">

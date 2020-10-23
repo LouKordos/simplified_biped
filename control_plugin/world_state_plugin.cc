@@ -1,3 +1,6 @@
+#ifndef _GAZEBO_WORLD_STATE_PLUGIN_HH_
+#define _GAZEBO_WORLD_STATE_PLUGIN_HH_
+
 #include <ignition/math/Pose3.hh>
 #include "gazebo/physics/physics.hh"
 #include "gazebo/common/common.hh"
@@ -66,7 +69,6 @@ namespace gazebo
 			socklen_t len = sizeof(servaddr);
 
             while(true) {
-                
                 start = high_resolution_clock::now();
                 
                 std::stringstream msg;
@@ -99,3 +101,5 @@ namespace gazebo
 // Register this plugin with the simulator
 GZ_REGISTER_WORLD_PLUGIN(SimStatePlugin)
 }
+
+#endif

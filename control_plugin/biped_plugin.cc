@@ -59,8 +59,8 @@ namespace gazebo
 	ignition::math::Vector3d r_l(0, 0, 0); // Position where force is excerted expressed in CoM frame
 	ignition::math::Vector3d r_r(0, 0, 0); // Position where force is excerted expressed in CoM frame
 
-	static const double torqueApplyingInterval = 1000; // microseconds
-	static const double statePublishingInterval = 1000; // microseconds
+	static const double torqueApplyingInterval = 960; // microseconds, some margin to account for comms delays etc.
+	static const double statePublishingInterval = 960; // microseconds
 	static const double mpcInterval = (1/30.0) * 1000.0 * 1000.0; // microseconds, make sure this is the same as in Controller code!
 
 	const int left_leg_port = 4200;
@@ -387,7 +387,7 @@ namespace gazebo
 				//std::cout << "f_r: " << f_r << std::endl;
 				//std::cout << "r_l_world: " << r_l << std::endl;
 				//std::cout << "r_r_world: " << r_r << std::endl;
-				if(true /*&& (total_iterations * (1/1000.0)) > 0.5*/) {
+				if(false /*&& (total_iterations * (1/1000.0)) > 0.5*/) {
 					torso->AddForceAtWorldPosition(f_l, r_l);
 					torso->AddForceAtWorldPosition(f_r, r_r);
 				}

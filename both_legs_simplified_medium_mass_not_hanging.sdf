@@ -156,6 +156,21 @@
                     <size> 0.08 0.18 0.02</size>
                 </box>
             </geometry>
+
+            <surface>
+                <friction>
+                    <ode>
+                        <mu>100000</mu>
+                        <mu2>100000</mu2>
+                        <slip1>0</slip1>
+                        <slip2>0</slip2>
+                    </ode>
+                    <bullet>
+                        <friction>1</friction>
+                        <friction2>1</friction2>
+                    </bullet>
+                </friction>
+            </surface>
         </collision>
  
         <visual name="left_foot_base_visual">
@@ -165,6 +180,13 @@
                 </box>
             </geometry>
         </visual>
+
+        <sensor name='left_foot_contact' type='contact'>
+            <plugin name="foot_contact_plugin" filename="./libfoot_contact_plugin.so"/>
+            <contact>
+                <collision>left_foot_base_collision</collision>
+            </contact>
+        </sensor>
     </link>
  
     <link name="left_ankle">
@@ -500,7 +522,7 @@
         <self_collide>0</self_collide>
         <pose> 0.15 0 -0.055 0 0 0</pose>
  
-       <inertial>
+        <inertial>
             <mass>0.05</mass>
             <inertia>
                 <ixx>1.42e-04</ixx>
@@ -515,6 +537,21 @@
                     <size> 0.08 0.18 0.02</size>
                 </box>
             </geometry>
+
+            <surface>
+                <friction>
+                    <ode>
+                        <mu>100000</mu>
+                        <mu2>100000</mu2>
+                        <slip1>0</slip1>
+                        <slip2>0</slip2>
+                    </ode>
+                    <bullet>
+                        <friction>1</friction>
+                        <friction2>1</friction2>
+                    </bullet>
+                </friction>
+            </surface>
         </collision>
  
         <visual name="right_foot_base_visual">
@@ -524,6 +561,13 @@
                 </box>
             </geometry>
         </visual>
+
+        <sensor name='right_foot_contact' type='contact'>
+            <plugin name="foot_contact_plugin" filename="./libfoot_contact_plugin.so"/>
+            <contact>
+                <collision>right_foot_base_collision</collision>
+            </contact>
+        </sensor>
     </link>
  
     <link name="right_ankle">
