@@ -1,6 +1,7 @@
 #include "FootContactPlugin.hh"
 
 using namespace gazebo;
+using namespace std;
 GZ_REGISTER_SENSOR_PLUGIN(FootContactPlugin)
 
 /////////////////////////////////////////////////
@@ -29,7 +30,7 @@ void FootContactPlugin::Load(sensors::SensorPtr _sensor, sdf::ElementPtr /*_sdf*
         return;
     }
 
-    // std::cout << this->parentSensor->Name() << "\n";
+    std::cout << this->parentSensor->Name() << "\n";
 
     if(this->parentSensor->Name() == "left_foot_contact") {
         port = 4203;
@@ -84,7 +85,7 @@ void FootContactPlugin::update_state() {
 
     while(true) {
         start = high_resolution_clock::now();
-                
+        
         std::stringstream msg;
         state_mutex.lock();
         msg << state;
@@ -102,7 +103,7 @@ void FootContactPlugin::update_state() {
         deadline.tv_nsec = remainder;
         deadline.tv_sec = 0;
         clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
-    }    
+    }
 }
 
 /////////////////////////////////////////////////
@@ -111,23 +112,4 @@ void FootContactPlugin::OnUpdate()
     state_mutex.lock();
     state = this->parentSensor->Contacts().contact_size() >= 1 ? true : false;
     state_mutex.unlock();
-
-    // for (unsigned int i = 0; i < contacts.contact_size(); ++i)
-    // {
-    //     std::cout << "Collision between[" << contacts.contact(i).collision1()
-    //               << "] and [" << contacts.contact(i).collision2() << "]\n";
-
-    //     for (unsigned int j = 0; j < contacts.contact(i).position_size(); ++j)
-    //     {
-    //         std::cout << j << "  Position:"
-    //                   << contacts.contact(i).position(j).x() << " "
-    //                   << contacts.contact(i).position(j).y() << " "
-    //                   << contacts.contact(i).position(j).z() << "\n";
-    //         std::cout << "   Normal:"
-    //                   << contacts.contact(i).normal(j).x() << " "
-    //                   << contacts.contact(i).normal(j).y() << " "
-    //                   << contacts.contact(i).normal(j).z() << "\n";
-    //         std::cout << "   Depth:" << contacts.contact(i).depth(j) << "\n";
-    //     }
-    // }
 }

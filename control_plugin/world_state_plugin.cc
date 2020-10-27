@@ -51,13 +51,13 @@ namespace gazebo
             int sockfd;
 			char buffer[udp_buffer_size]; 
 			struct sockaddr_in servaddr; 
-		
+
 			// Creating socket file descriptor 
 			if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) { 
 				perror("socket creation failed"); 
 				exit(EXIT_FAILURE); 
 			} 
-		
+            
 			memset(&servaddr, 0, sizeof(servaddr)); 
 			
 			// Filling server information 
