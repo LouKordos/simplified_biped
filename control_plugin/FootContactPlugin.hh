@@ -31,10 +31,10 @@ namespace gazebo
         std::mutex state_mutex;
 
     private:
-        static const int udp_buffer_size = 4096;
+        const int udp_buffer_size = 4096;
 
     private:
-        static int port;
+        int port;
 
     private:
         bool state;
