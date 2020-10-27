@@ -69,7 +69,9 @@
 			"typeindex": "cpp",
 			"typeinfo": "cpp",
 			"matrixfunctions": "cpp",
-			"dense": "cpp"
+			"dense": "cpp",
+			"strstream": "cpp",
+			"cfenv": "cpp"
 		}
 	}
 }

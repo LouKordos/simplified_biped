@@ -73,7 +73,10 @@ namespace gazebo
 
 	const int udp_mpc_port = 4801;
 
-	const bool legs_attached = true;
+	const bool legs_attached = false;
+	const bool apply_torques = true;
+	const bool apply_forces = true;
+	const bool print_torque_vectors = false;
 
 	// Pointer to the update event connection
 	event::ConnectionPtr updateConnection;
@@ -387,7 +390,7 @@ namespace gazebo
 				//std::cout << "f_r: " << f_r << std::endl;
 				//std::cout << "r_l_world: " << r_l << std::endl;
 				//std::cout << "r_r_world: " << r_r << std::endl;
-				if(false /*&& (total_iterations * (1/1000.0)) > 0.5*/) {
+				if(apply_forces /*&& (total_iterations * (1/1000.0)) > 0.5*/) {
 					torso->AddForceAtWorldPosition(f_l, r_l);
 					torso->AddForceAtWorldPosition(f_r, r_r);
 				}
@@ -572,15 +575,19 @@ namespace gazebo
 						double tau_4 = atof(torques[3].c_str());
 						double tau_5 = atof(torques[4].c_str());
 
-						model->GetJointController()->SetForce(leftHip3Joint->GetScopedName(), tau_1);
-						model->GetJointController()->SetForce(leftHip2Joint->GetScopedName(), tau_2);
-						model->GetJointController()->SetForce(leftHip1Joint->GetScopedName(), tau_3);
-						model->GetJointController()->SetForce(leftKneeJoint->GetScopedName(), tau_4);
-						model->GetJointController()->SetForce(leftAnkleJoint->GetScopedName(), tau_5);
+						if(apply_torques) {
+							model->GetJointController()->SetForce(leftHip3Joint->GetScopedName(), tau_1);
+							model->GetJointController()->SetForce(leftHip2Joint->GetScopedName(), tau_2);
+							model->GetJointController()->SetForce(leftHip1Joint->GetScopedName(), tau_3);
+							model->GetJointController()->SetForce(leftKneeJoint->GetScopedName(), tau_4);
+							model->GetJointController()->SetForce(leftAnkleJoint->GetScopedName(), tau_5);
+						}
 
-						stringstream temp;
-						temp << "Torque vector: " << tau_1 << "," << tau_2 << "," << tau_3 << "," << tau_4 << "," << tau_5;
-						print_threadsafe(temp.str(), "left_leg_torque_thread");
+						if(print_torque_vectors) {
+							stringstream temp;
+							temp << "Torque vector: " << tau_1 << "," << tau_2 << "," << tau_3 << "," << tau_4 << "," << tau_5;
+							print_threadsafe(temp.str(), "left_leg_torque_thread");
+						}
 					}
 
 					iteration_counter++;
@@ -667,15 +674,18 @@ namespace gazebo
 						double tau_4 = atof(torques[3].c_str());
 						double tau_5 = atof(torques[4].c_str());
 
-						model->GetJointController()->SetForce(rightHip3Joint->GetScopedName(), tau_1);
-						model->GetJointController()->SetForce(rightHip2Joint->GetScopedName(), tau_2);
-						model->GetJointController()->SetForce(rightHip1Joint->GetScopedName(), tau_3);
-						model->GetJointController()->SetForce(rightKneeJoint->GetScopedName(), tau_4);
-						model->GetJointController()->SetForce(rightAnkleJoint->GetScopedName(), tau_5);
-
-						stringstream temp;
-						temp << "Torque vector: " << tau_1 << "," << tau_2 << "," << tau_3 << "," << tau_4 << "," << tau_5;
-						print_threadsafe(temp.str(), "right_leg_torque_thread");
+						if(apply_torques) {
+							model->GetJointController()->SetForce(rightHip3Joint->GetScopedName(), tau_1);
+							model->GetJointController()->SetForce(rightHip2Joint->GetScopedName(), tau_2);
+							model->GetJointController()->SetForce(rightHip1Joint->GetScopedName(), tau_3);
+							model->GetJointController()->SetForce(rightKneeJoint->GetScopedName(), tau_4);
+							model->GetJointController()->SetForce(rightAnkleJoint->GetScopedName(), tau_5);
+						}
+						if(print_torque_vectors) {
+							stringstream temp;
+							temp << "Torque vector: " << tau_1 << "," << tau_2 << "," << tau_3 << "," << tau_4 << "," << tau_5;
+							print_threadsafe(temp.str(), "right_leg_torque_thread");
+						}
 					}
 
 					iteration_counter++;
