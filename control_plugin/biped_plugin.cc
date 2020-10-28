@@ -73,7 +73,7 @@ namespace gazebo
 
 	const int udp_mpc_port = 4801;
 
-	const bool legs_attached = false;
+	const bool legs_attached = true;
 	const bool apply_torques = true;
 	const bool apply_forces = true;
 	const bool print_torque_vectors = false;
