@@ -4,6 +4,9 @@ RUN pacman -Syu --needed --noconfirm base-devel git go nvidia nvidia-utils
 RUN git clone https://aur.archlinux.org/yay.git
 RUN sudo chmod 777 -R ./yay
 
+ENV MAKEFLAGS="-j$(nproc)"
+RUN echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf
+
 RUN useradd --shell=/bin/bash build && usermod -L build
 RUN echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 RUN echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
@@ -25,7 +28,7 @@ RUN rm -rf ./build && mkdir ./build
 WORKDIR /src/control_plugin/build
 
 RUN cmake ..
-RUN make -j
+RUN make -j$(nproc)
 
 ENV NVIDIA_VISIBLE_DEVICES all
 ENV NVIDIA_DRIVER_CAPABILITIES compute,video,utility
