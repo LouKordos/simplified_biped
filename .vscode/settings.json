@@ -63,5 +63,6 @@
         "cinttypes": "cpp",
         "typeindex": "cpp",
         "typeinfo": "cpp"
-    }
+    },
+    "cmake.sourceDirectory": "${workspaceFolder}/control_plugin"
 }
