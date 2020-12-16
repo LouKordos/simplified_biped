@@ -75,7 +75,7 @@ namespace gazebo
 
 	const bool legs_attached = true;
 	const bool apply_torques = true;
-	const bool apply_forces = true;
+	const bool apply_forces = false;
 	const bool print_torque_vectors = false;
 
 	// Pointer to the update event connection
