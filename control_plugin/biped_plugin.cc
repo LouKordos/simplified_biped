@@ -246,7 +246,6 @@ namespace gazebo
 
 			while(true) {
 				start = high_resolution_clock::now();
-
 				stringstream s;
 
 				// state is phi, theta, psi, p_x, p_y, p_z, omega_x, omega_y, omega_z, v_x, v_y, v_z, gravity constant
@@ -295,7 +294,7 @@ namespace gazebo
 				buffer[n] = '\0';
 
 				string data_str(buffer);
-
+				
 				std::vector<std::string> message_split = split_string(data_str, '|');
 
 				if(static_cast<int>(message_split.size()) >= 11) {
@@ -344,6 +343,9 @@ namespace gazebo
 					ignition::math::Vector3d r_l_temp(r_x_left + pos_x, r_y_left + pos_y, r_z_left + pos_z);
 					ignition::math::Vector3d r_r_temp(r_x_right + pos_x, r_y_right + pos_y, r_z_right + pos_z);
 					
+					// ignition::math::Vector3d r_l_temp(r_x_left, r_y_left, r_z_left);
+					// ignition::math::Vector3d r_r_temp(r_x_right, r_y_right, r_z_right);
+
 					r_l = r_l_temp;
 					r_r = r_r_temp;
 
