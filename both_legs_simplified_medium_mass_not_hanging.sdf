@@ -375,19 +375,19 @@
         </axis>
     </joint>
  
-    <joint type="revolute" name="left_hip_axis_3_hip_axis_2_joint">
-        <pose> -0.145 0 0 0 -1.5707 0 </pose>
+    <joint type="fixed" name="left_hip_axis_3_hip_axis_2_joint">
+        <pose> 0 0 0 0 0 0 </pose>
  
         <parent>left_hip_axis_3</parent>
         <child>left_hip_axis_2</child>
  
-        <axis>
+        <!-- <axis>
             <xyz> 0 0 1 </xyz>
             <limit>
                 <lower>-1</lower>
                 <upper>1</upper>
             </limit>
-        </axis>
+        </axis> -->
     </joint>
  
     <!--Change joint type back to revolute if actively driven ankle joint is needed-->
@@ -761,19 +761,19 @@
         </axis>
     </joint>
  
-    <joint type="revolute" name="right_hip_axis_3_hip_axis_2_joint">
-        <pose> -0.145 0 0 0 -1.5707 0 </pose>
+    <joint type="fixed" name="right_hip_axis_3_hip_axis_2_joint">
+        <pose> 0 0 0 0 0 0 </pose>
  
         <parent>right_hip_axis_3</parent>
         <child>right_hip_axis_2</child>
  
-        <axis>
+        <!-- <axis>
             <xyz> 0 0 1 </xyz>
             <limit>
                 <lower>-1</lower>
                 <upper>1</upper>
             </limit>
-        </axis>
+        </axis> -->
     </joint>
  
     <!--Change joint type back to revolute if actively driven ankle joint is needed-->

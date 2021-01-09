@@ -39,13 +39,11 @@ namespace gazebo
 	std::thread sim_state_thread;
 	std::mutex sim_state_mutex;
 
-	gazebo::physics::JointPtr leftHip3Joint;
 	gazebo::physics::JointPtr leftHip2Joint;
 	gazebo::physics::JointPtr leftHip1Joint;
 	gazebo::physics::JointPtr leftKneeJoint;
 	gazebo::physics::JointPtr leftAnkleJoint;
 
-	gazebo::physics::JointPtr rightHip3Joint;
 	gazebo::physics::JointPtr rightHip2Joint;
 	gazebo::physics::JointPtr rightHip1Joint;
 	gazebo::physics::JointPtr rightKneeJoint;
@@ -76,7 +74,7 @@ namespace gazebo
 	const bool legs_attached = true;
 	const bool apply_torques = true;
 	const bool apply_forces = false;
-	const bool print_torque_vectors = false;
+	const bool print_torque_vectors = true;
 
 	// Pointer to the update event connection
 	event::ConnectionPtr updateConnection;
@@ -119,49 +117,41 @@ namespace gazebo
 			torso = model->GetChildLink("simplified_biped::torso_connection");
 
 			if(legs_attached) {
-				leftHip3Joint = model->GetJoint("simplified_biped::left_hip_axis_3_hip_axis_2_joint");
 				leftHip2Joint = model->GetJoint("simplified_biped::left_hip_axis_2_hip_axis_1_joint");
 				leftHip1Joint = model->GetJoint("simplified_biped::left_hip_axis_1_upper_leg_joint");
 				leftKneeJoint = model->GetJoint("simplified_biped::left_knee_lower_leg_joint");
 				leftAnkleJoint = model->GetJoint("simplified_biped::left_ankle_foot_base_joint");
 
-				rightHip3Joint = model->GetJoint("simplified_biped::right_hip_axis_3_hip_axis_2_joint");
 				rightHip2Joint = model->GetJoint("simplified_biped::right_hip_axis_2_hip_axis_1_joint");
 				rightHip1Joint = model->GetJoint("simplified_biped::right_hip_axis_1_upper_leg_joint");
 				rightKneeJoint = model->GetJoint("simplified_biped::right_knee_lower_leg_joint");
 				rightAnkleJoint = model->GetJoint("simplified_biped::right_ankle_foot_base_joint");
 
-				leftHip3Joint->SetPosition(0, 0);
 				leftHip2Joint->SetPosition(0, 0);
 				leftHip1Joint->SetPosition(0, -0.4);
 				leftKneeJoint->SetPosition(0, 0.85);
 				leftAnkleJoint->SetPosition(0, -0.45);
 
-				rightHip3Joint->SetPosition(0, 0);
 				rightHip2Joint->SetPosition(0, 0);
 				rightHip1Joint->SetPosition(0, -0.4);
 				rightKneeJoint->SetPosition(0, 0.85);
 				rightAnkleJoint->SetPosition(0, -0.45);
 
-				model->GetJointController()->SetPositionPID(leftHip3Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetPositionPID(leftHip2Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetPositionPID(leftHip1Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetPositionPID(leftKneeJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetPositionPID(leftAnkleJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 
-				model->GetJointController()->SetVelocityPID(leftHip3Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetVelocityPID(leftHip2Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetVelocityPID(leftHip1Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetVelocityPID(leftKneeJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetVelocityPID(leftAnkleJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 
-				model->GetJointController()->SetPositionPID(rightHip3Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetPositionPID(rightHip2Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetPositionPID(rightHip1Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetPositionPID(rightKneeJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetPositionPID(rightAnkleJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 
-				model->GetJointController()->SetVelocityPID(rightHip3Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetVelocityPID(rightHip2Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetVelocityPID(rightHip1Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetVelocityPID(rightKneeJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
@@ -171,13 +161,11 @@ namespace gazebo
 
 				double friction = 0.05; // Coulomb friction coefficient
 
-				// leftHip3Joint->SetParam("friction", 0, friction);
 				// leftKneeJoint->SetParam("friction", 0, friction);
 				// leftHip2Joint->SetParam("friction", 0, friction);
 				// leftHip1Joint->SetParam("friction", 0, friction);
 				// leftAnkleJoint->SetParam("friction", 0, friction);
 
-				// rightHip3Joint->SetParam("friction", 0, friction);
 				// rightKneeJoint->SetParam("friction", 0, friction);
 				// rightHip2Joint->SetParam("friction", 0, friction);
 				// rightHip1Joint->SetParam("friction", 0, friction);
@@ -547,10 +535,9 @@ namespace gazebo
 			
 				//Initial message for connection to work properly.
 				stringstream first_msg;
-				first_msg << leftHip3Joint->Position() << "|" << leftHip2Joint->Position() << "|" << leftHip1Joint->Position() << "|" << leftKneeJoint->Position() << "|" 
-					<< leftAnkleJoint->Position() 
-					<< "|" << leftHip3Joint->GetVelocity(0) << "|" << leftHip2Joint->GetVelocity(0) << "|" << leftHip1Joint->GetVelocity(0) << "|" 
-					<< leftKneeJoint->GetVelocity(0) << "|" << leftAnkleJoint->GetVelocity(0);
+				first_msg << leftHip2Joint->Position() << "|" << leftHip1Joint->Position() << "|" << leftKneeJoint->Position() << "|" << leftAnkleJoint->Position() << "|" 
+							<< leftHip2Joint->GetVelocity(0) << "|" << leftHip1Joint->GetVelocity(0) << "|" 
+							<< leftKneeJoint->GetVelocity(0) << "|" << leftAnkleJoint->GetVelocity(0);
 				
 				sendto(sockfd, (const char *)first_msg.str().c_str(), strlen(first_msg.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 
@@ -558,11 +545,9 @@ namespace gazebo
 					start = high_resolution_clock::now();
 
 					stringstream s;
-					s << leftHip3Joint->Position() << "|" << leftHip2Joint->Position() << "|" << leftHip1Joint->Position() << "|" << leftKneeJoint->Position() << "|" 
-						<< leftAnkleJoint->Position() 
-						<< "|" << leftHip3Joint->GetVelocity(0) << "|" << leftHip2Joint->GetVelocity(0) << "|" << leftHip1Joint->GetVelocity(0) << "|" 
+					s << leftHip2Joint->Position() << "|" << leftHip1Joint->Position() << "|" << leftKneeJoint->Position() << "|" << leftAnkleJoint->Position() << "|"
+						<< leftHip2Joint->GetVelocity(0) << "|" << leftHip1Joint->GetVelocity(0) << "|" 
 						<< leftKneeJoint->GetVelocity(0) << "|" << leftAnkleJoint->GetVelocity(0);
-
 					
 					sendto(sockfd, (const char *)s.str().c_str(), strlen(s.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 					
@@ -573,25 +558,23 @@ namespace gazebo
 
 					std::vector<std::string> torques = split_string(data, '|');
 
-					if(static_cast<int>(torques.size()) >= 4) {
+					if(static_cast<int>(torques.size()) >= 3) {
 
 						double tau_1 = atof(torques[0].c_str());
 						double tau_2 = atof(torques[1].c_str());
 						double tau_3 = atof(torques[2].c_str());
 						double tau_4 = atof(torques[3].c_str());
-						double tau_5 = atof(torques[4].c_str());
 
 						if(apply_torques) {
-							model->GetJointController()->SetForce(leftHip3Joint->GetScopedName(), tau_1);
-							model->GetJointController()->SetForce(leftHip2Joint->GetScopedName(), tau_2);
-							model->GetJointController()->SetForce(leftHip1Joint->GetScopedName(), tau_3);
-							model->GetJointController()->SetForce(leftKneeJoint->GetScopedName(), tau_4);
-							model->GetJointController()->SetForce(leftAnkleJoint->GetScopedName(), tau_5);
+							model->GetJointController()->SetForce(leftHip2Joint->GetScopedName(), tau_1);
+							model->GetJointController()->SetForce(leftHip1Joint->GetScopedName(), tau_2);
+							model->GetJointController()->SetForce(leftKneeJoint->GetScopedName(), tau_3);
+							model->GetJointController()->SetForce(leftAnkleJoint->GetScopedName(), tau_4);
 						}
 
 						if(print_torque_vectors) {
 							stringstream temp;
-							temp << "Torque vector: " << tau_1 << "," << tau_2 << "," << tau_3 << "," << tau_4 << "," << tau_5;
+							temp << "Torque vector: " << tau_1 << "," << tau_2 << "," << tau_3 << "," << tau_4;
 							print_threadsafe(temp.str(), "left_leg_torque_thread");
 						}
 					}
@@ -646,9 +629,8 @@ namespace gazebo
 			
 				//Initial message for connection to work properly.
 				stringstream first_msg;
-				first_msg << rightHip3Joint->Position() << "|" << rightHip2Joint->Position() << "|" << rightHip1Joint->Position() << "|" << rightKneeJoint->Position() << "|" 
-					<< rightAnkleJoint->Position() 
-					<< "|" << rightHip3Joint->GetVelocity(0) << "|" << rightHip2Joint->GetVelocity(0) << "|" << rightHip1Joint->GetVelocity(0) << "|" 
+				first_msg << rightHip2Joint->Position() << "|" << rightHip1Joint->Position() << "|" << rightKneeJoint->Position() << "|" << rightAnkleJoint->Position() << "|"
+					<< rightHip2Joint->GetVelocity(0) << "|" << rightHip1Joint->GetVelocity(0) << "|" 
 					<< rightKneeJoint->GetVelocity(0) << "|" << rightAnkleJoint->GetVelocity(0);
 				
 				sendto(sockfd, (const char *)first_msg.str().c_str(), strlen(first_msg.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
@@ -657,9 +639,8 @@ namespace gazebo
 					start = high_resolution_clock::now();
 
 					stringstream s;
-					s << rightHip3Joint->Position() << "|" << rightHip2Joint->Position() << "|" << rightHip1Joint->Position() << "|" << rightKneeJoint->Position() << "|" 
-						<< rightAnkleJoint->Position() 
-						<< "|" << rightHip3Joint->GetVelocity(0) << "|" << rightHip2Joint->GetVelocity(0) << "|" << rightHip1Joint->GetVelocity(0) << "|" 
+					s << rightHip2Joint->Position() << "|" << rightHip1Joint->Position() << "|" << rightKneeJoint->Position() << "|" << rightAnkleJoint->Position() << "|" 
+						<< rightHip2Joint->GetVelocity(0) << "|" << rightHip1Joint->GetVelocity(0) << "|" 
 						<< rightKneeJoint->GetVelocity(0) << "|" << rightAnkleJoint->GetVelocity(0);
 
 					sendto(sockfd, (const char *)s.str().c_str(), strlen(s.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
@@ -672,24 +653,22 @@ namespace gazebo
 
 					std::vector<std::string> torques = split_string(data, '|');
 
-					if(static_cast<int>(torques.size()) >= 4) {
+					if(static_cast<int>(torques.size()) >= 3) {
 
 						double tau_1 = atof(torques[0].c_str());
 						double tau_2 = atof(torques[1].c_str());
 						double tau_3 = atof(torques[2].c_str());
 						double tau_4 = atof(torques[3].c_str());
-						double tau_5 = atof(torques[4].c_str());
 
 						if(apply_torques) {
-							model->GetJointController()->SetForce(rightHip3Joint->GetScopedName(), tau_1);
-							model->GetJointController()->SetForce(rightHip2Joint->GetScopedName(), tau_2);
-							model->GetJointController()->SetForce(rightHip1Joint->GetScopedName(), tau_3);
-							model->GetJointController()->SetForce(rightKneeJoint->GetScopedName(), tau_4);
-							model->GetJointController()->SetForce(rightAnkleJoint->GetScopedName(), tau_5);
+							model->GetJointController()->SetForce(rightHip2Joint->GetScopedName(), tau_1);
+							model->GetJointController()->SetForce(rightHip1Joint->GetScopedName(), tau_2);
+							model->GetJointController()->SetForce(rightKneeJoint->GetScopedName(), tau_3);
+							model->GetJointController()->SetForce(rightAnkleJoint->GetScopedName(), tau_4);
 						}
 						if(print_torque_vectors) {
 							stringstream temp;
-							temp << "Torque vector: " << tau_1 << "," << tau_2 << "," << tau_3 << "," << tau_4 << "," << tau_5;
+							temp << "Torque vector: " << tau_1 << "," << tau_2 << "," << tau_3 << "," << tau_4;
 							print_threadsafe(temp.str(), "right_leg_torque_thread");
 						}
 					}
