@@ -471,9 +471,12 @@ namespace gazebo
 					
 					double disturbance_duration = atof(message_split[2].c_str());
 
+					stringstream temp;
+					temp << "Trying to find link simplified_biped::" << message_split[0] << std::endl;
+
 					auto disturbance_link = model->GetLink("simplified_biped::" + message_split[0]);
 
-					stringstream temp;
+					temp.str("");
 					temp << "Finished parsing, entering loop. Selected Link name: " << disturbance_link << ", force: " << force.Length() << ", Duration: " << disturbance_duration;
 					print_threadsafe(temp.str(), "disturbance_thread");
 
