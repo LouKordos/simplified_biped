@@ -160,14 +160,14 @@
             <surface>
                 <friction>
                     <ode>
-                        <mu>1</mu>
-                        <mu2>1</mu2>
+                        <mu>100</mu>
+                        <mu2>100</mu2>
                         <slip1>0</slip1>
                         <slip2>0</slip2>
                     </ode>
                     <bullet>
-                        <friction>1</friction>
-                        <friction2>1</friction2>
+                        <friction>100</friction>
+                        <friction2>100</friction2>
                     </bullet>
                 </friction>
                 <contact>
@@ -546,14 +546,14 @@
             <surface>
                 <friction>
                     <ode>
-                        <mu>1</mu>
-                        <mu2>1</mu2>
+                        <mu>100</mu>
+                        <mu2>100</mu2>
                         <slip1>0</slip1>
                         <slip2>0</slip2>
                     </ode>
                     <bullet>
-                        <friction>1</friction>
-                        <friction2>1</friction2>
+                        <friction>100</friction>
+                        <friction2>100</friction2>
                     </bullet>
                 </friction>
                 <contact>
