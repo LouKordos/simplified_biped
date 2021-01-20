@@ -487,7 +487,7 @@ namespace gazebo
 						for(int i = 0; i < (dt/1000) * disturbance_duration * 1000 /*multiply by 1000 to get back to ms*/; ++i) {
 							
 							start = high_resolution_clock::now();
-							disturbance_link->AddLinkForce(force);
+							disturbance_link->SetForce(force);
 
 							stringstream temp;
 							temp << "Applied disturbance for one iteration. Link name: " << disturbance_link << ", force: " << force.Length() << ", Duration: " << disturbance_duration;
