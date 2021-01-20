@@ -490,7 +490,7 @@ namespace gazebo
 							disturbance_link->SetForce(force);
 
 							stringstream temp;
-							temp << "Applied disturbance for one iteration. Link name: " << disturbance_link << ", force: " << force.Length() << ", Duration: " << disturbance_duration;
+							temp << "Applied disturbance for one iteration. Link name: " << disturbance_link << ", Force Mag: " << force.Length() << ", Duration: " << disturbance_duration;
 							print_threadsafe(temp.str(), "disturbance_thread");
 
 							end = high_resolution_clock::now();
