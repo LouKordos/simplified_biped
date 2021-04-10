@@ -1,55 +1,57 @@
-#include "FootContactPlugin.hh"
+#include "FootForcePlugin.hh"
 
 using namespace gazebo;
 using namespace std;
-GZ_REGISTER_SENSOR_PLUGIN(FootContactPlugin)
+GZ_REGISTER_SENSOR_PLUGIN(FootForcePlugin)
 
 /////////////////////////////////////////////////
-FootContactPlugin::FootContactPlugin() : SensorPlugin()
+FootForcePlugin::FootForcePlugin() : SensorPlugin()
 {
 
 }
 
 /////////////////////////////////////////////////
-FootContactPlugin::~FootContactPlugin()
+FootForcePlugin::~FootForcePlugin()
 {
 
 }
 
 /////////////////////////////////////////////////
-void FootContactPlugin::Load(sensors::SensorPtr _sensor, sdf::ElementPtr /*_sdf*/)
+void FootForcePlugin::Load(sensors::SensorPtr _sensor, sdf::ElementPtr /*_sdf*/)
 {
     // Get the parent sensor.
     this->parentSensor =
-        std::dynamic_pointer_cast<sensors::ContactSensor>(_sensor);
+        std::dynamic_pointer_cast<sensors::ForceTorqueSensor>(_sensor);
 
     // Make sure the parent sensor is valid.
     if (!this->parentSensor)
     {
-        gzerr << "ContactPlugin requires a ContactSensor.\n";
+        gzerr << "ForcePlugin requires a Force-Torque sensor.\n";
         return;
     }
 
-    std::cout << "Contact Sensor Name: " << this->parentSensor->Name() << "\n";
+    std::cout << "PLEASE SHOW THIS" << std::endl;
 
-    if(this->parentSensor->Name() == "left_foot_contact") {
-        port = 4203;
+    std::cout << this->parentSensor->Name() << "\n";
+
+    if(this->parentSensor->Name() == "left_foot_force_torque") {
+        port = 4209;
     }
     else {
-        port = 4204;
+        port = 4210;
     }
 
     // Connect to the sensor update event.
     this->updateConnection = this->parentSensor->ConnectUpdated(
-        std::bind(&FootContactPlugin::OnUpdate, this));
+        std::bind(&FootForcePlugin::OnUpdate, this));
 
     // Make sure the parent sensor is active.
     this->parentSensor->SetActive(true);
 
-    update_thread = std::thread([this] { update_state(); });
+    update_thread = std::thread([this] { update_force(); });
 }
 
-void FootContactPlugin::update_state() {
+void FootForcePlugin::update_force() {
     // High resolution clocks used for measuring execution time of loop iteration.
     high_resolution_clock::time_point start = high_resolution_clock::now();
     high_resolution_clock::time_point end = high_resolution_clock::now();
@@ -87,10 +89,10 @@ void FootContactPlugin::update_state() {
         start = high_resolution_clock::now();
         
         std::stringstream msg;
-        state_mutex.lock();
-        msg << state;
+        force_mutex.lock();
+        msg << force[0] << "|" << force[1] << "|" << force[2];
         sendto(sockfd, (const char *)msg.str().c_str(), strlen(msg.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
-        state_mutex.unlock();
+        force_mutex.unlock();
         // std::cout << msg.str() << std::endl;
         
         iteration_counter++; // Increment iteration counter
@@ -107,9 +109,10 @@ void FootContactPlugin::update_state() {
 }
 
 /////////////////////////////////////////////////
-void FootContactPlugin::OnUpdate()
+void FootForcePlugin::OnUpdate()
 {
-    state_mutex.lock();
-    state = this->parentSensor->Contacts().contact_size() >= 1 ? true : false;
-    state_mutex.unlock();
+    force_mutex.lock();
+    force = this->parentSensor->Force();
+    std::cout << force << std::endl;
+    force_mutex.unlock();
 }

@@ -16,6 +16,7 @@ add_definitions(-std=c++17 -Wall -Wpedantic -I .. -O2 -I /usr/local/include -L /
 add_library(biped_plugin SHARED biped_plugin.cc)
 add_library(world_state_plugin SHARED world_state_plugin.cc)
 add_library(foot_contact_plugin SHARED FootContactPlugin.cc)
+add_library(foot_force_plugin SHARED FootForcePlugin.cc)
 target_link_libraries(biped_plugin world_state_plugin foot_contact_plugin ${GAZEBO_LIBRARIES})
 
 #target_link_libraries(biped_plugin ${GAZEBO_LIBRARIES} ${COMMUNICATIONS_LIBS})

@@ -403,6 +403,10 @@
                 <upper>1.57</upper>
             </limit>
         </axis>
+        <sensor name="left_foot_force_torque" type="force_torque">
+            <plugin name="foot_force_plugin" filename="./libfoot_force_plugin.so"/>
+            <update_rate>250</update_rate>
+        </sensor>
     </joint>
  
     <joint type="fixed" name="left_torso_connection_joint">
@@ -789,6 +793,10 @@
                 <upper>1.57</upper>
             </limit>
         </axis>
+        <sensor name="right_foot_force_torque" type="force_torque">
+            <plugin name="foot_force_plugin" filename="./libfoot_force_plugin.so"/>
+            <update_rate>250</update_rate>
+        </sensor>
     </joint>
  
     <joint type="fixed" name="right_torso_connection_joint">
