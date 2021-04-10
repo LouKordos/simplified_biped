@@ -73,6 +73,8 @@ namespace gazebo
 
 	const int udp_mpc_port = 4801;
 
+	static const int n = 13, m = 6;
+
 	const bool legs_attached = true;
 	const bool apply_torques = true;
 	const bool apply_forces = false;
@@ -193,6 +195,41 @@ namespace gazebo
 			mpc_parse_thread = std::thread(std::bind(&BipedPlugin::UpdateMPCForces, this));
 		}
 
+		public: Eigen::Matrix<double, n, 1> get_CoMState() {
+			// state is phi, theta, psi, p_x, p_y, p_z, omega_x, omega_y, omega_z, v_x, v_y, v_z, gravity constant
+				double phi = torso->WorldPose().Rot().Roll();
+				filter_value(phi);
+				double theta = torso->WorldPose().Rot().Pitch();
+				filter_value(theta);
+				double psi = torso->WorldPose().Rot().Yaw();
+				filter_value(psi);
+
+				double pos_x = torso->WorldPose().Pos().X();
+				filter_value(pos_x);
+				double pos_y = torso->WorldPose().Pos().Y();
+				filter_value(pos_y);
+				double pos_z = torso->WorldPose().Pos().Z();
+				filter_value(pos_z);
+
+				double omega_x = torso->WorldAngularVel().X();
+				filter_value(omega_x);
+				double omega_y = torso->WorldAngularVel().Y();
+				filter_value(omega_y);
+				double omega_z = torso->WorldAngularVel().Z();
+				filter_value(omega_z);
+
+				double vel_x = torso->WorldLinearVel().X();
+				filter_value(vel_x);
+				double vel_y = torso->WorldLinearVel().Y();
+				filter_value(vel_y);
+				double vel_z = torso->WorldLinearVel().Z();
+				filter_value(vel_z);
+
+				double g = -9.81;
+
+				return (Eigen::Matrix<double, n, 1>() << phi, theta, psi, pos_x, pos_y, pos_z, omega_x, omega_y, omega_z, vel_x, vel_y, vel_z, g).finished();
+		}
+
 		public: void UpdateMPCForces() {
 			auto start = high_resolution_clock::now();
 			auto end = high_resolution_clock::now();
@@ -225,9 +262,15 @@ namespace gazebo
 			
 			stringstream first_msg;
 
-			first_msg << torso->WorldPose().Rot().Euler().X() << "|" << torso->WorldPose().Rot().Euler().Y() << "|" << torso->WorldPose().Rot().Euler().Z() << "|" << torso->WorldPose().Pos().X() << "|" 
-					<< torso->WorldPose().Pos().Y() << "|" << torso->WorldPose().Pos().Z() << "|" << torso->WorldAngularVel().X() << "|" << torso->WorldAngularVel().Y() << "|" 
-					<< torso->WorldAngularVel().Z() << "|" << torso->WorldLinearVel().X() << "|" << torso->WorldLinearVel().Y() << "|" << torso->WorldLinearVel().Z() << "|-9.81";
+			Eigen::Matrix<double, n, 1> state = get_CoMState();
+
+			for(int i = 0; i < n; i++) {
+				first_msg << state(i, 0);
+
+				if(i != n - 1) { // Don't append separator to end
+					first_msg << "|";
+				}
+			}
 
 			sendto(sockfd, (const char *)first_msg.str().c_str(), strlen(first_msg.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 
@@ -248,45 +291,15 @@ namespace gazebo
 				start = high_resolution_clock::now();
 				stringstream s;
 
-				// state is phi, theta, psi, p_x, p_y, p_z, omega_x, omega_y, omega_z, v_x, v_y, v_z, gravity constant
-				double phi = torso->WorldPose().Rot().Roll();
-				filter_value(phi);
-				double theta = torso->WorldPose().Rot().Pitch();
-				filter_value(theta);
-				double psi = torso->WorldPose().Rot().Yaw();
-				filter_value(psi);
+				state = get_CoMState();
 
-				double pos_x = torso->WorldPose().Pos().X();
-				filter_value(pos_x);
-				double pos_y = torso->WorldPose().Pos().Y();
-				filter_value(pos_y);
-				double pos_z = torso->WorldPose().Pos().Z();
-				filter_value(pos_z);
+				for(int i = 0; i < n; i++) {
+					s << state(i, 0);
 
-				double omega_x = torso->WorldAngularVel().X();
-				filter_value(omega_x);
-				double omega_y = torso->WorldAngularVel().Y();
-				filter_value(omega_y);
-				double omega_z = torso->WorldAngularVel().Z();
-				filter_value(omega_z);
-
-				double vel_x = torso->WorldLinearVel().X();
-				filter_value(vel_x);
-				double vel_y = torso->WorldLinearVel().Y();
-				filter_value(vel_y);
-				double vel_z = torso->WorldLinearVel().Z();
-				filter_value(vel_z);
-
-				//std::cout << "omega_x:" << torso->WorldAngularVel().X() << ",omega_y:" << torso->WorldAngularVel().Y() << ",omega_z:" << torso->WorldAngularVel().Z() 
-				//<< ",vel_x:" << torso->WorldLinearVel().X() << ",vel_y:" << torso->WorldLinearVel().Y() << ",vel_z:" << torso->WorldLinearVel().Z() << std::endl;
-
-				s << phi << "|" << theta << "|" << psi << "|" << pos_x << "|" 
-					<< pos_y << "|" << pos_z << "|" << omega_x << "|" << omega_y << "|" 
-					<< omega_z << "|" << vel_x << "|" << vel_y << "|" << vel_z << "|-9.81";
-
-				// stringstream temp;
-				// temp << "UDP message: " << s.str();
-				// print_threadsafe(temp.str(), "mpc_update_thread");
+					if(i != n - 1) { // Don't append seperator to end
+						s << "|";
+					}
+				}
 
 				sendto(sockfd, (const char *)s.str().c_str(), strlen(s.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 
