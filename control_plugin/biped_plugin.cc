@@ -217,9 +217,9 @@ namespace gazebo
 			servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
 			servaddr.sin_port = htons(udp_mpc_port);
 
-			int n;
+			int msg_length;
 		
-			socklen_t len = sizeof(servaddr);  //len is value/result
+			socklen_t len = sizeof(servaddr);  // len is value/result
 
 			print_threadsafe("MPC Socket set up.", "mpc_update_thread");
 			
@@ -290,8 +290,8 @@ namespace gazebo
 
 				sendto(sockfd, (const char *)s.str().c_str(), strlen(s.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 
-				n = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, (struct sockaddr *) &servaddr, &len); 
-				buffer[n] = '\0';
+				msg_length = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, (struct sockaddr *) &servaddr, &len); 
+				buffer[msg_length] = '\0';
 
 				string data_str(buffer);
 				
@@ -442,7 +442,7 @@ namespace gazebo
 				exit(EXIT_FAILURE);
 			}
 			
-			int n; 
+			int msg_length; 
 		
 			socklen_t len = sizeof(cliaddr);  //len is value/result 
 
@@ -452,8 +452,8 @@ namespace gazebo
 
 			while(true) {
 
-				n = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, ( struct sockaddr *) &cliaddr, &len); 
-				buffer[n] = '\0'; 
+				msg_length = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, ( struct sockaddr *) &cliaddr, &len); 
+				buffer[msg_length] = '\0'; 
 
 				print_threadsafe("Received message, processing...", "disturbance_thread");
 
@@ -540,7 +540,8 @@ namespace gazebo
 			servaddr.sin_port = htons(left_leg_port); 
 			servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
 			
-			int n; 
+			int msg_length;
+
 			socklen_t len = sizeof(servaddr);
 
 			if (legs_attached) {
@@ -566,8 +567,8 @@ namespace gazebo
 					
 					sendto(sockfd, (const char *)s.str().c_str(), strlen(s.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 					
-					n = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, (struct sockaddr *) &servaddr, &len); 
-					buffer[n] = '\0';
+					msg_length = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, (struct sockaddr *) &servaddr, &len); 
+					buffer[msg_length] = '\0';
 
 					string data(buffer);
 
@@ -639,7 +640,8 @@ namespace gazebo
 			servaddr.sin_port = htons(right_leg_port); 
 			servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
 			
-			int n; 
+			int msg_length;
+
 			socklen_t len = sizeof(servaddr);
 
 			if(legs_attached) {
@@ -663,8 +665,8 @@ namespace gazebo
 						<< rightKneeJoint->GetVelocity(0) << "|" << rightAnkleJoint->GetVelocity(0);
 
 					sendto(sockfd, (const char *)s.str().c_str(), strlen(s.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
-					n = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, (struct sockaddr *) &servaddr, &len); 
-					buffer[n] = '\0';
+					msg_length = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, (struct sockaddr *) &servaddr, &len); 
+					buffer[msg_length] = '\0';
 
 					// print_threadsafe("Received left leg torque setpoint.", "right_leg_torque_thread");
 
