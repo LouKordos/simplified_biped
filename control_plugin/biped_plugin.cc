@@ -565,6 +565,18 @@ namespace gazebo
 					<< leftAnkleJoint->Position() 
 					<< "|" << leftHip3Joint->GetVelocity(0) << "|" << leftHip2Joint->GetVelocity(0) << "|" << leftHip1Joint->GetVelocity(0) << "|" 
 					<< leftKneeJoint->GetVelocity(0) << "|" << leftAnkleJoint->GetVelocity(0);
+
+				first_msg << "|";
+
+				Eigen::Matrix<double, n, 1> state = get_CoMState();
+
+				for(int i = 0; i < n; i++) {
+					first_msg << state(i, 0);
+
+					if(i != n - 1) { // Don't append seperator to end
+						first_msg << "|";
+					}
+				}
 				
 				sendto(sockfd, (const char *)first_msg.str().c_str(), strlen(first_msg.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 
@@ -577,6 +589,17 @@ namespace gazebo
 						<< "|" << leftHip3Joint->GetVelocity(0) << "|" << leftHip2Joint->GetVelocity(0) << "|" << leftHip1Joint->GetVelocity(0) << "|" 
 						<< leftKneeJoint->GetVelocity(0) << "|" << leftAnkleJoint->GetVelocity(0);
 
+					s << "|";
+
+					Eigen::Matrix<double, n, 1> state = get_CoMState();
+
+					for(int i = 0; i < n; i++) {
+						s << state(i, 0);
+
+						if(i != n - 1) { // Don't append seperator to end
+							s << "|";
+						}
+					}
 					
 					sendto(sockfd, (const char *)s.str().c_str(), strlen(s.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 					
@@ -666,6 +689,18 @@ namespace gazebo
 					<< "|" << rightHip3Joint->GetVelocity(0) << "|" << rightHip2Joint->GetVelocity(0) << "|" << rightHip1Joint->GetVelocity(0) << "|" 
 					<< rightKneeJoint->GetVelocity(0) << "|" << rightAnkleJoint->GetVelocity(0);
 				
+				first_msg << "|";
+
+				Eigen::Matrix<double, n, 1> state = get_CoMState();
+
+				for(int i = 0; i < n; i++) {
+					first_msg << state(i, 0);
+
+					if(i != n - 1) { // Don't append seperator to end
+						first_msg << "|";
+					}
+				}
+
 				sendto(sockfd, (const char *)first_msg.str().c_str(), strlen(first_msg.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 
 				while(true) {
@@ -676,6 +711,18 @@ namespace gazebo
 						<< rightAnkleJoint->Position() 
 						<< "|" << rightHip3Joint->GetVelocity(0) << "|" << rightHip2Joint->GetVelocity(0) << "|" << rightHip1Joint->GetVelocity(0) << "|" 
 						<< rightKneeJoint->GetVelocity(0) << "|" << rightAnkleJoint->GetVelocity(0);
+
+					s << "|";
+
+					Eigen::Matrix<double, n, 1> state = get_CoMState();
+
+					for(int i = 0; i < n; i++) {
+						s << state(i, 0);
+
+						if(i != n - 1) { // Don't append seperator to end
+							s << "|";
+						}
+					}
 
 					sendto(sockfd, (const char *)s.str().c_str(), strlen(s.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 					msg_length = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, (struct sockaddr *) &servaddr, &len); 
