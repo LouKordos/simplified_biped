@@ -73,6 +73,8 @@ namespace gazebo
 
 	const int udp_mpc_port = 4801;
 
+	static const int n = 13, m = 6;
+
 	const bool legs_attached = true;
 	const bool apply_torques = true;
 	const bool apply_forces = false;
@@ -193,62 +195,8 @@ namespace gazebo
 			mpc_parse_thread = std::thread(std::bind(&BipedPlugin::UpdateMPCForces, this));
 		}
 
-		public: void UpdateMPCForces() {
-			auto start = high_resolution_clock::now();
-			auto end = high_resolution_clock::now();
-
-			double duration;
-			struct timespec deadline;
-			
-			int sockfd;
-			char buffer[udp_buffer_size];
-			struct sockaddr_in servaddr;
-			
-			// Creating socket file descriptor
-			if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
-				perror("socket creation failed");
-				exit(EXIT_FAILURE);
-			}
-			
-			memset(&servaddr, 0, sizeof(servaddr));
-			
-			// Filling server information
-			servaddr.sin_family    = AF_INET; // IPv4
-			servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-			servaddr.sin_port = htons(udp_mpc_port);
-
-			int n;
-		
-			socklen_t len = sizeof(servaddr);  //len is value/result
-
-			print_threadsafe("MPC Socket set up.", "mpc_update_thread");
-			
-			stringstream first_msg;
-
-			first_msg << torso->WorldPose().Rot().Euler().X() << "|" << torso->WorldPose().Rot().Euler().Y() << "|" << torso->WorldPose().Rot().Euler().Z() << "|" << torso->WorldPose().Pos().X() << "|" 
-					<< torso->WorldPose().Pos().Y() << "|" << torso->WorldPose().Pos().Z() << "|" << torso->WorldAngularVel().X() << "|" << torso->WorldAngularVel().Y() << "|" 
-					<< torso->WorldAngularVel().Z() << "|" << torso->WorldLinearVel().X() << "|" << torso->WorldLinearVel().Y() << "|" << torso->WorldLinearVel().Z() << "|-9.81";
-
-			sendto(sockfd, (const char *)first_msg.str().c_str(), strlen(first_msg.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
-
-			Eigen::Matrix<double, 4,4> H_body_world;
-			Eigen::Matrix<double, 4,1> r_left_vector;
-			Eigen::Matrix<double, 4,1> r_right_vector;
-			Eigen::Matrix<double, 4,1> r_left_world_vector;
-			Eigen::Matrix<double, 4,1> r_right_world_vector;
-
-			ofstream data_file;
-			data_file.open("../mpc_log.csv");
-			data_file << "t,phi,theta,psi,pos_x,pos_y,pos_z,omega_x,omega_y,omega_z,vel_x,vel_y,vel_z,g,f_x_left,f_y_left,f_z_left,f_x_right,f_y_right,f_z_right,r_x_left,r_y_left,r_z_left,r_x_right,r_y_right,r_z_right,theta_delay_compensation,full_iteration_time,phi_delay_compensation" << std::endl; // Add header to csv file
-			data_file.close();
-
-			long long total_iterations = 0;
-
-			while(true) {
-				start = high_resolution_clock::now();
-				stringstream s;
-
-				// state is phi, theta, psi, p_x, p_y, p_z, omega_x, omega_y, omega_z, v_x, v_y, v_z, gravity constant
+		public: Eigen::Matrix<double, n, 1> get_CoMState() {
+			// state is phi, theta, psi, p_x, p_y, p_z, omega_x, omega_y, omega_z, v_x, v_y, v_z, gravity constant
 				double phi = torso->WorldPose().Rot().Roll();
 				filter_value(phi);
 				double theta = torso->WorldPose().Rot().Pitch();
@@ -277,21 +225,86 @@ namespace gazebo
 				double vel_z = torso->WorldLinearVel().Z();
 				filter_value(vel_z);
 
-				//std::cout << "omega_x:" << torso->WorldAngularVel().X() << ",omega_y:" << torso->WorldAngularVel().Y() << ",omega_z:" << torso->WorldAngularVel().Z() 
-				//<< ",vel_x:" << torso->WorldLinearVel().X() << ",vel_y:" << torso->WorldLinearVel().Y() << ",vel_z:" << torso->WorldLinearVel().Z() << std::endl;
+				double g = -9.81;
 
-				s << phi << "|" << theta << "|" << psi << "|" << pos_x << "|" 
-					<< pos_y << "|" << pos_z << "|" << omega_x << "|" << omega_y << "|" 
-					<< omega_z << "|" << vel_x << "|" << vel_y << "|" << vel_z << "|-9.81";
+				return (Eigen::Matrix<double, n, 1>() << phi, theta, psi, pos_x, pos_y, pos_z, omega_x, omega_y, omega_z, vel_x, vel_y, vel_z, g).finished();
+		}
 
-				// stringstream temp;
-				// temp << "UDP message: " << s.str();
-				// print_threadsafe(temp.str(), "mpc_update_thread");
+		public: void UpdateMPCForces() {
+			auto start = high_resolution_clock::now();
+			auto end = high_resolution_clock::now();
+
+			double duration;
+			struct timespec deadline;
+			
+			int sockfd;
+			char buffer[udp_buffer_size];
+			struct sockaddr_in servaddr;
+			
+			// Creating socket file descriptor
+			if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
+				perror("socket creation failed");
+				exit(EXIT_FAILURE);
+			}
+			
+			memset(&servaddr, 0, sizeof(servaddr));
+			
+			// Filling server information
+			servaddr.sin_family    = AF_INET; // IPv4
+			servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
+			servaddr.sin_port = htons(udp_mpc_port);
+
+			int msg_length;
+		
+			socklen_t len = sizeof(servaddr);  // len is value/result
+
+			print_threadsafe("MPC Socket set up.", "mpc_update_thread");
+			
+			stringstream first_msg;
+
+			Eigen::Matrix<double, n, 1> state = get_CoMState();
+
+			for(int i = 0; i < n; i++) {
+				first_msg << state(i, 0);
+
+				if(i != n - 1) { // Don't append separator to end
+					first_msg << "|";
+				}
+			}
+
+			sendto(sockfd, (const char *)first_msg.str().c_str(), strlen(first_msg.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
+
+			Eigen::Matrix<double, 4,4> H_body_world;
+			Eigen::Matrix<double, 4,1> r_left_vector;
+			Eigen::Matrix<double, 4,1> r_right_vector;
+			Eigen::Matrix<double, 4,1> r_left_world_vector;
+			Eigen::Matrix<double, 4,1> r_right_world_vector;
+
+			ofstream data_file;
+			data_file.open("../mpc_log.csv");
+			data_file << "t,phi,theta,psi,pos_x,pos_y,pos_z,omega_x,omega_y,omega_z,vel_x,vel_y,vel_z,g,f_x_left,f_y_left,f_z_left,f_x_right,f_y_right,f_z_right,r_x_left,r_y_left,r_z_left,r_x_right,r_y_right,r_z_right,theta_delay_compensation,full_iteration_time,phi_delay_compensation" << std::endl; // Add header to csv file
+			data_file.close();
+
+			long long total_iterations = 0;
+
+			while(true) {
+				start = high_resolution_clock::now();
+				stringstream s;
+
+				state = get_CoMState();
+
+				for(int i = 0; i < n; i++) {
+					s << state(i, 0);
+
+					if(i != n - 1) { // Don't append seperator to end
+						s << "|";
+					}
+				}
 
 				sendto(sockfd, (const char *)s.str().c_str(), strlen(s.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 
-				n = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, (struct sockaddr *) &servaddr, &len); 
-				buffer[n] = '\0';
+				msg_length = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, (struct sockaddr *) &servaddr, &len); 
+				buffer[msg_length] = '\0';
 
 				string data_str(buffer);
 				
@@ -442,7 +455,7 @@ namespace gazebo
 				exit(EXIT_FAILURE);
 			}
 			
-			int n; 
+			int msg_length; 
 		
 			socklen_t len = sizeof(cliaddr);  //len is value/result 
 
@@ -452,8 +465,8 @@ namespace gazebo
 
 			while(true) {
 
-				n = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, ( struct sockaddr *) &cliaddr, &len); 
-				buffer[n] = '\0'; 
+				msg_length = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, ( struct sockaddr *) &cliaddr, &len); 
+				buffer[msg_length] = '\0'; 
 
 				print_threadsafe("Received message, processing...", "disturbance_thread");
 
@@ -540,7 +553,8 @@ namespace gazebo
 			servaddr.sin_port = htons(left_leg_port); 
 			servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
 			
-			int n; 
+			int msg_length;
+
 			socklen_t len = sizeof(servaddr);
 
 			if (legs_attached) {
@@ -551,6 +565,18 @@ namespace gazebo
 					<< leftAnkleJoint->Position() 
 					<< "|" << leftHip3Joint->GetVelocity(0) << "|" << leftHip2Joint->GetVelocity(0) << "|" << leftHip1Joint->GetVelocity(0) << "|" 
 					<< leftKneeJoint->GetVelocity(0) << "|" << leftAnkleJoint->GetVelocity(0);
+
+				first_msg << "|";
+
+				Eigen::Matrix<double, n, 1> state = get_CoMState();
+
+				for(int i = 0; i < n; i++) {
+					first_msg << state(i, 0);
+
+					if(i != n - 1) { // Don't append seperator to end
+						first_msg << "|";
+					}
+				}
 				
 				sendto(sockfd, (const char *)first_msg.str().c_str(), strlen(first_msg.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 
@@ -563,11 +589,22 @@ namespace gazebo
 						<< "|" << leftHip3Joint->GetVelocity(0) << "|" << leftHip2Joint->GetVelocity(0) << "|" << leftHip1Joint->GetVelocity(0) << "|" 
 						<< leftKneeJoint->GetVelocity(0) << "|" << leftAnkleJoint->GetVelocity(0);
 
+					s << "|";
+
+					Eigen::Matrix<double, n, 1> state = get_CoMState();
+
+					for(int i = 0; i < n; i++) {
+						s << state(i, 0);
+
+						if(i != n - 1) { // Don't append seperator to end
+							s << "|";
+						}
+					}
 					
 					sendto(sockfd, (const char *)s.str().c_str(), strlen(s.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 					
-					n = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, (struct sockaddr *) &servaddr, &len); 
-					buffer[n] = '\0';
+					msg_length = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, (struct sockaddr *) &servaddr, &len); 
+					buffer[msg_length] = '\0';
 
 					string data(buffer);
 
@@ -639,7 +676,8 @@ namespace gazebo
 			servaddr.sin_port = htons(right_leg_port); 
 			servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
 			
-			int n; 
+			int msg_length;
+
 			socklen_t len = sizeof(servaddr);
 
 			if(legs_attached) {
@@ -651,6 +689,18 @@ namespace gazebo
 					<< "|" << rightHip3Joint->GetVelocity(0) << "|" << rightHip2Joint->GetVelocity(0) << "|" << rightHip1Joint->GetVelocity(0) << "|" 
 					<< rightKneeJoint->GetVelocity(0) << "|" << rightAnkleJoint->GetVelocity(0);
 				
+				first_msg << "|";
+
+				Eigen::Matrix<double, n, 1> state = get_CoMState();
+
+				for(int i = 0; i < n; i++) {
+					first_msg << state(i, 0);
+
+					if(i != n - 1) { // Don't append seperator to end
+						first_msg << "|";
+					}
+				}
+
 				sendto(sockfd, (const char *)first_msg.str().c_str(), strlen(first_msg.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 
 				while(true) {
@@ -662,9 +712,21 @@ namespace gazebo
 						<< "|" << rightHip3Joint->GetVelocity(0) << "|" << rightHip2Joint->GetVelocity(0) << "|" << rightHip1Joint->GetVelocity(0) << "|" 
 						<< rightKneeJoint->GetVelocity(0) << "|" << rightAnkleJoint->GetVelocity(0);
 
+					s << "|";
+
+					Eigen::Matrix<double, n, 1> state = get_CoMState();
+
+					for(int i = 0; i < n; i++) {
+						s << state(i, 0);
+
+						if(i != n - 1) { // Don't append seperator to end
+							s << "|";
+						}
+					}
+
 					sendto(sockfd, (const char *)s.str().c_str(), strlen(s.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
-					n = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, (struct sockaddr *) &servaddr, &len); 
-					buffer[n] = '\0';
+					msg_length = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, (struct sockaddr *) &servaddr, &len); 
+					buffer[msg_length] = '\0';
 
 					// print_threadsafe("Received left leg torque setpoint.", "right_leg_torque_thread");
 
