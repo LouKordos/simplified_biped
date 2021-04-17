@@ -282,10 +282,12 @@ namespace gazebo
 
 			ofstream data_file;
 			data_file.open("../mpc_log.csv");
-			data_file << "t,phi,theta,psi,pos_x,pos_y,pos_z,omega_x,omega_y,omega_z,vel_x,vel_y,vel_z,g,f_x_left,f_y_left,f_z_left,f_x_right,f_y_right,f_z_right,r_x_left,r_y_left,r_z_left,r_x_right,r_y_right,r_z_right,theta_delay_compensation,full_iteration_time,phi_delay_compensation" << std::endl; // Add header to csv file
+			data_file << "t_sim,phi,theta,psi,pos_x,pos_y,pos_z,omega_x,omega_y,omega_z,vel_x,vel_y,vel_z,g,f_x_left,f_y_left,f_z_left,f_x_right,f_y_right,f_z_right,r_x_left,r_y_left,r_z_left,r_x_right,r_y_right,r_z_right,theta_delay_compensation,full_iteration_time,phi_delay_compensation,prev_logging_time" << std::endl; // Add header to csv file
 			data_file.close();
 
 			long long total_iterations = 0;
+
+			double previous_logging_duration = 0;
 
 			while(true) {
 				start = high_resolution_clock::now();
@@ -362,9 +364,11 @@ namespace gazebo
 					r_l = r_l_temp;
 					r_r = r_r_temp;
 
+					auto logging_start = high_resolution_clock::now();
+
 					ofstream data_file;
 					data_file.open("../mpc_log.csv", ios::app); // Open csv file in append mode
-					data_file << total_iterations * (mpcInterval / 1e+6) << "," << phi << "," << theta << "," << psi << "," 
+					data_file << atof(message_split[15].c_str()) << "," << phi << "," << theta << "," << psi << "," 
 								<< pos_x << "," << pos_y << "," << pos_z << ","
 								<< omega_x << "," << omega_y << "," << omega_z << ","
 								<< vel_x << "," << vel_y << "," << vel_z << "," << -9.81 << ","
@@ -372,9 +376,14 @@ namespace gazebo
 								<< f_r[0] << "," << f_r[1] << "," << f_r[2] << ","
 								<< r_l[0] << "," << r_l[1] << "," << r_l[2] << "," 
 								<< r_r[0] << "," << r_r[1] << "," << r_r[2] << ","
-								<< atof(message_split[12].c_str()) << "," << atof(message_split[13].c_str()) << "," << atof(message_split[14].c_str())
+								<< atof(message_split[12].c_str()) << "," << atof(message_split[13].c_str()) << "," << atof(message_split[14].c_str()) << ","
+								<< previous_logging_duration
 								<< std::endl;
 					data_file.close(); // Close csv file again. This way thread abort should (almost) never leave file open.
+
+					auto logging_end = high_resolution_clock::now();
+
+					previous_logging_duration = duration_cast<nanoseconds>(logging_end - logging_start).count();
 				}
 
 				total_iterations++;
