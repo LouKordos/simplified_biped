@@ -1,0 +1,18 @@
+#!/bin/bash
+
+if [ "$1" == "paused" ] || [ "$1" == "pause" ]
+then
+    LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$(pwd)/control_plugin/build/ chrt -r 1 taskset -c 8-11,20-23 gazebo -u -e bullet --verbose -r --record_encoding zlib --record_path $(pwd) simplified_biped.world # Run sim
+else
+    LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$(pwd)/control_plugin/build/ chrt -r 1 taskset -c 8-11,20-23 gazebo -e bullet --verbose -r --record_encoding zlib --record_path $(pwd) simplified_biped.world # Run sim
+fi
+
+
+plot_data_dir=$HOME/dev/walking_controller/plot_data/
+largest_index=$(ls ${plot_data_dir} | sort -nr | head -n 1 | sed 's/\([0-9]*\).*/\1/')
+
+echo -e "Copying recorded state to \"${plot_data_dir}${largest_index}_state.log\"..."
+
+pv state.log > ${plot_data_dir}/${largest_index}_state.log
+
+echo -e "Done."
