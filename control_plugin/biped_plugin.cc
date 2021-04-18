@@ -677,7 +677,7 @@ namespace gazebo
 
 			long long iteration_counter = 0;
 
-			int sockfd; 
+			int sockfd;
 			char buffer[udp_buffer_size]; 
 			struct sockaddr_in servaddr; 
 		
