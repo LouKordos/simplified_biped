@@ -11,6 +11,7 @@
 		</include>
 
 		<model name="biped">
+			<pose>0 0 0 0 0 0</pose>
 			<include>
 				<uri>model://simplified_biped</uri>
 			</include>
