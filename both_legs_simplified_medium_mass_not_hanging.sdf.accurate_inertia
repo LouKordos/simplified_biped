@@ -187,7 +187,7 @@
         </visual>
 
         <sensor name='left_foot_contact' type='contact'>
-            <plugin name="foot_contact_plugin" filename="./libfoot_contact_plugin.so"/>
+            <plugin name="foot_contact_plugin" filename="libfoot_contact_plugin.so"/>
             <contact>
                 <collision>left_foot_base_collision</collision>
             </contact>
@@ -573,7 +573,7 @@
         </visual>
 
         <sensor name='right_foot_contact' type='contact'>
-            <plugin name="foot_contact_plugin" filename="./libfoot_contact_plugin.so"/>
+            <plugin name="foot_contact_plugin" filename="libfoot_contact_plugin.so"/>
             <contact>
                 <collision>right_foot_base_collision</collision>
             </contact>
