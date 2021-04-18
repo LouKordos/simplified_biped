@@ -52,6 +52,8 @@ namespace gazebo
 	gazebo::physics::JointPtr rightAnkleJoint;
 	
 	gazebo::physics::LinkPtr torso;
+	gazebo::physics::LinkPtr left_foot_base;
+	gazebo::physics::LinkPtr right_foot_base;
 
 	ignition::math::Vector3d f_l(0, 0, 0); // Left foot force expressed in world frame
 	ignition::math::Vector3d f_r(0, 0, 0); // Right foot force expressed in world frame
@@ -132,6 +134,9 @@ namespace gazebo
 				rightHip1Joint = model->GetJoint("simplified_biped::right_hip_axis_1_upper_leg_joint");
 				rightKneeJoint = model->GetJoint("simplified_biped::right_knee_lower_leg_joint");
 				rightAnkleJoint = model->GetJoint("simplified_biped::right_ankle_foot_base_joint");
+
+				left_foot_base = model->GetChildLink("simplified_biped::left_foot_base");
+				right_foot_base = model->GetChildLink("simplified_biped::right_foot_base");
 
 				leftHip3Joint->SetPosition(0, 0);
 				leftHip2Joint->SetPosition(0, 0);
@@ -572,8 +577,8 @@ namespace gazebo
 				stringstream first_msg;
 				first_msg << leftHip3Joint->Position() << "|" << leftHip2Joint->Position() << "|" << leftHip1Joint->Position() << "|" << leftKneeJoint->Position() << "|" 
 					<< leftAnkleJoint->Position() 
-					<< "|" << leftHip3Joint->GetVelocity(0) << "|" << leftHip2Joint->GetVelocity(0) << "|" << leftHip1Joint->GetVelocity(0) << "|" 
-					<< leftKneeJoint->GetVelocity(0) << "|" << leftAnkleJoint->GetVelocity(0);
+					<< "|" << leftHip3Joint->GetVelocity(0) << "|" << leftHip2Joint->GetVelocity(0) << "|" << leftHip1Joint->GetVelocity(0) 
+					<< "|" << leftKneeJoint->GetVelocity(0) << "|" << leftAnkleJoint->GetVelocity(0);
 
 				first_msg << "|";
 
@@ -586,6 +591,8 @@ namespace gazebo
 						first_msg << "|";
 					}
 				}
+
+				first_msg << "|" << left_foot_base->WorldPose().Pos().X() << "|" << left_foot_base->WorldPose().Pos().Y() << "|" << left_foot_base->WorldPose().Pos().Z();
 				
 				sendto(sockfd, (const char *)first_msg.str().c_str(), strlen(first_msg.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 
@@ -609,6 +616,8 @@ namespace gazebo
 							s << "|";
 						}
 					}
+
+					s << "|" << left_foot_base->WorldPose().Pos().X() << "|" << left_foot_base->WorldPose().Pos().Y() << "|" << left_foot_base->WorldPose().Pos().Z();
 					
 					sendto(sockfd, (const char *)s.str().c_str(), strlen(s.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 					
@@ -695,8 +704,8 @@ namespace gazebo
 				stringstream first_msg;
 				first_msg << rightHip3Joint->Position() << "|" << rightHip2Joint->Position() << "|" << rightHip1Joint->Position() << "|" << rightKneeJoint->Position() << "|" 
 					<< rightAnkleJoint->Position() 
-					<< "|" << rightHip3Joint->GetVelocity(0) << "|" << rightHip2Joint->GetVelocity(0) << "|" << rightHip1Joint->GetVelocity(0) << "|" 
-					<< rightKneeJoint->GetVelocity(0) << "|" << rightAnkleJoint->GetVelocity(0);
+					<< "|" << rightHip3Joint->GetVelocity(0) << "|" << rightHip2Joint->GetVelocity(0) << "|" << rightHip1Joint->GetVelocity(0) 
+					<< "|" << rightKneeJoint->GetVelocity(0) << "|" << rightAnkleJoint->GetVelocity(0);
 				
 				first_msg << "|";
 
@@ -709,6 +718,10 @@ namespace gazebo
 						first_msg << "|";
 					}
 				}
+
+				// std::cout << right_foot_base->WorldPose().Pos().X() << std::endl;
+
+				first_msg << "|" << right_foot_base->WorldPose().Pos().X() << "|" << right_foot_base->WorldPose().Pos().Y() << "|" << right_foot_base->WorldPose().Pos().Z();
 
 				sendto(sockfd, (const char *)first_msg.str().c_str(), strlen(first_msg.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 
@@ -732,6 +745,8 @@ namespace gazebo
 							s << "|";
 						}
 					}
+
+					s << "|" << right_foot_base->WorldPose().Pos().X() << "|" << right_foot_base->WorldPose().Pos().Y() << "|" << right_foot_base->WorldPose().Pos().Z();
 
 					sendto(sockfd, (const char *)s.str().c_str(), strlen(s.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 					msg_length = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, (struct sockaddr *) &servaddr, &len); 
