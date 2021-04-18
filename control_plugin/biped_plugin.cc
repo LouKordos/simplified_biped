@@ -366,20 +366,20 @@ namespace gazebo
 
 					auto logging_start = high_resolution_clock::now();
 
-					ofstream data_file;
-					data_file.open("../mpc_log.csv", ios::app); // Open csv file in append mode
-					data_file << atof(message_split[15].c_str()) << "," << phi << "," << theta << "," << psi << "," 
-								<< pos_x << "," << pos_y << "," << pos_z << ","
-								<< omega_x << "," << omega_y << "," << omega_z << ","
-								<< vel_x << "," << vel_y << "," << vel_z << "," << -9.81 << ","
-								<< f_l[0] << "," << f_l[1] << "," << f_l[2] << ","
-								<< f_r[0] << "," << f_r[1] << "," << f_r[2] << ","
-								<< r_l[0] << "," << r_l[1] << "," << r_l[2] << "," 
-								<< r_r[0] << "," << r_r[1] << "," << r_r[2] << ","
-								<< atof(message_split[12].c_str()) << "," << atof(message_split[13].c_str()) << "," << atof(message_split[14].c_str()) << ","
-								<< previous_logging_duration
-								<< std::endl;
-					data_file.close(); // Close csv file again. This way thread abort should (almost) never leave file open.
+					// ofstream data_file;
+					// data_file.open("../mpc_log.csv", ios::app); // Open csv file in append mode
+					// data_file << atof(message_split[15].c_str()) << "," << phi << "," << theta << "," << psi << "," 
+					// 			<< pos_x << "," << pos_y << "," << pos_z << ","
+					// 			<< omega_x << "," << omega_y << "," << omega_z << ","
+					// 			<< vel_x << "," << vel_y << "," << vel_z << "," << -9.81 << ","
+					// 			<< f_l[0] << "," << f_l[1] << "," << f_l[2] << ","
+					// 			<< f_r[0] << "," << f_r[1] << "," << f_r[2] << ","
+					// 			<< r_l[0] << "," << r_l[1] << "," << r_l[2] << "," 
+					// 			<< r_r[0] << "," << r_r[1] << "," << r_r[2] << ","
+					// 			<< atof(message_split[12].c_str()) << "," << atof(message_split[13].c_str()) << "," << atof(message_split[14].c_str()) << ","
+					// 			<< previous_logging_duration
+					// 			<< std::endl;
+					// data_file.close(); // Close csv file again. This way thread abort should (almost) never leave file open.
 
 					auto logging_end = high_resolution_clock::now();
 
