@@ -4,8 +4,8 @@ RUN pacman -Syu --needed --noconfirm base-devel git go nvidia nvidia-utils
 RUN git clone https://aur.archlinux.org/yay.git
 RUN sudo chmod 777 -R ./yay
 
-ENV MAKEFLAGS="-j$(nproc)"
-RUN echo 'MAKEFLAGS="-j$(nproc)"' >> /etc/makepkg.conf
+ENV MAKEFLAGS="-j$(awk '( $1 == "MemTotal:" ) { printf "%d", $2/2/1000000 }' /proc/meminfo)"
+RUN echo 'MAKEFLAGS="-j$(awk '( $1 == "MemTotal:" ) { printf "%d", $2/2/1000000 }' /proc/meminfo)"' >> /etc/makepkg.conf
 
 RUN useradd --shell=/bin/bash build && usermod -L build
 RUN echo "build ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
