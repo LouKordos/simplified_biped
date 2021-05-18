@@ -71,7 +71,22 @@
 			"matrixfunctions": "cpp",
 			"dense": "cpp",
 			"strstream": "cpp",
-			"cfenv": "cpp"
+			"cfenv": "cpp",
+			"any": "cpp",
+			"hash_map": "cpp",
+			"hash_set": "cpp",
+			"bit": "cpp",
+			"compare": "cpp",
+			"concepts": "cpp",
+			"coroutine": "cpp",
+			"forward_list": "cpp",
+			"regex": "cpp",
+			"source_location": "cpp",
+			"ranges": "cpp",
+			"shared_mutex": "cpp",
+			"stop_token": "cpp",
+			"valarray": "cpp",
+			"variant": "cpp"
 		}
 	}
 }
