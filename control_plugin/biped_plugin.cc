@@ -214,11 +214,11 @@ namespace gazebo
 				double psi = torso->WorldPose().Rot().Yaw();
 				filter_value(psi);
 
-				std::cout << "signbit psi=" << signbit(psi) << ",signbit prev_psi=" << signbit(prev_psi) << ",psi=" << psi << ",prev_psi=" << prev_psi << "\n";
+				// std::cout << "signbit psi=" << signbit(psi) << ",signbit prev_psi=" << signbit(prev_psi) << ",psi=" << psi << ",prev_psi=" << prev_psi << "\n";
 
 				if(signbit(psi) != signbit(prev_psi) && (prev_psi > M_PI_2 || prev_psi < -M_PI_2)) {
 					offset += (signbit(psi) ? 2 * M_PI : -2 * M_PI);
-					std::cout << "Offset applied, psi=" << psi << "\n";
+					// std::cout << "Offset applied, psi=" << psi << "\n";
 				}
 
 				double pos_x = torso->WorldPose().Pos().X();
