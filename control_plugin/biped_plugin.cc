@@ -17,6 +17,7 @@
 #include <eigen3/unsupported/Eigen/MatrixFunctions>
 #include <eigen3/Eigen/Dense>
 #include <eigen3/Eigen/QR>
+#include <math.h>
 
 using Eigen::MatrixXd;
 
@@ -81,6 +82,8 @@ namespace gazebo
 	const bool apply_torques = true;
 	const bool apply_forces = false;
 	const bool print_torque_vectors = false;
+
+	double prev_psi = 0;
 
 	// Pointer to the update event connection
 	event::ConnectionPtr updateConnection;
@@ -200,6 +203,8 @@ namespace gazebo
 			mpc_parse_thread = std::thread(std::bind(&BipedPlugin::UpdateMPCForces, this));
 		}
 
+		public: double offset = 0;
+
 		public: Eigen::Matrix<double, n, 1> get_CoMState() {
 			// state is phi, theta, psi, p_x, p_y, p_z, omega_x, omega_y, omega_z, v_x, v_y, v_z, gravity constant
 				double phi = torso->WorldPose().Rot().Roll();
@@ -208,6 +213,13 @@ namespace gazebo
 				filter_value(theta);
 				double psi = torso->WorldPose().Rot().Yaw();
 				filter_value(psi);
+
+				std::cout << "signbit psi=" << signbit(psi) << ",signbit prev_psi=" << signbit(prev_psi) << ",psi=" << psi << ",prev_psi=" << prev_psi << "\n";
+
+				if(signbit(psi) != signbit(prev_psi) && (prev_psi > M_PI_2 || prev_psi < -M_PI_2)) {
+					offset += (signbit(psi) ? 2 * M_PI : -2 * M_PI);
+					std::cout << "Offset applied, psi=" << psi << "\n";
+				}
 
 				double pos_x = torso->WorldPose().Pos().X();
 				filter_value(pos_x);
@@ -231,6 +243,9 @@ namespace gazebo
 				filter_value(vel_z);
 
 				double g = -9.81;
+
+				prev_psi = psi;
+				psi += offset;
 
 				return (Eigen::Matrix<double, n, 1>() << phi, theta, psi, pos_x, pos_y, pos_z, omega_x, omega_y, omega_z, vel_x, vel_y, vel_z, g).finished();
 		}
