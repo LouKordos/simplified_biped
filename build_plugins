@@ -1,6 +1,7 @@
 #!/bin/bash
 
+set -ue
+
 cd control_plugin
-mkdir build ; cd build
+mkdir -p build ; cd build
 make -j
-cd ../..

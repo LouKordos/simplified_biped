@@ -1,6 +1,11 @@
 #!/bin/bash
 
-./build_plugins # To prevent running old versions
+function fatalerror() {
+  echo "$1" 1>&2
+  exit 1
+}
+
+./build_plugins || fatalerror "Build exited with a nonzero error code, not running sim." # To prevent running old versions
 
 if [ "$1" == "paused" ] || [ "$1" == "pause" ]
 then
