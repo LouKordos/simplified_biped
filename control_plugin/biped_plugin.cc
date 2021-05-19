@@ -301,47 +301,47 @@ namespace gazebo
 
 		public: Eigen::Matrix<double, n, 1> get_CoMState() {
 			// state is phi, theta, psi, p_x, p_y, p_z, omega_x, omega_y, omega_z, v_x, v_y, v_z, gravity constant
-				double phi = torso->WorldPose().Rot().Roll();
-				filter_value(phi);
-				double theta = torso->WorldPose().Rot().Pitch();
-				filter_value(theta);
-				double psi = torso->WorldPose().Rot().Yaw();
-				filter_value(psi);
+			double phi = torso->WorldPose().Rot().Roll();
+			filter_value(phi);
+			double theta = torso->WorldPose().Rot().Pitch();
+			filter_value(theta);
+			double psi = torso->WorldPose().Rot().Yaw();
+			filter_value(psi);
 
-				// std::cout << "signbit psi=" << signbit(psi) << ",signbit prev_psi=" << signbit(prev_psi) << ",psi=" << psi << ",prev_psi=" << prev_psi << "\n";
+			// std::cout << "signbit psi=" << signbit(psi) << ",signbit prev_psi=" << signbit(prev_psi) << ",psi=" << psi << ",prev_psi=" << prev_psi << "\n";
 
-				if(signbit(psi) != signbit(prev_psi) && (prev_psi > M_PI_2 || prev_psi < -M_PI_2)) {
-					offset += (signbit(psi) ? 2 * M_PI : -2 * M_PI);
-					// std::cout << "Offset applied, psi=" << psi << "\n";
-				}
+			if(signbit(psi) != signbit(prev_psi) && (prev_psi > M_PI_2 || prev_psi < -M_PI_2)) {
+				offset += (signbit(psi) ? 2 * M_PI : -2 * M_PI);
+				// std::cout << "Offset applied, psi=" << psi << "\n";
+			}
 
-				double pos_x = torso->WorldPose().Pos().X();
-				filter_value(pos_x);
-				double pos_y = torso->WorldPose().Pos().Y();
-				filter_value(pos_y);
-				double pos_z = torso->WorldPose().Pos().Z();
-				filter_value(pos_z);
+			double pos_x = torso->WorldPose().Pos().X();
+			filter_value(pos_x);
+			double pos_y = torso->WorldPose().Pos().Y();
+			filter_value(pos_y);
+			double pos_z = torso->WorldPose().Pos().Z();
+			filter_value(pos_z);
 
-				double omega_x = torso->WorldAngularVel().X();
-				filter_value(omega_x);
-				double omega_y = torso->WorldAngularVel().Y();
-				filter_value(omega_y);
-				double omega_z = torso->WorldAngularVel().Z();
-				filter_value(omega_z);
+			double omega_x = torso->WorldAngularVel().X();
+			filter_value(omega_x);
+			double omega_y = torso->WorldAngularVel().Y();
+			filter_value(omega_y);
+			double omega_z = torso->WorldAngularVel().Z();
+			filter_value(omega_z);
 
-				double vel_x = torso->WorldLinearVel().X();
-				filter_value(vel_x);
-				double vel_y = torso->WorldLinearVel().Y();
-				filter_value(vel_y);
-				double vel_z = torso->WorldLinearVel().Z();
-				filter_value(vel_z);
+			double vel_x = torso->WorldLinearVel().X();
+			filter_value(vel_x);
+			double vel_y = torso->WorldLinearVel().Y();
+			filter_value(vel_y);
+			double vel_z = torso->WorldLinearVel().Z();
+			filter_value(vel_z);
 
-				double g = -9.81;
+			double g = -9.81;
 
-				prev_psi = psi;
-				psi += offset;
+			prev_psi = psi;
+			psi += offset;
 
-				return (Eigen::Matrix<double, n, 1>() << phi, theta, psi, pos_x, pos_y, pos_z, omega_x, omega_y, omega_z, vel_x, vel_y, vel_z, g).finished();
+			return (Eigen::Matrix<double, n, 1>() << phi, theta, psi, pos_x, pos_y, pos_z, omega_x, omega_y, omega_z, vel_x, vel_y, vel_z, g).finished();
 		}
 
 		public: void UpdateMPCForces() {
