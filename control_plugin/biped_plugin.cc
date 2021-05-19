@@ -201,7 +201,101 @@ namespace gazebo
 			}
 			mpc_force_thread = std::thread(std::bind(&BipedPlugin::ApplyMPCForces, this));
 			mpc_parse_thread = std::thread(std::bind(&BipedPlugin::UpdateMPCForces, this));
+
+			test_thread = std::thread(std::bind(&BipedPlugin::resetWorld, this));
 		}
+
+		public: std::thread test_thread;
+
+        public: void resetWorld() {
+
+			struct timeval tv;
+			tv.tv_sec = 1;
+			tv.tv_usec = 0;
+
+			int sockfd, portno, n;
+			struct sockaddr_in serv_addr;
+			struct hostent *server;
+
+			const int buffer_size = 128;
+
+			char buffer[buffer_size];
+			portno = 421;
+			sockfd = socket(AF_INET, SOCK_STREAM, 0);
+			if (sockfd < 0) 
+				std::cerr << "Error opening socket.\n";
+			
+			server = gethostbyname("terminator.loukordos.eu");
+			if (server == NULL) {
+				fprintf(stderr,"ERROR, no such host\n");
+				exit(0);
+			}
+
+			bzero((char *) &serv_addr, sizeof(serv_addr));
+			serv_addr.sin_family = AF_INET;
+			bcopy((char *)server->h_addr, 
+				(char *)&serv_addr.sin_addr.s_addr,
+				server->h_length);
+			serv_addr.sin_port = htons(portno);
+
+			if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) 
+				std::cerr << "Error connecting to server.\n";
+			
+			setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
+
+			while(true) {
+
+				bzero(buffer, buffer_size);
+				n = read(sockfd, buffer, buffer_size - 1);
+				if (n < 0) {
+					std::cout << "Error while reading from socket.\n";
+				}
+				std::string parsedString(buffer);
+
+				if(parsedString == "1") {
+					std::cout << "Reset triggered.\n";
+					
+					model->GetJointController()->SetPositionPID(leftHip3Joint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+					model->GetJointController()->SetPositionPID(leftHip2Joint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+					model->GetJointController()->SetPositionPID(leftHip1Joint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+					model->GetJointController()->SetPositionPID(leftKneeJoint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+					model->GetJointController()->SetPositionPID(leftAnkleJoint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+
+					model->GetJointController()->SetVelocityPID(leftHip3Joint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+					model->GetJointController()->SetVelocityPID(leftHip2Joint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+					model->GetJointController()->SetVelocityPID(leftHip1Joint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+					model->GetJointController()->SetVelocityPID(leftKneeJoint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+					model->GetJointController()->SetVelocityPID(leftAnkleJoint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+					
+					leftHip3Joint->SetPosition(0, 0);
+					leftHip2Joint->SetPosition(0, 0);
+					leftHip1Joint->SetPosition(0, -0.4);
+					leftKneeJoint->SetPosition(0, 0.85);
+					leftAnkleJoint->SetPosition(0, -0.45);
+
+					rightHip3Joint->SetPosition(0, 0);
+					rightHip2Joint->SetPosition(0, 0);
+					rightHip1Joint->SetPosition(0, -0.4);
+					rightKneeJoint->SetPosition(0, 0.85);
+					rightAnkleJoint->SetPosition(0, -0.45);
+
+					model->GetJointController()->SetPositionPID(leftHip3Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+					model->GetJointController()->SetPositionPID(leftHip2Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+					model->GetJointController()->SetPositionPID(leftHip1Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+					model->GetJointController()->SetPositionPID(leftKneeJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+					model->GetJointController()->SetPositionPID(leftAnkleJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+
+					model->GetJointController()->SetVelocityPID(leftHip3Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+					model->GetJointController()->SetVelocityPID(leftHip2Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+					model->GetJointController()->SetVelocityPID(leftHip1Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+					model->GetJointController()->SetVelocityPID(leftKneeJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+					model->GetJointController()->SetVelocityPID(leftAnkleJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+
+					ignition::math::Pose3d test(ignition::math::Vector3d(0, 0, 0.02), ignition::math::Quaterniond(0, 0, 0));
+					model->SetWorldPose(test);
+				}
+			}
+        }
 
 		public: double offset = 0;
 

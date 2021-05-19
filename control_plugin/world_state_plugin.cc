@@ -91,10 +91,67 @@ namespace gazebo
         
         public: physics::WorldPtr world;
 
+        public: std::thread test_thread;
+
+        public: void resetWorld() {
+            struct timeval tv;
+			tv.tv_sec = 1; 
+			tv.tv_usec = 0;
+
+			int sockfd, portno, n;
+			struct sockaddr_in serv_addr;
+			struct hostent *server;
+
+			const int buffer_size = 128;
+
+			char buffer[buffer_size];
+			portno = 422;
+			sockfd = socket(AF_INET, SOCK_STREAM, 0);
+			if (sockfd < 0) 
+				std::cerr << "Error opening socket.\n";
+			
+			server = gethostbyname("terminator.loukordos.eu");
+			if (server == NULL) {
+				fprintf(stderr,"ERROR, no such host\n");
+				exit(0);
+			}
+
+			bzero((char *) &serv_addr, sizeof(serv_addr));
+			serv_addr.sin_family = AF_INET;
+			bcopy((char *)server->h_addr, 
+				(char *)&serv_addr.sin_addr.s_addr,
+				server->h_length);
+			serv_addr.sin_port = htons(portno);
+
+			if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) 
+				std::cerr << "Error connecting to server.\n";
+			
+			setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
+
+            while(true) {
+
+                bzero(buffer, buffer_size);
+				n = read(sockfd, buffer, buffer_size - 1);
+				if (n < 0) {
+					std::cout << "Error while reading from socket.\n";
+				}
+				std::string parsedString(buffer);
+
+				if(parsedString == "1") {
+					std::cout << "Reset triggered.\n";
+                    world->Reset();
+                    world->SetPaused(true);
+                    std::this_thread::sleep_for(std::chrono::milliseconds(250));
+                    world->SetPaused(false);
+                }
+            }
+        }
+
         public: void Load(physics::WorldPtr _parent, sdf::ElementPtr /*_sdf*/)
         {
             world = _parent;
             sim_state_update_thread = std::thread([this] {update_sim_state(); });
+            test_thread = std::thread([this] {resetWorld(); });
         }
     };
 
