@@ -18,6 +18,90 @@
 			<plugin name="biped_plugin" filename="libbiped_plugin.so"/>
 		</model>
 
+		<model name="box">
+			<static>true</static>
+			<pose>0 1 -0.05 0 0.2 -1.5707</pose>
+			<link name="link">
+
+				<collision name="collision">
+				<surface>
+					<friction>
+						<ode>
+							<mu>100</mu>
+							<mu2>100</mu2>
+							<slip1>0</slip1>
+							<slip2>0</slip2>
+						</ode>
+						<bullet>
+							<friction>100</friction>
+							<friction2>100</friction2>
+							<fdir1>0 0 1</fdir1>
+						</bullet>
+					</friction>
+					<contact>
+						<ode>
+							<min_depth>0.005</min_depth>
+						</ode>
+					</contact>
+				</surface>
+				<geometry>
+					<box>
+					<size>1 1 .1</size>
+					</box>
+				</geometry>
+				</collision>
+				<visual name="visual">
+				<geometry>
+					<box>
+					<size>1 1 .1</size>
+					</box>
+				</geometry>
+				</visual>
+			</link>
+		</model>
+
+		<model name="box2">
+			<static>true</static>
+			<pose>0 1.96 -0.05 0 -0.2 -1.5707</pose>
+			<link name="link2">
+
+				<collision name="collision2">
+				<surface>
+					<friction>
+						<ode>
+							<mu>100</mu>
+							<mu2>100</mu2>
+							<slip1>0</slip1>
+							<slip2>0</slip2>
+						</ode>
+						<bullet>
+							<friction>100</friction>
+							<friction2>100</friction2>
+							<fdir1>0 0 1</fdir1>
+						</bullet>
+					</friction>
+					<contact>
+						<ode>
+							<min_depth>0.005</min_depth>
+						</ode>
+					</contact>
+				</surface>
+				<geometry>
+					<box>
+					<size>1 1 .1</size>
+					</box>
+				</geometry>
+				</collision>
+				<visual name="visual2">
+				<geometry>
+					<box>
+					<size>1 1 .1</size>
+					</box>
+				</geometry>
+				</visual>
+			</link>
+		</model>
+
         <plugin name="world_state_plugin" filename="libworld_state_plugin.so"/>
 	</world>
 </sdf>
