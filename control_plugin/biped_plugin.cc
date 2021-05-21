@@ -591,6 +591,8 @@ namespace gazebo
 
 			socklen_t len = sizeof(servaddr);
 
+			long prev_iteration_timestamp = -1; // Iteration timestamp sent with every message so that same message is not applied twice.
+
 			if (legs_attached) {
 			
 				//Initial message for connection to work properly.
@@ -653,7 +655,7 @@ namespace gazebo
 
 					std::vector<std::string> torques = split_string(data, '|');
 
-					if(static_cast<int>(torques.size()) >= 4) {
+					if(static_cast<int>(torques.size()) >= 5) {
 
 						double tau_1 = atof(torques[0].c_str());
 						double tau_2 = atof(torques[1].c_str());
@@ -662,12 +664,19 @@ namespace gazebo
 						double tau_5 = atof(torques[4].c_str());
 
 						if(apply_torques) {
-							model->GetJointController()->SetForce(leftHip3Joint->GetScopedName(), tau_1);
-							model->GetJointController()->SetForce(leftHip2Joint->GetScopedName(), tau_2);
-							model->GetJointController()->SetForce(leftHip1Joint->GetScopedName(), tau_3);
-							model->GetJointController()->SetForce(leftKneeJoint->GetScopedName(), tau_4);
-							model->GetJointController()->SetForce(leftAnkleJoint->GetScopedName(), tau_5);
+							if(atoi(torques[5].c_str()) != prev_iteration_timestamp) {
+								model->GetJointController()->SetForce(leftHip3Joint->GetScopedName(), tau_1);
+								model->GetJointController()->SetForce(leftHip2Joint->GetScopedName(), tau_2);
+								model->GetJointController()->SetForce(leftHip1Joint->GetScopedName(), tau_3);
+								model->GetJointController()->SetForce(leftKneeJoint->GetScopedName(), tau_4);
+								model->GetJointController()->SetForce(leftAnkleJoint->GetScopedName(), tau_5);
+							}
+							else {
+								print_threadsafe("Got outdated torque setpoint.", "left_leg_torque_thread");
+							}
 						}
+
+						prev_iteration_timestamp = atoi(torques[5].c_str());
 
 						if(print_torque_vectors) {
 							stringstream temp;
@@ -722,6 +731,8 @@ namespace gazebo
 			int msg_length;
 
 			socklen_t len = sizeof(servaddr);
+
+			long prev_iteration_timestamp = -1; // Iteration timestamp sent with every message so that same message is not applied twice.
 
 			if(legs_attached) {
 			
@@ -788,7 +799,7 @@ namespace gazebo
 
 					std::vector<std::string> torques = split_string(data, '|');
 
-					if(static_cast<int>(torques.size()) >= 4) {
+					if(static_cast<int>(torques.size()) >= 5) {
 
 						double tau_1 = atof(torques[0].c_str());
 						double tau_2 = atof(torques[1].c_str());
@@ -797,12 +808,23 @@ namespace gazebo
 						double tau_5 = atof(torques[4].c_str());
 
 						if(apply_torques) {
-							model->GetJointController()->SetForce(rightHip3Joint->GetScopedName(), tau_1);
-							model->GetJointController()->SetForce(rightHip2Joint->GetScopedName(), tau_2);
-							model->GetJointController()->SetForce(rightHip1Joint->GetScopedName(), tau_3);
-							model->GetJointController()->SetForce(rightKneeJoint->GetScopedName(), tau_4);
-							model->GetJointController()->SetForce(rightAnkleJoint->GetScopedName(), tau_5);
+							if(atoi(torques[5].c_str()) != prev_iteration_timestamp) {
+								model->GetJointController()->SetForce(rightHip3Joint->GetScopedName(), tau_1);
+								model->GetJointController()->SetForce(rightHip2Joint->GetScopedName(), tau_2);
+								model->GetJointController()->SetForce(rightHip1Joint->GetScopedName(), tau_3);
+								model->GetJointController()->SetForce(rightKneeJoint->GetScopedName(), tau_4);
+								model->GetJointController()->SetForce(rightAnkleJoint->GetScopedName(), tau_5);
+							}
+							else {
+								stringstream temp;
+								temp << "Got outdated torque setpoint.";
+								print_threadsafe(temp.str(), "right_leg_torque_thread");
+							}
+							
 						}
+
+						prev_iteration_timestamp = atoi(torques[5].c_str());
+
 						if(print_torque_vectors) {
 							stringstream temp;
 							temp << "Torque vector: " << tau_1 << "," << tau_2 << "," << tau_3 << "," << tau_4 << "," << tau_5;
