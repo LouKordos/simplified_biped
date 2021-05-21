@@ -463,17 +463,17 @@ namespace gazebo
 			double duration;
 			struct timespec deadline;
 			
-			int sockfd; 
+			int sockfd;
 			char buffer[udp_buffer_size];
-			struct sockaddr_in servaddr, cliaddr; 
+			struct sockaddr_in servaddr, cliaddr;
 			
 			// Creating socket file descriptor 
-			if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) { 
-				perror("socket creation failed"); 
-				exit(EXIT_FAILURE); 
-			} 
+			if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
+				perror("socket creation failed");
+				exit(EXIT_FAILURE);
+			}
 			
-			memset(&servaddr, 0, sizeof(servaddr)); 
+			memset(&servaddr, 0, sizeof(servaddr));
 			memset(&cliaddr, 0, sizeof(cliaddr));
 			
 			// Filling server information
@@ -482,16 +482,15 @@ namespace gazebo
 			servaddr.sin_port = htons(udp_disturbance_port);
 			
 			// Bind the socket with the server address 
-			if ( bind(sockfd, (const struct sockaddr *)&servaddr,  
-					sizeof(servaddr)) < 0 )
+			if (bind(sockfd, (const struct sockaddr *)&servaddr, sizeof(servaddr)) < 0)
 			{
 				perror("bind failed");
 				exit(EXIT_FAILURE);
 			}
 			
-			int msg_length; 
-		
-			socklen_t len = sizeof(cliaddr);  //len is value/result 
+			int msg_length;
+			
+			socklen_t len = sizeof(cliaddr);  //len is value/result
 
 			stringstream temp;
 			temp << "Disturbance Socket set up.";
