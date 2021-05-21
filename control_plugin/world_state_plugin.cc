@@ -91,7 +91,7 @@ namespace gazebo
         
         public: physics::WorldPtr world;
 
-        public: std::thread test_thread;
+        public: std::thread reset_thread;
 
         public: void resetWorld() {
             struct timeval tv;
@@ -105,7 +105,7 @@ namespace gazebo
 			const int buffer_size = 128;
 
 			char buffer[buffer_size];
-			portno = 422;
+			portno = 422000;
 			sockfd = socket(AF_INET, SOCK_STREAM, 0);
 			if (sockfd < 0) 
 				std::cerr << "Error opening socket.\n";
@@ -140,9 +140,69 @@ namespace gazebo
 				if(parsedString == "1") {
 					std::cout << "Reset triggered.\n";
                     world->Reset();
+
+                    ignition::math::Pose3d test(ignition::math::Vector3d(0, 0, 0.01), ignition::math::Quaterniond(0, 0, 0));
+                    world->ModelByName("biped")->SetWorldPose(test);
+                    world->ModelByName("biped")->SetAngularVel(ignition::math::Vector3d(0, 0, 0));
+
+                    gazebo::physics::JointPtr leftHip3Joint = world->ModelByName("biped")->GetJoint("simplified_biped::left_hip_axis_3_hip_axis_2_joint");
+                    gazebo::physics::JointPtr leftHip2Joint = world->ModelByName("biped")->GetJoint("simplified_biped::left_hip_axis_2_hip_axis_1_joint");
+                    gazebo::physics::JointPtr leftHip1Joint = world->ModelByName("biped")->GetJoint("simplified_biped::left_hip_axis_1_upper_leg_joint");
+                    gazebo::physics::JointPtr leftKneeJoint = world->ModelByName("biped")->GetJoint("simplified_biped::left_knee_lower_leg_joint");
+                    gazebo::physics::JointPtr leftAnkleJoint = world->ModelByName("biped")->GetJoint("simplified_biped::left_ankle_foot_base_joint");
+
+                    gazebo::physics::JointPtr rightHip3Joint = world->ModelByName("biped")->GetJoint("simplified_biped::right_hip_axis_3_hip_axis_2_joint");
+                    gazebo::physics::JointPtr rightHip2Joint = world->ModelByName("biped")->GetJoint("simplified_biped::right_hip_axis_2_hip_axis_1_joint");
+                    gazebo::physics::JointPtr rightHip1Joint = world->ModelByName("biped")->GetJoint("simplified_biped::right_hip_axis_1_upper_leg_joint");
+                    gazebo::physics::JointPtr rightKneeJoint = world->ModelByName("biped")->GetJoint("simplified_biped::right_knee_lower_leg_joint");
+                    gazebo::physics::JointPtr rightAnkleJoint = world->ModelByName("biped")->GetJoint("simplified_biped::right_ankle_foot_base_joint");
+                    
+                    world->ModelByName("biped")->GetJointController()->SetPositionPID(leftHip3Joint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+					world->ModelByName("biped")->GetJointController()->SetPositionPID(leftHip2Joint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+					world->ModelByName("biped")->GetJointController()->SetPositionPID(leftHip1Joint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+					world->ModelByName("biped")->GetJointController()->SetPositionPID(leftKneeJoint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+					world->ModelByName("biped")->GetJointController()->SetPositionPID(leftAnkleJoint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+
+					world->ModelByName("biped")->GetJointController()->SetVelocityPID(leftHip3Joint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+					world->ModelByName("biped")->GetJointController()->SetVelocityPID(leftHip2Joint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+					world->ModelByName("biped")->GetJointController()->SetVelocityPID(leftHip1Joint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+					world->ModelByName("biped")->GetJointController()->SetVelocityPID(leftKneeJoint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+					world->ModelByName("biped")->GetJointController()->SetVelocityPID(leftAnkleJoint->GetScopedName(), gazebo::common::PID(1, 0.1, 0.01));
+
+                    leftHip3Joint->SetPosition(0, 0);
+					leftHip2Joint->SetPosition(0, 0);
+					leftHip1Joint->SetPosition(0, -0.4);
+					leftKneeJoint->SetPosition(0, 0.85);
+					leftAnkleJoint->SetPosition(0, -0.45);
+
+					rightHip3Joint->SetPosition(0, 0);
+					rightHip2Joint->SetPosition(0, 0);
+					rightHip1Joint->SetPosition(0, -0.4);
+					rightKneeJoint->SetPosition(0, 0.85);
+					rightAnkleJoint->SetPosition(0, -0.45);
+
+                    world->ModelByName("biped")->GetJointController()->SetPositionPID(leftHip3Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+					world->ModelByName("biped")->GetJointController()->SetPositionPID(leftHip2Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+					world->ModelByName("biped")->GetJointController()->SetPositionPID(leftHip1Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+					world->ModelByName("biped")->GetJointController()->SetPositionPID(leftKneeJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+					world->ModelByName("biped")->GetJointController()->SetPositionPID(leftAnkleJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+
+					world->ModelByName("biped")->GetJointController()->SetVelocityPID(leftHip3Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+					world->ModelByName("biped")->GetJointController()->SetVelocityPID(leftHip2Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+					world->ModelByName("biped")->GetJointController()->SetVelocityPID(leftHip1Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+					world->ModelByName("biped")->GetJointController()->SetVelocityPID(leftKneeJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+					world->ModelByName("biped")->GetJointController()->SetVelocityPID(leftAnkleJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+
+                    std::this_thread::sleep_for(std::chrono::milliseconds(10));
+
+                    // std::this_thread::sleep_for(std::chrono::milliseconds(1));
                     world->SetPaused(true);
-                    std::this_thread::sleep_for(std::chrono::milliseconds(250));
+                    std::this_thread::sleep_for(std::chrono::milliseconds(1200));
                     world->SetPaused(false);
+                    // std::this_thread::sleep_for(std::chrono::milliseconds(100));
+                    // world->SetPaused(true);
+                    // std::this_thread::sleep_for(std::chrono::milliseconds(10));
+                    // world->SetPaused(false);
                 }
             }
         }
@@ -151,7 +211,7 @@ namespace gazebo
         {
             world = _parent;
             sim_state_update_thread = std::thread([this] {update_sim_state(); });
-            test_thread = std::thread([this] {resetWorld(); });
+            // reset_thread = std::thread([this] {resetWorld(); });
         }
     };
 
