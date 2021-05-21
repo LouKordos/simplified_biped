@@ -463,47 +463,45 @@ namespace gazebo
 			double duration;
 			struct timespec deadline;
 			
-			int sockfd;
-			char buffer[udp_buffer_size];
-			struct sockaddr_in servaddr, cliaddr;
+			int sockfd, portno, n;
+			struct sockaddr_in serv_addr;
+			struct hostent *server;
+
+			const int buffer_size = 128;
+
+			char buffer[buffer_size];
+			portno = 6969;
+			sockfd = socket(AF_INET, SOCK_STREAM, 0);
+			if (sockfd < 0) 
+				std::cerr << "Error opening socket.\n";
 			
-			// Creating socket file descriptor 
-			if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
-				perror("socket creation failed");
-				exit(EXIT_FAILURE);
+			server = gethostbyname("terminator.loukordos.eu");
+			if (server == NULL) {
+				fprintf(stderr,"ERROR, no such host\n");
+				exit(0);
 			}
-			
-			memset(&servaddr, 0, sizeof(servaddr));
-			memset(&cliaddr, 0, sizeof(cliaddr));
-			
-			// Filling server information
-			servaddr.sin_family    = AF_INET; // IPv4
-			servaddr.sin_addr.s_addr = inet_addr("127.0.0.1");
-			servaddr.sin_port = htons(udp_disturbance_port);
-			
-			// Bind the socket with the server address 
-			if (bind(sockfd, (const struct sockaddr *)&servaddr, sizeof(servaddr)) < 0)
-			{
-				perror("bind failed");
-				exit(EXIT_FAILURE);
-			}
-			
-			int msg_length;
-			
-			socklen_t len = sizeof(cliaddr);  //len is value/result
+
+			bzero((char *) &serv_addr, sizeof(serv_addr));
+			serv_addr.sin_family = AF_INET;
+			bcopy((char *)server->h_addr, (char *)&serv_addr.sin_addr.s_addr, server->h_length);
+			serv_addr.sin_port = htons(portno);
+
+			if (connect(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) 
+				std::cerr << "Error connecting to server.\n";
 
 			stringstream temp;
 			temp << "Disturbance Socket set up.";
 			print_threadsafe(temp.str(), "disturbance_thread");
 
 			while(true) {
-
-				msg_length = recvfrom(sockfd, (char *)buffer, udp_buffer_size, 0, ( struct sockaddr *) &cliaddr, &len); 
-				buffer[msg_length] = '\0'; 
+				bzero(buffer, buffer_size);
+				n = read(sockfd, buffer, buffer_size - 1);
+				if (n < 0) {
+					std::cout << "Error while reading from socket.\n";
+				}
+				std::string data(buffer);
 
 				print_threadsafe("Received message, processing...", "disturbance_thread");
-
-				string data(buffer);
 
 				std::vector<std::string> message_split = split_string(data, '|');
 
