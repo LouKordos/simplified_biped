@@ -20,7 +20,7 @@
 
 		<model name="box">
 			<static>true</static>
-			<pose>0 2 -0.05 0 0.1 -1.5707</pose>
+			<pose>0 4 -0.05 0 0.1 -1.5707</pose>
 			<link name="link">
 
 				<collision name="collision">
@@ -62,7 +62,7 @@
 
 		<model name="box2">
 			<static>true</static>
-			<pose>0 2.985 -0.05 0 -0.1 -1.5707</pose>
+			<pose>0 4.985 -0.05 0 -0.1 -1.5707</pose>
 			<link name="link2">
 
 				<collision name="collision2">
