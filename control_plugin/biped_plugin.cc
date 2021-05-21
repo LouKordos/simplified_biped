@@ -309,6 +309,11 @@ namespace gazebo
 
 			double previous_logging_duration = 0;
 
+			struct timeval tv;
+			tv.tv_sec = 0; // Initially set to very high value to wait for first message because it takes some time to start up sim.
+			tv.tv_usec = 100000;
+			setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
+
 			while(true) {
 				start = high_resolution_clock::now();
 				stringstream s;
@@ -611,6 +616,11 @@ namespace gazebo
 				
 				sendto(sockfd, (const char *)first_msg.str().c_str(), strlen(first_msg.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
 
+				struct timeval tv;
+				tv.tv_sec = 0; // Initially set to very high value to wait for first message because it takes some time to start up sim.
+				tv.tv_usec = 100000;
+				setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
+
 				while(true) {
 					start = high_resolution_clock::now();
 
@@ -739,6 +749,11 @@ namespace gazebo
 				first_msg << "|" << right_foot_base->WorldPose().Pos().X() << "|" << right_foot_base->WorldPose().Pos().Y() << "|" << right_foot_base->WorldPose().Pos().Z();
 
 				sendto(sockfd, (const char *)first_msg.str().c_str(), strlen(first_msg.str().c_str()), MSG_CONFIRM, (const struct sockaddr *) &servaddr, sizeof(servaddr));
+
+				struct timeval tv;
+				tv.tv_sec = 0; // Initially set to very high value to wait for first message because it takes some time to start up sim.
+				tv.tv_usec = 100000;
+				setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
 
 				while(true) {
 					start = high_resolution_clock::now();
