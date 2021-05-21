@@ -18,6 +18,18 @@
 			<plugin name="biped_plugin" filename="libbiped_plugin.so"/>
 		</model>
 
+		<gui fullscreen='0'>
+			<camera name="user_camera">
+				<track_visual>
+				<name>biped::simplified_biped::torso_connection</name>
+				<static>true</static>
+				<use_model_frame>true</use_model_frame>
+				<xyz>3.5 0 0.5</xyz>
+				<inherit_yaw>false</inherit_yaw>
+				</track_visual>
+			</camera>
+		</gui>
+
 		<physics type="bullet">
 			<max_step_size>0.00025</max_step_size>
 			<real_time_update_rate>4000</real_time_update_rate>
