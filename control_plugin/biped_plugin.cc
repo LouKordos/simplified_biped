@@ -503,7 +503,7 @@ namespace gazebo
 
 				std::vector<std::string> message_split = split_string(data, '|');
 
-				double dt = 1000; // microseconds
+				double dt = 250; // microseconds
 
 				if(static_cast<int>(message_split.size()) >= 2) {
 					
