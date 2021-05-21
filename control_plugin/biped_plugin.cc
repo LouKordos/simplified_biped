@@ -526,7 +526,7 @@ namespace gazebo
 						
 						int counter = 0;
 
-						for(int i = 0; i < (dt/1000) * disturbance_duration * 1000 /*multiply by 1000 to get back to ms*/; ++i) {
+						for(int i = 0; i < (1000/dt) * disturbance_duration * 1000 /*multiply by 1000 to get back to ms*/; ++i) {
 							
 							start = high_resolution_clock::now();
 							disturbance_link->SetForce(force);
