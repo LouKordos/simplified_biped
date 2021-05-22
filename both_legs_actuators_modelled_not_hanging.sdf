@@ -11,7 +11,7 @@
         <pose> 0 0 1.02 0 0 0 </pose>
  
         <inertial>
-            <mass>19.68</mass>
+            <mass>21.68</mass>
  
             <inertia>
                 <ixx>0.15121</ixx>
@@ -227,7 +227,7 @@
         </visual>
     </link>
 
-    <link name="left_knee_actuator">
+    <!-- <link name="left_knee_actuator">
  
         <self_collide>1</self_collide>
         <pose> -0.1 0 0.76 0 1.570796 0 </pose>
@@ -257,7 +257,7 @@
                 </mesh>
             </geometry>
         </visual>
-    </link>
+    </link> -->
 
     <link name="left_hip_axis_1">
  
@@ -439,11 +439,11 @@
         <child>left_hip_axis_3</child>
     </joint>
 
-    <joint type="fixed" name="left_knee_actuator_joint">
+    <!-- <joint type="fixed" name="left_knee_actuator_joint">
         <pose> 0 0 0 0 0 0 </pose>
         <parent>left_hip_axis_2</parent>
         <child>left_knee_actuator</child>
-    </joint>
+    </joint> -->
  
     <joint type="fixed" name="left_upper_leg_knee_joint">
         <pose> 0 0 0 0 0 0 </pose>
@@ -647,7 +647,7 @@
         </visual>
     </link>
 
-    <link name="right_knee_actuator">
+    <!-- <link name="right_knee_actuator">
  
         <self_collide>1</self_collide>
         <pose> 0.1 0 0.76 0 -1.570796 0 </pose>
@@ -677,7 +677,7 @@
                 </mesh>
             </geometry>
         </visual>
-    </link>
+    </link> -->
  
     <link name="right_hip_axis_1">
  
@@ -859,11 +859,11 @@
         <child>right_hip_axis_3</child>
     </joint>
 
-    <joint type="fixed" name="right_knee_actuator_joint">
+    <!-- <joint type="fixed" name="right_knee_actuator_joint">
         <pose> 0 0 0 0 0 0 </pose>
         <parent>right_hip_axis_2</parent>
         <child>right_knee_actuator</child>
-    </joint>
+    </joint> -->
  
     <joint type="fixed" name="right_upper_leg_knee_joint">
         <pose> 0 0 0 0 0 0 </pose>
