@@ -41,33 +41,34 @@
     <link name="left_lower_leg">
  
         <self_collide>0</self_collide>
- 
+
         <pose> -0.15 0 0.145 0 0 0 </pose>
         
-            <inertial>
-                <mass>0.5</mass>
-                <inertia>
-                    <ixx>0.005</ixx>
-                    <iyy>0.005</iyy>
-					<izz>2.078e-04</izz>
-                </inertia>
-            </inertial>
- 
-            <collision name="left_base_collision">
-                <geometry>
-                    <mesh>
-						<uri>model://simplified_biped/meshes/lower_leg_350mm.stl</uri>
-					</mesh>
-                </geometry>
-            </collision>
- 
-            <visual name="left_base_visual">
-                <geometry>
-                    <mesh>
-		   		 		<uri>model://simplified_biped/meshes/lower_leg_350mm.stl</uri>
-					</mesh>
-                </geometry>
-            </visual>
+        <inertial>
+            <mass>0.5</mass>
+            <inertia>
+                <ixx>0.005</ixx>
+                <iyy>0.005</iyy>
+                <izz>2.078e-04</izz>
+            </inertia>
+        </inertial>
+
+        <collision name="left_lower_leg_collision">
+            <geometry>
+                <mesh>
+                    <uri>model://simplified_biped/meshes/lower_leg_350mm.stl</uri>
+                </mesh>
+            </geometry>
+        </collision>
+
+        <visual name="left_lower_leg_visual">
+            <pose>0.15 0 0.83 0 0 0</pose>
+            <geometry>
+                <mesh>
+                    <uri>model://simplified_biped/meshes/lower-leg-scaled.stl</uri>
+                </mesh>
+            </geometry>
+        </visual>
     </link>
  
     <link name="left_knee">
@@ -128,9 +129,10 @@
         </collision>
  
         <visual name="left_upper_leg_visual">
+            <pose>0.15 0 0.42 0 0 0</pose>
             <geometry>
                 <mesh>
-					<uri>model://simplified_biped/meshes/upper_leg_350mm.stl</uri>
+					<uri>model://simplified_biped/meshes/upper-leg-scaled.stl</uri>
 				</mesh>
             </geometry>
         </visual>
@@ -251,12 +253,11 @@
         </collision>
  
         <visual name="left_hip_axis_1_visual">
-            <pose> 0 0 0 0 0 0</pose>
+            <pose> -0.216 0 -0.15 -1.5707 1.5707 1.5707</pose>
             <geometry>
-                <cylinder>
-                    <radius>0.05</radius>
-                    <length>0.06</length>
-                </cylinder>
+                <mesh>
+					<uri>model://simplified_biped/meshes/hip2-hip1-v2-scaled.stl</uri>
+				</mesh>
             </geometry>
         </visual>
     </link>
@@ -285,12 +286,11 @@
         </collision>
  
         <visual name="left_hip_axis_2_visual">
-            <pose> 0 0 0 0 0 0</pose>
+            <pose>-0.0698 -0.15 0 1.5707 0 -1.5707</pose>
             <geometry>
-                <cylinder>
-                    <radius>0.05</radius>
-                    <length>0.06</length>
-                </cylinder>
+                <mesh>
+					<uri>model://simplified_biped/meshes/hip3-hip2-connection-piece-scaled-v2.stl</uri>
+				</mesh>
             </geometry>
         </visual>
     </link>
@@ -430,30 +430,31 @@
  
         <pose> 0.15 0 0.145 0 0 0 </pose>
  
-            <inertial>
-                <mass>0.5</mass>
-                <inertia>
-                    <ixx>0.005</ixx>
-                    <iyy>0.005</iyy>
-					<izz>2.078e-04</izz>
-                </inertia>
-            </inertial>
- 
-            <collision name="right_base_collision">
-                <geometry>
-                    <mesh>
-						<uri>model://simplified_biped/meshes/lower_leg_350mm.stl</uri>
-					</mesh>
-                </geometry>
-            </collision>
- 
-            <visual name="right_base_visual">
-                <geometry>
-                    <mesh>
-		   		 		<uri>model://simplified_biped/meshes/lower_leg_350mm.stl</uri>
-					</mesh>
-                </geometry>
-            </visual>
+        <inertial>
+            <mass>0.5</mass>
+            <inertia>
+                <ixx>0.005</ixx>
+                <iyy>0.005</iyy>
+                <izz>2.078e-04</izz>
+            </inertia>
+        </inertial>
+
+        <collision name="right_lower_leg_collision">
+            <geometry>
+                <mesh>
+                    <uri>model://simplified_biped/meshes/lower_leg_350mm.stl</uri>
+                </mesh>
+            </geometry>
+        </collision>
+
+        <visual name="right_lower_leg_visual">
+            <pose>0.15 0 0.83 0 0 0</pose>
+            <geometry>
+                <mesh>
+                    <uri>model://simplified_biped/meshes/lower-leg-scaled.stl</uri>
+                </mesh>
+            </geometry>
+        </visual>
     </link>
  
     <link name="right_knee">
@@ -514,9 +515,10 @@
         </collision>
  
         <visual name="right_upper_leg_visual">
+            <pose>0.15 0 0.42 0 0 0</pose>
             <geometry>
                 <mesh>
-					<uri>model://simplified_biped/meshes/upper_leg_350mm.stl</uri>
+					<uri>model://simplified_biped/meshes/upper-leg-scaled.stl</uri>
 				</mesh>
             </geometry>
         </visual>
@@ -637,12 +639,11 @@
         </collision>
  
         <visual name="right_hip_axis_1_visual">
-            <pose> 0 0 0 0 0 0</pose>
+            <pose> -0.216 0 -0.15 -1.5707 1.5707 1.5707</pose>
             <geometry>
-                <cylinder>
-                    <radius>0.05</radius>
-                    <length>0.06</length>
-                </cylinder>
+                <mesh>
+					<uri>model://simplified_biped/meshes/hip2-hip1-v2-scaled.stl</uri>
+				</mesh>
             </geometry>
         </visual>
     </link>
@@ -671,12 +672,11 @@
         </collision>
  
         <visual name="right_hip_axis_2_visual">
-            <pose> 0 0 0 0 0 0</pose>
+            <pose>-0.0698 -0.15 0 1.5707 0 -1.5707</pose>
             <geometry>
-                <cylinder>
-                    <radius>0.05</radius>
-                    <length>0.06</length>
-                </cylinder>
+                <mesh>
+					<uri>model://simplified_biped/meshes/hip3-hip2-connection-piece-scaled-v2.stl</uri>
+				</mesh>
             </geometry>
         </visual>
     </link>
@@ -706,7 +706,7 @@
         <visual name="right_hip_axis_3_visual">
             <geometry>
                 <mesh>
-					<uri>model://simplified_biped/meshes/actuator_scaled.stl</uri>
+                    <uri>model://simplified_biped/meshes/actuator_scaled.stl</uri>
 				</mesh>
             </geometry>
         </visual>
