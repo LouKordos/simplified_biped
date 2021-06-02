@@ -35,7 +35,7 @@
 			<real_time_update_rate>4000</real_time_update_rate>
 			<real_time_factor>1</real_time_factor>
 		</physics>
-
+		
 		<model name="box">
 			<static>true</static>
 			<pose>-5 4 -0.05 0 0.1 -1.5707</pose>
