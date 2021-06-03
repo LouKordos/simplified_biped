@@ -62,8 +62,8 @@ namespace gazebo
 	ignition::math::Vector3d r_l(0, 0, 0); // Position where force is excerted expressed in CoM frame
 	ignition::math::Vector3d r_r(0, 0, 0); // Position where force is excerted expressed in CoM frame
 
-	static const double torqueApplyingInterval = 960; // microseconds, some margin to account for comms delays etc.
-	static const double statePublishingInterval = 960; // microseconds
+	static const double torqueApplyingInterval = 250; // microseconds, some margin to account for comms delays etc.
+	static const double statePublishingInterval = 1000; // microseconds
 	static const double mpcInterval = (1/30.0) * 1000.0 * 1000.0; // microseconds, make sure this is the same as in Controller code!
 
 	const int left_leg_port = 4200;
@@ -427,9 +427,9 @@ namespace gazebo
 				duration = duration_cast<microseconds>(end - start).count();
 				//std::cout << "MPC force excertion loop duration in µS:" << duration << std::endl;
 				long long remainder = (torqueApplyingInterval - duration) * 1e+03; // nanoseconds
-				deadline.tv_nsec = remainder;
-				deadline.tv_sec = 0;
-				clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
+				// deadline.tv_nsec = remainder;
+				// deadline.tv_sec = 0;
+				// clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
 			}
 		}
 
@@ -669,9 +669,9 @@ namespace gazebo
 					// print_threadsafe(temp.str(), "left_leg_torque_thread");
 
 					long long remainder = (torqueApplyingInterval - duration) * 1e+03;
-					deadline.tv_nsec = remainder;
-					deadline.tv_sec = 0;
-					clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
+					// deadline.tv_nsec = remainder;
+					// deadline.tv_sec = 0;
+					// clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
 				}
 			}
 		}
@@ -816,9 +816,9 @@ namespace gazebo
 					// print_threadsafe(temp.str(), "right_leg_torque_thread");
 
 					long long remainder = (torqueApplyingInterval - duration) * 1e+03;
-					deadline.tv_nsec = remainder;
-					deadline.tv_sec = 0;
-					clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
+					// deadline.tv_nsec = remainder;
+					// deadline.tv_sec = 0;
+					// clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
 				}
 			}
 		}

@@ -65,7 +65,7 @@ namespace gazebo
 			servaddr.sin_port = htons(sim_state_port); 
 			servaddr.sin_addr.s_addr = inet_addr("127.0.0.1"); 
 			
-			int n; 
+			int n;
 			socklen_t len = sizeof(servaddr);
 
             while(true) {
@@ -83,9 +83,9 @@ namespace gazebo
                 duration = duration_cast<microseconds>(end - start).count();
 
                 long long remainder = (update_interval - duration) * 1e+03;
-                deadline.tv_nsec = remainder;
-                deadline.tv_sec = 0;
-                clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
+                // deadline.tv_nsec = remainder;
+                // deadline.tv_sec = 0;
+                // clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
             }
         }
         
