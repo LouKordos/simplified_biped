@@ -193,22 +193,3 @@ RUN rm -rf /tmp/*
 RUN  rm -rf /var/lib/apt/lists/*
 # Delete example plugins
 RUN rm -f /usr/local/lib/gazebo-11/plugins/*
-
-COPY . /src
-COPY . /root/.gazebo/models/simplified_biped
-
-WORKDIR /src/control_plugin
-
-RUN rm -rf ./build && mkdir ./build
-WORKDIR /src/control_plugin/build
-
-RUN cmake ..
-RUN make -j$(nproc)
-
-ENV NVIDIA_VISIBLE_DEVICES all
-ENV NVIDIA_DRIVER_CAPABILITIES compute,video,utility
-
-ENV LD_LIBRARY_PATH /src/control_plugin/build
-
-CMD bash -c 'gzserver --verbose -e bullet ../../simplified_biped.world'
-# Current command: sudo docker run -it --gpus all --net=host -e "TERM=xterm-256color" --env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw" loukordos/biped-sim
