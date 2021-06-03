@@ -100,9 +100,9 @@ void FootContactPlugin::update_state() {
         duration = duration_cast<microseconds>(end - start).count();
 
         long long remainder = (update_interval - duration) * 1e+03;
-        // deadline.tv_nsec = remainder;
-        // deadline.tv_sec = 0;
-        // clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
+        deadline.tv_nsec = remainder;
+        deadline.tv_sec = 0;
+        clock_nanosleep(CLOCK_REALTIME, 0, &deadline, NULL);
     }
 }
 
