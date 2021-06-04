@@ -16,6 +16,7 @@ then
         awk "{gsub(\"<max_step_size>[^<]*</max_step_size>\", sprintf(\"<max_step_size>%f</max_step_size>\", 1.0/4000.0*$rtf), \$0); gsub(\"<real_time_factor>[^<]*</real_time_factor>\", sprintf(\"<real_time_factor>%f</real_time_factor>\", $rtf), \$0); print \$0}" /src/simplified_biped.world > $temp_world_file
     fi
     LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$(pwd)/control_plugin/build/ gzserver -e bullet --verbose $temp_world_file # Run sim with temp world file
+    cp state.log /plot_data/
 else
     ./build_plugins || fatalerror "Build exited with a nonzero error code, not running sim." # To prevent running old versions
     temp_world_file=$(mktemp -t adjusted_rtf_XXXX.world)
