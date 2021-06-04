@@ -15,4 +15,5 @@ WORKDIR /src/control_plugin/build
 RUN cmake ..
 RUN make -j$(nproc)
 
+CMD '/src/run_sim'
 # Current command: sudo docker run -it --gpus all --net=host -e "TERM=xterm-256color" --env="DISPLAY" --volume="$HOME/.Xauthority:/root/.Xauthority:rw" loukordos/biped-sim
