@@ -5,7 +5,7 @@ function fatalerror() {
   exit 1
 }
 
-if [ $IS_DOCKER == "Y" ] || [ $IS_DOCKER == "YES" ]
+if [ $IS_DOCKER -eq "Y" ] || [ $IS_DOCKER -eq "YES" ]
 then
     echo "Docker env detected."
     temp_world_file=$(mktemp -t adjusted_rtf_XXXX.world)
