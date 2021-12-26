@@ -10,7 +10,7 @@ set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${GAZEBO_CXX_FLAGS}")
 
 #set(COMMUNICATIONS_LIBS zcm)
 
-add_definitions(-std=c++17 -Wall -Wpedantic -I .. -O2 -I /usr/local/include -L /usr/local/lib) #maybe only O2 if code is unstable
+add_definitions(-std=c++17 -Wall -Wpedantic -I .. -O2 -I /usr/local/include -L /usr/local/lib)
 
 # Build our plugin
 add_library(biped_plugin SHARED biped_plugin.cc)
