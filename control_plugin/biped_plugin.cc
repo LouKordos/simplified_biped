@@ -19,6 +19,8 @@
 #include <eigen3/Eigen/QR>
 #include <math.h>
 
+#include <fmt/core.h>
+
 using Eigen::MatrixXd;
 
 using namespace std;
@@ -453,10 +455,11 @@ namespace gazebo
 				std::cerr << "Error opening socket.\n";
 		
 			std::string domain = "https://terminator.loukordos.de";
+
 			
 			server = gethostbyname(domain.c_str());
 			if (server == NULL) {
-				// fprintf(stderr, std::format("Could not connect to {}\n", domain));
+				fmt::print("Host {} is unreachable\n", domain);
 				return;
 			}
 
