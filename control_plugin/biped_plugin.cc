@@ -451,11 +451,13 @@ namespace gazebo
 			sockfd = socket(AF_INET, SOCK_STREAM, 0);
 			if (sockfd < 0) 
 				std::cerr << "Error opening socket.\n";
+		
+			std::string domain = "https://terminator.loukordos.de";
 			
-			server = gethostbyname("terminator.loukordos.eu");
+			server = gethostbyname(domain.c_str());
 			if (server == NULL) {
-				fprintf(stderr,"ERROR, no such host\n");
-				exit(0);
+				// fprintf(stderr, std::format("Could not connect to {}\n", domain));
+				return;
 			}
 
 			bzero((char *) &serv_addr, sizeof(serv_addr));
