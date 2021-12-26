@@ -652,7 +652,13 @@ namespace gazebo
 								model->GetJointController()->SetForce(leftAnkleJoint->GetScopedName(), tau_5);
 							}
 							else {
-								print_threadsafe("Got outdated torque setpoint.", "left_leg_torque_thread");
+								print_threadsafe("Got outdated torque setpoint, setting joint torques to zero.", "left_leg_torque_thread");
+
+								model->GetJointController()->SetForce(leftHip3Joint->GetScopedName(), 0);
+								model->GetJointController()->SetForce(leftHip2Joint->GetScopedName(), 0);
+								model->GetJointController()->SetForce(leftHip1Joint->GetScopedName(), 0);
+								model->GetJointController()->SetForce(leftKneeJoint->GetScopedName(), 0);
+								model->GetJointController()->SetForce(leftAnkleJoint->GetScopedName(), 0);
 							}
 						}
 
@@ -796,9 +802,12 @@ namespace gazebo
 								model->GetJointController()->SetForce(rightAnkleJoint->GetScopedName(), tau_5);
 							}
 							else {
-								stringstream temp;
-								temp << "Got outdated torque setpoint.";
-								print_threadsafe(temp.str(), "right_leg_torque_thread");
+								print_threadsafe("Got outdated torque setpoint, setting joint torques to zero.", "right_leg_torque_thread");
+								model->GetJointController()->SetForce(rightHip3Joint->GetScopedName(), 0);
+								model->GetJointController()->SetForce(rightHip2Joint->GetScopedName(), 0);
+								model->GetJointController()->SetForce(rightHip1Joint->GetScopedName(), 0);
+								model->GetJointController()->SetForce(rightKneeJoint->GetScopedName(), 0);
+								model->GetJointController()->SetForce(rightAnkleJoint->GetScopedName(), 0);
 							}
 							
 						}
