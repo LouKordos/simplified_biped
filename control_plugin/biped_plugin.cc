@@ -20,6 +20,7 @@
 #include <math.h>
 
 #include <fmt/core.h>
+#include <fmt/color.h>
 
 using Eigen::MatrixXd;
 
@@ -459,7 +460,7 @@ namespace gazebo
 			
 			server = gethostbyname(domain.c_str());
 			if (server == NULL) {
-				fmt::print("Host {} is unreachable\n", domain);
+				fmt::print(fg(fmt::color::red), "Host {} is unreachable\n", domain);
 				return;
 			}
 
