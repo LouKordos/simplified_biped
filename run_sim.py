@@ -48,6 +48,9 @@ if args.laptop:
 
 command = f"{LD_LIBRARY_PATH_str}:{os.getcwd()}/control_plugin/build/ chrt -r 1 taskset -c {pinning_str} timeout {args.runtime_limit} gazebo -e {args.physics_engine} --verbose -r --record_encoding zlib --record_path {os.getcwd()} {temp_world_file_path} ; killall gzserver ; killall gazebo ; killall gzclient"
 
+if args.runtime_limit == -1:
+    command = command.replace(f" timeout {args.runtime_limit}", "")
+
 if args.paused:
     # Add -u
     command = command.replace("gazebo", "gazebo -u")
