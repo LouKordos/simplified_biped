@@ -64,9 +64,9 @@ namespace gazebo
 	ignition::math::Vector3d r_l(0, 0, 0); // Position where force is excerted expressed in CoM frame
 	ignition::math::Vector3d r_r(0, 0, 0); // Position where force is excerted expressed in CoM frame
 
-	static const double torqueApplyingInterval = 250; // microseconds, some margin to account for comms delays etc.
+	static const double torqueApplyingInterval = 1000; // microseconds, some margin to account for comms delays etc.
 	static const double statePublishingInterval = 1000; // microseconds
-	static const double mpcInterval = (1/30.0) * 1000.0 * 1000.0; // microseconds, make sure this is the same as in Controller code!
+	static const double mpcInterval = (1/50.0) * 1000.0 * 1000.0; // microseconds, make sure this is the same as in Controller code!
 
 	const int left_leg_port = 4200;
 	const int right_leg_port = 4201;
