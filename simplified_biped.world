@@ -31,8 +31,8 @@
 		</gui>
 
 		<physics type="bullet">
-			<max_step_size>0.00025</max_step_size>
-			<real_time_update_rate>4000</real_time_update_rate>
+			<max_step_size>0.001</max_step_size>
+			<real_time_update_rate>1000</real_time_update_rate>
 			<real_time_factor>1</real_time_factor>
 		</physics>
 
