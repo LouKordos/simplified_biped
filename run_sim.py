@@ -53,7 +53,7 @@ if args.runtime_limit == -1:
 
 if args.paused:
     # Add -u
-    command = command.replace("gazebo", "gazebo -u")
+    command = command.replace("gazebo -e", "gazebo -u -e")
 
 if args.skip_pinning:
     # Remove pinning commands
