@@ -63,7 +63,7 @@ print("Final command:", command, "\n")
 
 os.system(command)
 
-plot_data_dir = os.environ["HOME"] + "/dev/walking_controller/plot_data/"
+plot_data_dir = os.environ["HOME"] + "/Nextcloud/dev/walking_controller/plot_data/"
 
 largest_index = 0
 
