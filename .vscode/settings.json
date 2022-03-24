@@ -64,5 +64,6 @@
         "typeindex": "cpp",
         "typeinfo": "cpp"
     },
-    "cmake.sourceDirectory": "${workspaceFolder}/control_plugin"
+    "cmake.sourceDirectory": "${workspaceFolder}/control_plugin",
+    "python.pythonPath": "/usr/bin/python"
 }
