@@ -415,7 +415,7 @@
     <link name="left_hip_axis_1">
 
         <self_collide>1</self_collide>
-        <pose> -0.1 0 1.26 0 1.570796 0 </pose>
+        <pose> -0.0765 0 1.26 0 1.570796 0 </pose>
 
         <inertial>
             <mass>4</mass>
@@ -448,7 +448,7 @@
 	<link name="left_knee_actuator">
 
         <self_collide>1</self_collide>
-        <pose> -0.2 0 1.26 0 -1.570796 0 </pose>
+        <pose> -0.1625 0 1.26 0 -1.570796 0 </pose>
 
         <inertial>
             <mass>4</mass>
@@ -583,7 +583,7 @@
     </joint>
 
 	<joint type="revolute" name="left_hip_axis_2_hip_axis_1_joint">
-        <pose> 0 -0.12 -0.05 0 0 0 </pose>
+        <pose> 0 -0.12 -0.0735 0 0 0 </pose>
 
         <parent>left_hip_axis_2</parent>
         <child>left_hip_axis_1</child>
