@@ -450,11 +450,11 @@
         <pose> -0.2 0 1.26 0 -1.570796 0 </pose>
 
         <inertial>
-            <mass>2.5</mass>
+            <mass>4</mass>
             <inertia>
-                <ixx>0.004505</ixx>
-                <iyy>0.004505</iyy>
-                <izz>0.008515</izz>
+                <ixx>0.007</ixx>
+                <iyy>0.007</iyy>
+                <izz>0.012</izz>
             </inertia>
         </inertial>
 
