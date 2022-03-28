@@ -428,9 +428,10 @@
 
         <collision name="left_hip_axis_1_collision">
             <geometry>
-                <mesh>
-					<uri>model://simplified_biped/meshes/actuator_scaled.stl</uri>
-				</mesh>
+                <cylinder>
+                    <radius>0.04</radius>
+                    <length>0.04</length>
+                </cylinder>
             </geometry>
         </collision>
 
@@ -460,9 +461,10 @@
 
         <collision name="left_knee_actuator_collision">
             <geometry>
-                <mesh>
-					<uri>model://simplified_biped/meshes/actuator_scaled.stl</uri>
-				</mesh>
+                <cylinder>
+                    <radius>0.04</radius>
+                    <length>0.04</length>
+                </cylinder>
             </geometry>
         </collision>
 
