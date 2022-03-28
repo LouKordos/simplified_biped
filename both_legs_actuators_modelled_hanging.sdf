@@ -610,19 +610,19 @@
         </axis>
     </joint>
 
-    <joint type="revolute" name="left_ankle_foot_base_joint">
+    <joint type="fixed" name="left_ankle_foot_base_joint">
         <pose> 0 0 0.03 0 0 0 </pose>
 
         <parent>left_ankle</parent>
         <child>left_foot_base</child>
 
-        <axis>
+        <!-- <axis>
             <xyz>1 0 0 </xyz>
             <limit>
                 <lower>-1.57</lower>
                 <upper>1.57</upper>
             </limit>
-        </axis>
+        </axis> -->
     </joint>
 
     <joint type="fixed" name="left_knee_upper_leg_joint">
