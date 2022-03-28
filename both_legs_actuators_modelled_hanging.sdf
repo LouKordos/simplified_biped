@@ -239,33 +239,33 @@
 
         <self_collide>1</self_collide>
 
-        <pose> -0.15 0 0.635 0 0 0 </pose>
+        <pose> -0.15 0 0.64 0 0 0 </pose>
 
             <inertial>
-                <mass>0.5</mass>
-                <inertia>
-                    <ixx>5.220e-03</ixx>
-		            <iyy>5.220e-03</iyy>
-		            <izz>2.078e-04</izz>
-                    <ixy>0</ixy>
-                    <ixz>0</ixz>
-                    <iyz>0</iyz>
+                <mass>0.83</mass>
+            <inertia>
+                <ixx>0.015</ixx>
+                <iyy>0.014</iyy>
+                <izz>0.001</izz>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyz>0</iyz>
                 </inertia>
             </inertial>
             
-            <collision name="left_base_collision">
+            <collision name="left_lower_leg_collision">
                 <geometry>
-                    <mesh>
-						<uri>model://simplified_biped/meshes/lower_leg_350mm.stl</uri>
-					</mesh>
+                    <box>
+                        <size>0.06 0.06 0.35</size>
+                    </box>
                 </geometry>
             </collision>
 
-            <visual name="left_base_visual">
+            <visual name="left_lower_leg_visual">
                 <geometry>
-                    <mesh>
-		   		 		<uri>model://simplified_biped/meshes/lower_leg_350mm.stl</uri>
-					</mesh>
+                    <box>
+                        <size>0.06 0.06 0.4</size>
+                    </box>
                 </geometry>
             </visual>
     </link>
@@ -290,7 +290,7 @@
         <collision name="left_knee_collision">
             <geometry>
                 <cylinder>
-                    <radius>0.025</radius>
+                    <radius>0.02</radius>
                     <length>0.05</length>
                 </cylinder>
             </geometry>
@@ -300,7 +300,7 @@
             <pose> 0 0 0 0 0 0</pose>
             <geometry>
                 <cylinder>
-                    <radius>0.025</radius>
+                    <radius>0.02</radius>
                     <length>0.05</length>
                 </cylinder>
             </geometry>
@@ -311,14 +311,14 @@
 
         <self_collide>1</self_collide>
 
-        <pose> -0.15 0 1.045 0 0 0 </pose> 
+        <pose> -0.15 0 1.05 0 0 0 </pose> 
 
         <inertial>
-            <mass>0.5</mass>
+            <mass>2.1</mass>
             <inertia>
-                <ixx>5.220e-03</ixx>
-                <iyy>5.220e-03</iyy>
-                <izz>2.078e-04</izz>
+                <ixx>0.052</ixx>
+                <iyy>0.05</iyy>
+                <izz>0.007</izz>
                 <ixy>0</ixy>
                 <ixz>0</ixz>
                 <iyz>0</iyz>
@@ -415,14 +415,14 @@
     <link name="left_hip_axis_1">
 
         <self_collide>1</self_collide>
-        <pose> -0.1 0 1.25 0 1.570796 0 </pose>
+        <pose> -0.1 0 1.26 0 1.570796 0 </pose>
 
         <inertial>
-            <mass>2.5</mass>
+            <mass>4</mass>
             <inertia>
-                <ixx>0.004505</ixx>
-                <iyy>0.004505</iyy>
-                <izz>0.008515</izz>
+                <ixx>0.007</ixx>
+                <iyy>0.007</iyy>
+                <izz>0.012</izz>
             </inertia>
         </inertial>
 
@@ -447,7 +447,7 @@
 	<link name="left_knee_actuator">
 
         <self_collide>1</self_collide>
-        <pose> -0.2 0 1.25 0 -1.570796 0 </pose>
+        <pose> -0.2 0 1.26 0 -1.570796 0 </pose>
 
         <inertial>
             <mass>2.5</mass>
@@ -479,14 +479,14 @@
     <link name="left_hip_axis_2">
 
         <self_collide>1</self_collide>
-        <pose> -0.15 -0.15 1.25 1.570796327 0 0 </pose>
+        <pose> -0.15 -0.12 1.26 1.570796327 0 0 </pose>
         
         <inertial>
-            <mass>2.5</mass>
+            <mass>4</mass>
             <inertia>
-                <ixx>0.004505</ixx>
-                <iyy>0.004505</iyy>
-                <izz>0.008515</izz>
+                <ixx>0.007</ixx>
+                <iyy>0.007</iyy>
+                <izz>0.012</izz>
             </inertia>
         </inertial>
 
@@ -511,17 +511,14 @@
     <link name="left_hip_axis_3">
 
         <self_collide>1</self_collide>
-        <pose> -0.15 0 1.4 0 0 0 </pose> <!--145mm from center of hip axis 2-->
+        <pose> -0.15 0 1.377 0 0 0 </pose> <!--145mm from center of hip axis 2-->
 
         <inertial>
-            <mass>2.5</mass>
+            <mass>4</mass>
             <inertia>
-                <ixx>0.004505</ixx>
-                <iyy>0.004505</iyy>
-                <izz>0.008515</izz>
-                <ixy>0</ixy>
-                <ixz>0</ixz>
-                <iyz>0</iyz>
+                <ixx>0.007</ixx>
+                <iyy>0.007</iyy>
+                <izz>0.012</izz>
             </inertia>
         </inertial>
 
@@ -584,7 +581,7 @@
     </joint>
 
 	<joint type="revolute" name="left_hip_axis_2_hip_axis_1_joint">
-        <pose> 0 -0.15 -0.05 0 0 0 </pose>
+        <pose> 0 -0.12 -0.05 0 0 0 </pose>
 
         <parent>left_hip_axis_2</parent>
         <child>left_hip_axis_1</child>
@@ -599,7 +596,7 @@
     </joint>
 
     <joint type="revolute" name="left_hip_axis_3_hip_axis_2_joint">
-        <pose> 0 0.15 -0.15 0 0 0 </pose>
+        <pose> 0 0.12 -0.117 0 0 0 </pose>
 
         <parent>left_hip_axis_3</parent>
         <child>left_hip_axis_2</child>
@@ -724,7 +721,7 @@
 
         <self_collide>1</self_collide>
 
-        <pose> 0.15 0 1.045 0 0 0 </pose> 
+        <pose> 0.15 0 1.055 0 0 0 </pose> 
 
         <inertial>
             <mass>0.5</mass>
@@ -830,7 +827,7 @@
     <link name="right_hip_axis_1">
 
         <self_collide>1</self_collide>
-        <pose> 0.2 0 1.25 0 1.570796 0 </pose>
+        <pose> 0.2 0 1.26 0 1.570796 0 </pose>
 
         <inertial>
             <mass>2.5</mass>
@@ -862,7 +859,7 @@
 	<link name="right_knee_actuator">
 
         <self_collide>1</self_collide>
-        <pose> 0.1 0 1.25 0 -1.570796 0 </pose>
+        <pose> 0.1 0 1.26 0 -1.570796 0 </pose>
 
         <inertial>
             <mass>2.5</mass>
@@ -894,7 +891,7 @@
     <link name="right_hip_axis_2">
 
         <self_collide>1</self_collide>
-        <pose> 0.15 -0.15 1.25 1.570796327 0 0 </pose>
+        <pose> 0.15 -0.12 1.26 1.570796327 0 0 </pose>
         
         <inertial>
             <mass>2.5</mass>
@@ -926,7 +923,7 @@
     <link name="right_hip_axis_3">
 
         <self_collide>1</self_collide>
-        <pose> 0.15 0 1.4 0 0 0 </pose> <!--145mm from center of hip axis 2-->
+        <pose> 0.15 0 1.377 0 0 0 </pose> <!--145mm from center of hip axis 2-->
 
         <inertial>
             <mass>2.5</mass>
@@ -999,7 +996,7 @@
     </joint>
 
 	<joint type="revolute" name="right_hip_axis_2_hip_axis_1_joint">
-        <pose> 0 -0.15 -0.05 0 0 0 </pose>
+        <pose> 0 -0.12 -0.05 0 0 0 </pose>
 
         <parent>right_hip_axis_2</parent>
         <child>right_hip_axis_1</child>
@@ -1014,7 +1011,7 @@
     </joint>
 
     <joint type="revolute" name="right_hip_axis_3_hip_axis_2_joint">
-        <pose> 0 0.15 -0.15 0 0 0 </pose>
+        <pose> 0 0.12 -0.117 0 0 0 </pose>
 
         <parent>right_hip_axis_3</parent>
         <child>right_hip_axis_2</child>
