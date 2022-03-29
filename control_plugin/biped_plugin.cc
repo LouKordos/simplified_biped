@@ -147,7 +147,7 @@ namespace gazebo
 				leftHip2Joint->SetPosition(0, 0);
 				leftHip1Joint->SetPosition(0, -0.4);
 				leftKneeJoint->SetPosition(0, 0.85);
-				// leftAnkleJoint->SetPosition(0, -0.45);
+				leftAnkleJoint->SetPosition(0, -0.45);
 
 				rightHip3Joint->SetPosition(0, 0);
 				rightHip2Joint->SetPosition(0, 0);
@@ -159,13 +159,13 @@ namespace gazebo
 				model->GetJointController()->SetPositionPID(leftHip2Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetPositionPID(leftHip1Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetPositionPID(leftKneeJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
-				// model->GetJointController()->SetPositionPID(leftAnkleJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+				model->GetJointController()->SetPositionPID(leftAnkleJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 
 				model->GetJointController()->SetVelocityPID(leftHip3Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetVelocityPID(leftHip2Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetVelocityPID(leftHip1Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetVelocityPID(leftKneeJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
-				// model->GetJointController()->SetVelocityPID(leftAnkleJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
+				model->GetJointController()->SetVelocityPID(leftAnkleJoint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 
 				model->GetJointController()->SetPositionPID(rightHip3Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetPositionPID(rightHip2Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
@@ -577,9 +577,9 @@ namespace gazebo
 				//Initial message for connection to work properly.
 				stringstream first_msg;
 				first_msg << leftHip3Joint->Position() << "|" << leftHip2Joint->Position() << "|" << leftHip1Joint->Position() << "|" << leftKneeJoint->Position() << "|" 
-					<< 0
+					<< leftAnkleJoint->Position() 
 					<< "|" << leftHip3Joint->GetVelocity(0) << "|" << leftHip2Joint->GetVelocity(0) << "|" << leftHip1Joint->GetVelocity(0) 
-					<< "|" << leftKneeJoint->GetVelocity(0) << "|" << 0;
+					<< "|" << leftKneeJoint->GetVelocity(0)<< "|" << leftAnkleJoint->GetVelocity(0);
 
 				first_msg << "|";
 
@@ -607,9 +607,9 @@ namespace gazebo
 
 					stringstream s;
 					s << leftHip3Joint->Position() << "|" << leftHip2Joint->Position() << "|" << leftHip1Joint->Position() << "|" << leftKneeJoint->Position() << "|" 
-						<< 0
+						<< leftAnkleJoint->Position() 
 						<< "|" << leftHip3Joint->GetVelocity(0) << "|" << leftHip2Joint->GetVelocity(0) << "|" << leftHip1Joint->GetVelocity(0) << "|" 
-						<< leftKneeJoint->GetVelocity(0) << "|" << 0;
+						<< leftKneeJoint->GetVelocity(0) << "|" << leftAnkleJoint->GetVelocity(0);
 
 					s << "|";
 
@@ -648,7 +648,7 @@ namespace gazebo
 								model->GetJointController()->SetForce(leftHip2Joint->GetScopedName(), tau_2);
 								model->GetJointController()->SetForce(leftHip1Joint->GetScopedName(), tau_3);
 								model->GetJointController()->SetForce(leftKneeJoint->GetScopedName(), tau_4);
-								// model->GetJointController()->SetForce(leftAnkleJoint->GetScopedName(), tau_5);
+								model->GetJointController()->SetForce(leftAnkleJoint->GetScopedName(), tau_5);
 							}
 							else {
 								print_threadsafe("Got outdated torque setpoint.", "left_leg_torque_thread");
