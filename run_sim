@@ -23,13 +23,16 @@ else
     cat simplified_biped.world > $temp_world_file
     if [ "$1" == "paused" ] || [ "$1" == "pause" ]
     then
-        LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$(pwd)/control_plugin/build/ chrt -r 1 taskset -c 8-11,20-23 gazebo -u -e bullet --verbose -r --record_encoding zlib --record_path $(pwd) $temp_world_file # Run sim paused
+        LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$(pwd)/control_plugin/build/ chrt -r 1 taskset -c 4,5,10,11 gazebo -u -e bullet --verbose -r --record_encoding zlib --record_path $(pwd) $temp_world_file # Run sim paused
     elif [ "$1" == "--rtf" ] || [ "$1" == "-rtf" ]
     then
         rtf=$2
         awk "{gsub(\"<max_step_size>[^<]*</max_step_size>\", sprintf(\"<max_step_size>%f</max_step_size>\", 1.0/4000.0*$rtf), \$0); gsub(\"<real_time_factor>[^<]*</real_time_factor>\", sprintf(\"<real_time_factor>%f</real_time_factor>\", $rtf), \$0); print \$0}" simplified_biped.world > $temp_world_file
     fi
-    LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$(pwd)/control_plugin/build/ chrt -r 1 taskset -c 8-11,20-23 gazebo -e bullet --verbose -r --record_encoding zlib --record_path $(pwd) $temp_world_file # Run sim with temp world file
+    
+    tmp_pwd=$(pwd)
+    chrt -r 1 taskset -c 4,5,10,11 su $USER -c "LD_LIBRARY_PATH=${LD_LIBRARY_PATH}:$tmp_pwd/control_plugin/build/ gazebo -e bullet --verbose -r --record_encoding zlib --record_path $tmp_pwd $temp_world_file" # Run sim with temp world file
+    
     
     plot_data_dir=$HOME/dev/walking_controller/plot_data/
     largest_index=$(ls ${plot_data_dir} | sort -nr | head -n 1 | sed 's/\([0-9]*\).*/\1/')
