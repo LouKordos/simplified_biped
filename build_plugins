@@ -4,5 +4,5 @@ set -ue
 
 cd control_plugin
 mkdir -p build ; cd build
-cmake .. -DCMAKE_BUILD_TYPE=Release
+cmake -DCMAKE_BUILD_TYPE=Release ..
 make -j
