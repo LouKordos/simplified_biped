@@ -629,7 +629,7 @@
         <collision name="left_actuator_linkage_bar_1_collision">
             <geometry>
                 <box>
-                    <size> 0.01 0.08 0.42</size>
+                    <size> 0.01 0.01 0.42</size>
                 </box>
             </geometry>
         </collision>
@@ -663,7 +663,7 @@
         <collision name="left_actuator_linkage_bar_2_collision">
             <geometry>
                 <box>
-                    <size> 0.01 0.08 0.42</size>
+                    <size> 0.01 0.01 0.42</size>
                 </box>
             </geometry>
         </collision>
