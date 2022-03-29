@@ -415,7 +415,7 @@
     <link name="left_hip_axis_1">
 
         <self_collide>1</self_collide>
-        <pose> -0.0765 0 1.26 0 1.570796 0 </pose>
+        <pose> -0.1 0 1.26 0 1.570796 0 </pose>
 
         <inertial>
             <mass>4</mass>
@@ -448,7 +448,7 @@
 	<link name="left_knee_actuator">
 
         <self_collide>1</self_collide>
-        <pose> -0.1625 0 1.26 0 -1.570796 0 </pose>
+        <pose> -0.2 0 1.26 0 -1.570796 0 </pose>
 
         <inertial>
             <mass>4</mass>
@@ -541,9 +541,231 @@
         </visual>
     </link>
 
-    <joint type="revolute" name="left_knee_lower_leg_joint">
+    <link name="left_actuator_linkage_mount">
 
-        <pose> 0 0 0.205 0 0 0 </pose>
+        <self_collide>1</self_collide>
+        <pose> -0.23 0 1.26 0 0 0</pose>
+
+        <inertial>
+            <mass>0.01</mass>
+            <inertia>
+                <ixx>2.733e-05</ixx>
+                <iyy>5.666e-06</iyy>
+                <izz>3.233e-05</izz>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyz>0</iyz>
+            </inertia>
+        </inertial>
+
+        <collision name="left_actuator_linkage_mount_collision">
+            <geometry>
+                <box>
+                    <size> 0.01 0.08 0.02</size>
+                </box>
+            </geometry>
+        </collision>
+
+        <visual name="left_actuator_linkage_mount_visual">
+            <geometry>
+                <box>
+                    <size> 0.01 0.08 0.02</size>
+                </box>
+            </geometry>
+        </visual>
+    </link>
+
+    <link name="left_knee_linkage_mount">
+
+        <self_collide>1</self_collide>
+        <pose> -0.23 0 0.84 0 0 0</pose>
+
+        <inertial>
+            <mass>0.01</mass>
+            <inertia>
+                <ixx>2.733e-05</ixx>
+                <iyy>5.666e-06</iyy>
+                <izz>3.233e-05</izz>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyz>0</iyz>
+            </inertia>
+        </inertial>
+
+        <collision name="left_knee_linkage_mount_collision">
+            <geometry>
+                <box>
+                    <size> 0.01 0.08 0.02</size>
+                </box>
+            </geometry>
+        </collision>
+
+        <visual name="left_knee_linkage_mount_visual">
+            <geometry>
+                <box>
+                    <size> 0.01 0.08 0.02</size>
+                </box>
+            </geometry>
+        </visual>
+    </link>
+
+    <link name="left_actuator_linkage_bar_1">
+
+        <self_collide>1</self_collide>
+        <pose> -0.24 0.029 1.05 0 0 0</pose>
+
+        <inertial>
+            <mass>0.01</mass>
+            <inertia>
+                <ixx>2.733e-05</ixx>
+                <iyy>5.666e-06</iyy>
+                <izz>3.233e-05</izz>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyz>0</iyz>
+            </inertia>
+        </inertial>
+
+        <collision name="left_actuator_linkage_bar_1_collision">
+            <geometry>
+                <box>
+                    <size> 0.01 0.08 0.42</size>
+                </box>
+            </geometry>
+        </collision>
+
+        <visual name="left_actuator_linkage_bar_1_visual">
+            <geometry>
+                <box>
+                    <size> 0.01 0.01 0.42</size>
+                </box>
+            </geometry>
+        </visual>
+    </link>
+
+     <link name="left_actuator_linkage_bar_2">
+
+        <self_collide>1</self_collide>
+        <pose> -0.24 -0.029 1.05 0 0 0</pose>
+
+        <inertial>
+            <mass>0.01</mass>
+            <inertia>
+                <ixx>2.733e-05</ixx>
+                <iyy>5.666e-06</iyy>
+                <izz>3.233e-05</izz>
+                <ixy>0</ixy>
+                <ixz>0</ixz>
+                <iyz>0</iyz>
+            </inertia>
+        </inertial>
+
+        <collision name="left_actuator_linkage_bar_2_collision">
+            <geometry>
+                <box>
+                    <size> 0.01 0.08 0.42</size>
+                </box>
+            </geometry>
+        </collision>
+
+        <visual name="left_actuator_linkage_bar_2_visual">
+            <geometry>
+                <box>
+                    <size> 0.01 0.01 0.42</size>
+                </box>
+            </geometry>
+        </visual>
+    </link>
+
+    <joint type="revolute" name="left_actuator_linkage_mount_bar_1_joint">
+
+        <pose> 0 0.029 0 0 0 0 </pose>
+
+        <parent>left_actuator_linkage_bar_1</parent>
+
+        <child>left_actuator_linkage_mount</child>
+        
+        <axis>
+            <xyz>1 0 0 </xyz>
+            <limit>
+                <lower>-2.5</lower>
+                <upper>2.5</upper>
+            </limit>
+        </axis>
+    </joint>
+
+    <joint type="revolute" name="left_actuator_linkage_mount_bar_2_joint">
+
+        <pose> 0 -0.029 0 0 0 0 </pose>
+
+        <parent>left_actuator_linkage_bar_2</parent>
+
+        <child>left_actuator_linkage_mount</child>
+        
+        <axis>
+            <xyz>1 0 0 </xyz>
+            <limit>
+                <lower>-2.5</lower>
+                <upper>2.5</upper>
+            </limit>
+        </axis>
+    </joint>
+
+    <joint type="revolute" name="left_knee_linkage_mount_bar_1_joint">
+
+        <pose> 0 0.029 0 0 0 0 </pose>
+
+        <parent>left_actuator_linkage_bar_1</parent>
+
+        <child>left_knee_linkage_mount</child>
+        
+        <axis>
+            <xyz>1 0 0 </xyz>
+            <limit>
+                <lower>-2.5</lower>
+                <upper>2.5</upper>
+            </limit>
+        </axis>
+    </joint>
+
+    <joint type="revolute" name="left_knee_linkage_mount_bar_2_joint">
+
+        <pose> 0 -0.029 0 0 0 0 </pose>
+
+        <parent>left_actuator_linkage_bar_2</parent>
+
+        <child>left_knee_linkage_mount</child>
+        
+        <axis>
+            <xyz>1 0 0 </xyz>
+            <limit>
+                <lower>-2.5</lower>
+                <upper>2.5</upper>
+            </limit>
+        </axis>
+    </joint>
+
+    <!-- The name is wrong here but used to not break the plugin code. It actually connects the linkage to the actuator. -->
+    <joint type="revolute" name="left_knee_lower_leg_joint">
+        
+        <pose> 0 0 0 0 0 0 </pose>
+
+        <parent>left_knee_actuator</parent>
+
+        <child>left_actuator_linkage_mount</child>
+        
+        <axis>
+            <xyz>1 0 0 </xyz>
+            <limit>
+                <lower>-2.5</lower>
+                <upper>2.5</upper>
+            </limit>
+        </axis>
+    </joint>
+
+    <joint type="revolute" name="left_knee_lower_leg_joint_proper">
+
+        <pose> 0 0 0.2 0 0 0 </pose>
 
         <parent>left_knee</parent>
 
@@ -556,6 +778,15 @@
                 <upper>2.5</upper>
             </limit>
         </axis>
+    </joint>
+
+    <joint type="fixed" name="left_lower_leg_linkage_mount">
+
+        <pose> 0 0 0 0 0 0 </pose>
+
+        <parent>left_knee_linkage_mount</parent>
+
+        <child>left_lower_leg</child>
     </joint>
 
     <joint type="revolute" name="left_hip_axis_1_upper_leg_joint">
@@ -583,7 +814,7 @@
     </joint>
 
 	<joint type="revolute" name="left_hip_axis_2_hip_axis_1_joint">
-        <pose> 0 -0.12 -0.0735 0 0 0 </pose>
+        <pose> 0 -0.12 -0.05 0 0 0 </pose>
 
         <parent>left_hip_axis_2</parent>
         <child>left_hip_axis_1</child>
@@ -612,19 +843,19 @@
         </axis>
     </joint>
 
-    <joint type="fixed" name="left_ankle_foot_base_joint">
+    <joint type="revolute" name="left_ankle_foot_base_joint">
         <pose> 0 0 0.03 0 0 0 </pose>
 
         <parent>left_ankle</parent>
         <child>left_foot_base</child>
 
-        <!-- <axis>
+        <axis>
             <xyz>1 0 0 </xyz>
             <limit>
                 <lower>-1.57</lower>
                 <upper>1.57</upper>
             </limit>
-        </axis> -->
+        </axis>
     </joint>
 
     <joint type="fixed" name="left_knee_upper_leg_joint">
