@@ -143,17 +143,17 @@ namespace gazebo
 				left_foot_base = model->GetChildLink("simplified_biped::left_foot_base");
 				right_foot_base = model->GetChildLink("simplified_biped::right_foot_base");
 
-				leftHip3Joint->SetPosition(0, 0);
-				leftHip2Joint->SetPosition(0, 0);
-				leftHip1Joint->SetPosition(0, -0.4);
-				leftKneeJoint->SetPosition(0, 0.85);
-				leftAnkleJoint->SetPosition(0, -0.45);
+				// leftHip3Joint->SetPosition(0, 0);
+				// leftHip2Joint->SetPosition(0, 0);
+				// leftHip1Joint->SetPosition(0, -0.4);
+				// leftKneeJoint->SetPosition(0, 0.85);
+				// leftAnkleJoint->SetPosition(0, -0.45);
 
-				rightHip3Joint->SetPosition(0, 0);
-				rightHip2Joint->SetPosition(0, 0);
-				rightHip1Joint->SetPosition(0, -0.4);
-				rightKneeJoint->SetPosition(0, 0.85);
-				rightAnkleJoint->SetPosition(0, -0.45);
+				// rightHip3Joint->SetPosition(0, 0);
+				// rightHip2Joint->SetPosition(0, 0);
+				// rightHip1Joint->SetPosition(0, -0.4);
+				// rightKneeJoint->SetPosition(0, 0.85);
+				// rightAnkleJoint->SetPosition(0, -0.45);
 
 				model->GetJointController()->SetPositionPID(leftHip3Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
 				model->GetJointController()->SetPositionPID(leftHip2Joint->GetScopedName(), gazebo::common::PID(0, 0, 0));
