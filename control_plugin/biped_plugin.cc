@@ -19,6 +19,8 @@
 #include <eigen3/Eigen/QR>
 #include <math.h>
 
+#include <cstdlib>
+
 #include <fmt/core.h>
 
 using Eigen::MatrixXd;
@@ -604,6 +606,8 @@ namespace gazebo
 
 				auto proper_joint = model->GetJoint("simplified_biped::left_knee_lower_leg_joint_proper");
 
+				srand (static_cast <unsigned> (time(0)));
+
 				while(true) {
 					start = high_resolution_clock::now();
 
@@ -616,7 +620,7 @@ namespace gazebo
 
 					s << "|";
 					
-					std::cout << "same formula as angle: " << proper_joint->GetVelocity(0) - (leftKneeJoint->GetVelocity(0) - leftHip1Joint->GetVelocity(0)) << std::endl;
+					// std::cout << "same formula as angle: " << proper_joint->GetVelocity(0) - (leftKneeJoint->GetVelocity(0) - leftHip1Joint->GetVelocity(0)) << std::endl;
 
 					Eigen::Matrix<double, n, 1> state = get_CoMState();
 
@@ -647,13 +651,44 @@ namespace gazebo
 						double tau_4 = atof(torques[3].c_str());
 						double tau_5 = atof(torques[4].c_str());
 
+						if (abs(tau_1 - 10) < 0) {
+							tau_1 = 0;
+							std::cout << "hit" << std::endl;
+						}
+						if (abs(tau_2 - 10) < 0) {
+							tau_2 = 0;
+							std::cout << "hit" << std::endl;
+						}
+						if (abs(tau_3 - 10) < 0) {
+							tau_3 = 0;
+							std::cout << "hit" << std::endl;
+						}
+						if (abs(tau_4 - 10) < 0) {
+							tau_4 = 0;
+							std::cout << "hit" << std::endl;
+						}
+						if (abs(tau_5 - 10) < 0) {
+							tau_5 = 0;
+							std::cout << "hit" << std::endl;
+						}
+
+						// float LO = -2;
+						// float HI = 2;
+
+						// float r1 = LO + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(HI-LO)));
+						// float r2 = LO + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(HI-LO)));
+						// float r3 = LO + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(HI-LO)));
+						// float r4 = LO + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(HI-LO)));
+						// float r5 = LO + static_cast <float> (rand()) /( static_cast <float> (RAND_MAX/(HI-LO)));
+
+
 						if(apply_torques) {
 							if(atoi(torques[5].c_str()) != prev_iteration_timestamp) {
-								model->GetJointController()->SetForce(leftHip3Joint->GetScopedName(), tau_1);
-								model->GetJointController()->SetForce(leftHip2Joint->GetScopedName(), tau_2);
-								model->GetJointController()->SetForce(leftHip1Joint->GetScopedName(), tau_3);
-								model->GetJointController()->SetForce(leftKneeJoint->GetScopedName(), tau_4);
-								model->GetJointController()->SetForce(leftAnkleJoint->GetScopedName(), tau_5);
+								model->GetJointController()->SetForce(leftHip3Joint->GetScopedName(), tau_1 /*+ r1*/);
+								model->GetJointController()->SetForce(leftHip2Joint->GetScopedName(), tau_2 /*+ r2*/);
+								model->GetJointController()->SetForce(leftHip1Joint->GetScopedName(), tau_3 /*+ r3*/);
+								model->GetJointController()->SetForce(leftKneeJoint->GetScopedName(), tau_4 /*+ r4*/);
+								model->GetJointController()->SetForce(leftAnkleJoint->GetScopedName(), tau_5 /*+ r5*/);
 							}
 							else {
 								print_threadsafe("Got outdated torque setpoint.", "left_leg_torque_thread");
