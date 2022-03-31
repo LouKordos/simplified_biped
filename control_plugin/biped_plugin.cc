@@ -608,12 +608,15 @@ namespace gazebo
 					start = high_resolution_clock::now();
 
 					stringstream s;
-					s << leftHip3Joint->Position() << "|" << leftHip2Joint->Position() << "|" << leftHip1Joint->Position() << "|" << leftKneeJoint->Position() << "|" 
+					s << leftHip3Joint->Position() << "|" << leftHip2Joint->Position() << "|" << leftHip1Joint->Position() << "|" << leftKneeJoint->Position() - leftHip1Joint->Position() << "|" 
 						<< leftAnkleJoint->Position() 
 						<< "|" << leftHip3Joint->GetVelocity(0) << "|" << leftHip2Joint->GetVelocity(0) << "|" << leftHip1Joint->GetVelocity(0) << "|" 
-						<< leftKneeJoint->GetVelocity(0) << "|" << leftAnkleJoint->GetVelocity(0);
+						// Using the proper joint velocity is actually cheating here until there are joint encoders on the real leg! The correct formula should be KneeVelocity - Hip1Velocity, identical to the angle calculation.
+						<< proper_joint->GetVelocity(0) << "|" << leftAnkleJoint->GetVelocity(0);
 
 					s << "|";
+					
+					std::cout << "same formula as angle: " << proper_joint->GetVelocity(0) - (leftKneeJoint->GetVelocity(0) - leftHip1Joint->GetVelocity(0)) << std::endl;
 
 					Eigen::Matrix<double, n, 1> state = get_CoMState();
 
