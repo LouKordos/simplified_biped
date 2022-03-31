@@ -327,10 +327,10 @@
         
         <collision name="left_upper_leg_collision">
             <geometry>
-                <mesh>
-					<uri>model://simplified_biped/meshes/upper_leg_350mm.stl</uri>
-				</mesh>
-            </geometry>
+                    <box>
+                        <size>0.06 0.06 0.35</size>
+                    </box>
+                </geometry>
         </collision>
 
         <visual name="left_upper_leg_visual">
@@ -494,9 +494,10 @@
 
         <collision name="left_hip_axis_2_collision">
             <geometry>
-                <mesh>
-					<uri>model://simplified_biped/meshes/actuator_scaled.stl</uri>
-				</mesh>
+                <cylinder>
+                    <radius>0.04</radius>
+                    <length>0.04</length>
+                </cylinder>
             </geometry>
         </collision>
 
@@ -526,9 +527,10 @@
 
         <collision name="left_hip_axis_3_collision">
             <geometry>
-                <mesh>
-					<uri>model://simplified_biped/meshes/actuator_scaled.stl</uri>
-				</mesh>
+                <cylinder>
+                    <radius>0.04</radius>
+                    <length>0.04</length>
+                </cylinder>
             </geometry>
         </collision>
 
@@ -687,10 +689,6 @@
         
         <axis>
             <xyz>1 0 0 </xyz>
-            <limit>
-                <lower>-2.5</lower>
-                <upper>2.5</upper>
-            </limit>
         </axis>
     </joint>
 
@@ -704,10 +702,6 @@
         
         <axis>
             <xyz>1 0 0 </xyz>
-            <limit>
-                <lower>-2.5</lower>
-                <upper>2.5</upper>
-            </limit>
         </axis>
     </joint>
 
@@ -721,10 +715,6 @@
         
         <axis>
             <xyz>1 0 0 </xyz>
-            <limit>
-                <lower>-2.5</lower>
-                <upper>2.5</upper>
-            </limit>
         </axis>
     </joint>
 
@@ -738,10 +728,6 @@
         
         <axis>
             <xyz>1 0 0 </xyz>
-            <limit>
-                <lower>-2.5</lower>
-                <upper>2.5</upper>
-            </limit>
         </axis>
     </joint>
 
@@ -757,8 +743,8 @@
         <axis>
             <xyz>1 0 0 </xyz>
             <limit>
-                <lower>-2.5</lower>
-                <upper>2.5</upper>
+                <lower>-3</lower>
+                <upper>3</upper>
             </limit>
         </axis>
     </joint>
@@ -773,10 +759,6 @@
         
         <axis>
             <xyz>1 0 0 </xyz>
-            <limit>
-                <lower>-2.5</lower>
-                <upper>2.5</upper>
-            </limit>
         </axis>
     </joint>
 
@@ -896,15 +878,15 @@
                 </inertia>
             </inertial>
             
-            <collision name="right_base_collision">
+            <collision name="right_lower_leg_collision">
                 <geometry>
-                    <mesh>
-						<uri>model://simplified_biped/meshes/lower_leg_350mm.stl</uri>
-					</mesh>
+                    <box>
+                        <size>0.06 0.06 0.35</size>
+                    </box>
                 </geometry>
             </collision>
 
-            <visual name="right_base_visual">
+            <visual name="right_lower_leg_visual">
                 <geometry>
                     <mesh>
 		   		 		<uri>model://simplified_biped/meshes/lower_leg_350mm.stl</uri>
@@ -972,10 +954,10 @@
         
         <collision name="right_upper_leg_collision">
             <geometry>
-                <mesh>
-					<uri>model://simplified_biped/meshes/upper_leg_350mm.stl</uri>
-				</mesh>
-            </geometry>
+                    <box>
+                        <size>0.06 0.06 0.35</size>
+                    </box>
+                </geometry>
         </collision>
 
         <visual name="right_upper_leg_visual">
@@ -1073,9 +1055,10 @@
 
         <collision name="right_hip_axis_1_collision">
             <geometry>
-                <mesh>
-					<uri>model://simplified_biped/meshes/actuator_scaled.stl</uri>
-				</mesh>
+                <cylinder>
+                    <radius>0.04</radius>
+                    <length>0.04</length>
+                </cylinder>
             </geometry>
         </collision>
 
@@ -1105,9 +1088,10 @@
 
         <collision name="right_knee_actuator_collision">
             <geometry>
-                <mesh>
-					<uri>model://simplified_biped/meshes/actuator_scaled.stl</uri>
-				</mesh>
+                <cylinder>
+                    <radius>0.04</radius>
+                    <length>0.04</length>
+                </cylinder>
             </geometry>
         </collision>
 
@@ -1137,9 +1121,10 @@
 
         <collision name="right_hip_axis_2_collision">
             <geometry>
-                <mesh>
-					<uri>model://simplified_biped/meshes/actuator_scaled.stl</uri>
-				</mesh>
+                <cylinder>
+                    <radius>0.04</radius>
+                    <length>0.04</length>
+                </cylinder>
             </geometry>
         </collision>
 
@@ -1172,9 +1157,10 @@
 
         <collision name="right_hip_axis_3_collision">
             <geometry>
-                <mesh>
-					<uri>model://simplified_biped/meshes/actuator_scaled.stl</uri>
-				</mesh>
+                <cylinder>
+                    <radius>0.04</radius>
+                    <length>0.04</length>
+                </cylinder>
             </geometry>
         </collision>
 

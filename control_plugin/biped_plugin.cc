@@ -576,10 +576,10 @@ namespace gazebo
 			
 				//Initial message for connection to work properly.
 				stringstream first_msg;
-				first_msg << leftHip3Joint->Position() << "|" << leftHip2Joint->Position() << "|" << leftHip1Joint->Position() << "|" << leftKneeJoint->Position() << "|" 
+				first_msg << leftHip3Joint->Position() << "|" << leftHip2Joint->Position() << "|" << leftHip1Joint->Position() << "|" << leftKneeJoint->Position() - leftHip1Joint->Position() << "|" 
 					<< leftAnkleJoint->Position() 
 					<< "|" << leftHip3Joint->GetVelocity(0) << "|" << leftHip2Joint->GetVelocity(0) << "|" << leftHip1Joint->GetVelocity(0) 
-					<< "|" << leftKneeJoint->GetVelocity(0)<< "|" << leftAnkleJoint->GetVelocity(0);
+					<< "|" << leftKneeJoint->GetVelocity(0) - leftHip1Joint->GetVelocity(0) << "|" << leftAnkleJoint->GetVelocity(0);
 
 				first_msg << "|";
 
@@ -601,6 +601,8 @@ namespace gazebo
 				tv.tv_sec = 0; // Initially set to very high value to wait for first message because it takes some time to start up sim.
 				tv.tv_usec = 100000;
 				setsockopt(sockfd, SOL_SOCKET, SO_RCVTIMEO, (const char*)&tv, sizeof tv);
+
+				auto proper_joint = model->GetJoint("simplified_biped::left_knee_lower_leg_joint_proper");
 
 				while(true) {
 					start = high_resolution_clock::now();
