@@ -546,7 +546,7 @@
     <link name="left_actuator_linkage_mount">
 
         <self_collide>1</self_collide>
-        <pose> -0.23 0 1.26 0 0 0</pose>
+        <pose> -0.227 0 1.26 0 0 0</pose>
 
         <inertial>
             <mass>0.01</mass>
@@ -580,7 +580,7 @@
     <link name="left_knee_linkage_mount">
 
         <self_collide>1</self_collide>
-        <pose> -0.23 0 0.84 0 0 0</pose>
+        <pose> -0.227 0 0.84 0 0 0</pose>
 
         <inertial>
             <mass>0.01</mass>
